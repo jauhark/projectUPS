@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?ccsproject version="1.0"?>
+<projectOptions>
+	<ccsVersion value="12.1.0"/>
+	<deviceVariant value="TMS320C28XX.TMS320F280049C"/>
+	<deviceFamily value="C2000"/>
+	<deviceEndianness value="little"/>
+	<codegenToolVersion value="22.6.0.LTS"/>
+	<isElfFormat value="true"/>
+	<rts value="libc.a"/>
+	<createSlaveProjects value=""/>
+	<templateProperties value="id=gridConnectedInverterLCLFltr_nonpowerSUITE.projectspec.gridConnectedInverterLCLFltr_nonpowerSUITE_F28004x"/>
+	<sourceLookupPath value="${C2000WARE_DLIB_ROOT}"/>
+	<origin value="D:\SOFTWARES\TI\extras\DigitalPowerSDK\C2000Ware_DigitalPower_SDK_4_01_00_00\solutions\tidm_hv_1ph_dcac\f28004x\ccs\gridconnectedinvlclfltr\gridConnectedInverterLCLFltr_nonpowerSUITE.projectspec"/>
+	<filesToOpen value=""/>
+	<connection value="common/targetdb/connections/TIXDS110_Connection.xml"/>
+	<isTargetManual value="false"/>
+</projectOptions>
