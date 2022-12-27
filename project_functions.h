@@ -26,6 +26,12 @@ void setupInverterPWM(uint32_t, uint32_t, uint16_t,
 
 interrupt void inverterISR();
 interrupt void adcISR();
+//
+#define _GETRES_SOC0 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER0)
+#define _GETRES_SOC1 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER1)
+#define _GETRES_SOC2 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER2)
+#define _GETRES_SOC3 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER3)
+
 //----------------------------------------------------------------------
 //TODO updateInverterPWM()
 static inline void updateInverterPWM(uint32_t base1, uint32_t base2,
@@ -107,20 +113,21 @@ static inline void setupInterrupt(void)
 
 
 
-//// INT on ADC convCplt
-//    Interrupt_register(INT_ADCA1, &adcISR);
-//    ADC_setInterruptSource(ADCA_BASE, ADC_INT_NUMBER1 , ADC_SOC_NUMBER0);
-//    ADC_enableInterrupt(ADCA_BASE, ADC_INT_NUMBER1);
-//
-//    ADC_enableConverter(ADCA_BASE);
-//    Interrupt_enable(INT_ADCA1);
+// INT on ADC convCplt
+    Interrupt_register(INT_ADCA1, &adcISR);
+    ADC_setInterruptSource(ADCA_BASE, ADC_INT_NUMBER1 , ADC_SOC_NUMBER0);
+    ADC_enableInterrupt(ADCA_BASE, ADC_INT_NUMBER1);
 
-//    ADC_clearInterruptStatus(ADCA_BASE, ADC_INT_NUMBER1);
-//    Interrupt_clearACKGroup(INTERRUPT_ACK_GROUP1);
+    ADC_enableConverter(ADCA_BASE);
+    Interrupt_enable(INT_ADCA1);
+
+    ADC_clearInterruptStatus(ADCA_BASE, ADC_INT_NUMBER1);
+    Interrupt_clearACKGroup(INTERRUPT_ACK_GROUP1);
+
     EPWM_clearEventTriggerInterruptFlag(INV_ISR_TRIG_PWM_BASE);
     Interrupt_enable(INT_EPWM1);
 
-//    clearInterruptADC();
+    clearInterruptADC();
     clearInterruptEPWM();
 
     EINT;

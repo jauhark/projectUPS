@@ -5,10 +5,7 @@
  *      Author: jauha
  */
 
-
 #include "project_functions.h"
-
-
 
 //TODO device_setup()
 void setupDevice(void)
@@ -72,45 +69,49 @@ void setupDevice(void)
 void setupADC(void)
 {
     //Write ADC configurations and power up the ADC for both ADC A
-//    uint16_t i;
+    uint16_t i;
 
     //write configurations for ADC-A
 //
 //    ADC_setPrescaler(ADCA_BASE, ADC_CLK_DIV_2_0);
 //
-//    ASysCtl_setAnalogReferenceInternal(ASYSCTL_VREFHIA);
+    ASysCtl_setAnalogReferenceInternal(ASYSCTL_VREFHIA);
 //
 //    //power up the ADC
 //    ADC_enableConverter(ADCA_BASE);
 //
-//    //delay for > 1ms to allow ADC time to power up
-//    for (i = 0; i < 1000; i++)
-//    {
-//        asm("   RPT#255 || NOP");
-//    }
+    //delay for > 1ms to allow ADC time to power up
+    for (i = 0; i < 1000; i++)
+    {
+        asm("   RPT#255 || NOP");
+    }
 //
 //    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER0, ADC_SOC_TRIG,
 //                 ADC_CHANNEL_IN, ACQPS_SYS_CLKS);
 
 //    --- Reset the ADC.  This is good programming practice.
-        SysCtl_resetPeripheral(SYSCTL_PERIPH_RES_ADCA);     // Reset ADC
+    SysCtl_resetPeripheral(SYSCTL_PERIPH_RES_ADCA);     // Reset ADC
 
-        ADC_disableConverter(ADCA_BASE);
-        ADC_setVREF(ADCA_BASE, ADC_REFERENCE_INTERNAL, ADC_REFERENCE_3_3V);
-        ADC_setPrescaler(ADCA_BASE, ADC_CLK_DIV_4_0);                           // ADC clock prescaler = CPUCLK/4
+    ADC_disableConverter(ADCA_BASE);
+    ADC_setVREF(ADCA_BASE, ADC_REFERENCE_INTERNAL, ADC_REFERENCE_3_3V);
+    ADC_setPrescaler(ADCA_BASE, ADC_CLK_DIV_2_0); // ADC clock prescaler = CPUCLK/4
 
-        ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER0, ADC_SOC_TRIG, ADC_CHANNEL_IN, ACQPS_SYS_CLKS);
-//        ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER1, ADC_SOC_TRIG, ADC_CHANNEL_IN, ACQPS_SYS_CLKS);
-//        ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER2, ADC_SOC_TRIG, ADC_CHANNEL_IN, ACQPS_SYS_CLKS);
-//        ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER3, ADC_SOC_TRIG, ADC_CHANNEL_IN, ACQPS_SYS_CLKS);
+
+    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER0, ADC_SOC_TRIG, ADC_CHANNEL_IN,
+                 ACQPS_SYS_CLKS);
+//    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER1, ADC_SOC_TRIG, ADC_CHANNEL_IN,
+//                 ACQPS_SYS_CLKS);
+//    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER2, ADC_SOC_TRIG, ADC_CHANNEL_IN,
+//                 ACQPS_SYS_CLKS);
+//    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER3, ADC_SOC_TRIG, ADC_CHANNEL_IN,
+//                 ACQPS_SYS_CLKS);
 //        ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER4, ADC_SOC_TRIG, ADC_CHANNEL_IN, ACQPS_SYS_CLKS);
 //
 //        ADC_setBurstModeConfig(ADCA_BASE, ADC_SOC_TRIG,5);
 //        ADC_enableBurstMode(ADCA_BASE);
+    ADC_enableConverter(ADCA_BASE);             // Power up the ADC
 
-       ADC_enableConverter(ADCA_BASE);             // Power up the ADC
-
-        DEVICE_DELAY_US(1000);                      // Wait 1 ms after power-up before using the ADC
+    DEVICE_DELAY_US(1000);      // Wait 1 ms after power-up before using the ADC
 
     //Write ADC configurations and power up the ADC for both ADC A
 
@@ -130,8 +131,6 @@ void setupADC(void)
 //
 //    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER0, ADC_TRIGGER_EPWM1_SOCA,
 //                 ADC_CH_ADCIN4, ACQPS_SYS_CLKS);
-
-
 
 }
 
@@ -237,7 +236,7 @@ void setupInverterPWM(uint32_t base1, uint32_t base2, uint16_t pwm_period_ticks,
     /*ADC EVENT TRIGGER */
 
     EPWM_enableADCTrigger(base1, EPWM_SOC_A);
-    EPWM_setADCTriggerEventPrescale(base1, EPWM_SOC_A, 10);
+    EPWM_setADCTriggerEventPrescale(base1, EPWM_SOC_A, 1);
     EPWM_setADCTriggerSource(base1, EPWM_SOC_A, EPWM_SOC_TBCTR_ZERO);
 
     /*GPIO SETTINGS */

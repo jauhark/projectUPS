@@ -22,15 +22,15 @@
 /* Project Options*/
 
 /* Power Stage Related Values*/
-#define AC_FREQ             60
+#define AC_FREQ             50
 
 #define INV_PWM_SWITCHING_FREQUENCY ((float)20*1000)       //20KHz pwm freq
 
-#define INV_DEADBAND_US 0.2
+#define INV_DEADBAND_US 2
 #define INV_PWM_PERIOD (PWMSYSCLOCK_FREQ)/(INV_PWM_SWITCHING_FREQUENCY)
 #define INV_DEADBAND_PWM_COUNT (int)((float)INV_DEADBAND_US*(float)PWMSYSCLOCK_FREQ*(float)0.000001)
 
-#define CNTRL_ISR_FREQ_RATIO    10
+#define CNTRL_ISR_FREQ_RATIO    1
 #define INV_ISR_PIE_GROUP_NO    INTERRUPT_ACK_GROUP3
 
 #define INV_PWM1_BASE               EPWM1_BASE      //epwm module base

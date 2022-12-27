@@ -10,6 +10,8 @@
 
 
 //================================================================
+#define DEBUG 1
+
 #include "project_functions.h"
 
 #include "dlog_4ch.h"
