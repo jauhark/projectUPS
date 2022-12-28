@@ -14,11 +14,11 @@
 RAMPGEN rgen1;
 
 float32_t invSine = 0;
-float32_t invModIndex = 0.3;
+float32_t invModIndex = 0.8;
 float32_t invDutyPU = 0;
 
 //volatile float32_t adcRes = 0;
-volatile uint16_t adcRes=0;
+volatile float32_t adcRes = 0;
 
 /*
  * ############################################################################
@@ -53,21 +53,42 @@ void main(void)
     enablePWMCLKCounting();
     //
 
+#if DEBUG==1
+    /*
+     * switch input for debug
+     */
+#define SWITCH_GPIO 14
+#define LED_PIN 34
+
+    GPIO_setDirectionMode(SWITCH_GPIO, GPIO_DIR_MODE_IN);
+    GPIO_setPadConfig(SWITCH_GPIO, GPIO_PIN_TYPE_PULLUP); // disable pull up
+
+    GPIO_setDirectionMode(LED_PIN, GPIO_DIR_MODE_OUT);
+    GPIO_setPadConfig(LED_PIN, GPIO_PIN_TYPE_STD); // disable pull up
+
+    /*
+     * debug ends
+     */
+#endif
+
     while (1)
     {
 
     }
 }
 
-
 #if DEBUG ==1
 /*
  * DEBUG
  */
-#define SAMPLENO 5000
-volatile uint16_t a[SAMPLENO]={0};
-volatile uint32_t b[SAMPLENO]={0};
-volatile static int k=0;
+#define SAMPLENO 500
+volatile uint16_t a[SAMPLENO] = { 0 };
+//volatile uint32_t b[SAMPLENO] = { 0 };
+volatile int16_t mainsVoltage[SAMPLENO]={0};
+volatile int16_t genVoltage[SAMPLENO]={0};
+volatile float32_t volts[SAMPLENO]={0};
+volatile int16_t errorVoltage[SAMPLENO]={0};
+volatile static int k = 0;
 /*
  * END DEBUG
  */
@@ -95,33 +116,73 @@ interrupt void adcISR(void)
 
     updateInverterPWM(INV_PWM1_BASE, INV_PWM2_BASE, invDutyPU);
 
-//    adcRes = (float32_t) (_GETRES_SOC0 + _GETRES_SOC1 + _GETRES_SOC2
-//            + _GETRES_SOC3) * 0.25f;
-    adcRes=(uint16_t)ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER0);
+//    adcRes = (uint16_t) ((_GETRES_SOC0 + _GETRES_SOC1 + _GETRES_SOC2
+//            + _GETRES_SOC3) * 0.25f);
+//    adcRes = (uint16_t) ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER0);
+    adcRes=(float32_t)(((float32_t)_GETRES_SOC0)*3.2f)/(4095.0f);
 
 #if DEBUG==1
     /*
      * DEBUG
      */
-    static uint64_t kinit=0;
-    if(kinit<10000){
-        kinit++;
-    }
-    else {
-        if(k<SAMPLENO){
-            a[k]=adcRes;
-//            b[k]=(int32_t)(1000.0f*invDutyPU);
-            k++;
-        }
+    volatile static uint64_t kinit = 0;
+    volatile static uint16_t reset_ = 0;
 
-        if(k>=SAMPLENO){
-            NOP;
+    //=======================================
+    static uint16_t count = 0;
+    while (GPIO_readPin(SWITCH_GPIO) == 0)
+    {
+        count++;
+        if (count == 10)
+        {
+            //TODO after switch press make switch ONE
+            reset_ = 1;
+            GPIO_togglePin(LED_PIN);
+            kinit=0;
+
+        }
+        if (count > 10)
+            count = 20;
+    }
+    count = 0;
+    //=======================================
+    if (reset_ == 1)
+    {
+
+
+        if (kinit < 10000)
+        {
+            kinit++;
+            k=0;
+        }
+        else
+        {
+            if (k < SAMPLENO)
+            {
+                volts[k] = adcRes;
+                a[k]=(uint16_t)(1000.0f*adcRes);
+                mainsVoltage[k]=(int16_t)((adcRes-1.6f)*(1.0f/0.0032f));
+                genVoltage[k]=(int16_t)(-1.0f*invSine*325.27f);
+                errorVoltage[k]=mainsVoltage[k]-genVoltage[k];
+//            b[k]=(int32_t)(1000.0f*invDutyPU);
+                k++;
+            }
+
+            if (k >= SAMPLENO)
+            {
+                NOP;
+                reset_=0;
+            }
         }
     }
     /*
      * END DEBUG
      */
 #endif
+
+    //TODO: CONTROL SYSTEM
+
+
 
     clearInterruptADC();
 }

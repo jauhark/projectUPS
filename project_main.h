@@ -10,6 +10,7 @@
 
 
 //================================================================
+//DEBUG VERSION IF DEBUG=1
 #define DEBUG 1
 
 #include "project_functions.h"
