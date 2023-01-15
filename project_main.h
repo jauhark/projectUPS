@@ -12,6 +12,8 @@
 //================================================================
 //DEBUG VERSION IF DEBUG=1
 #define DEBUG 1
+//#define DEBUG 0
+
 
 #include "project_functions.h"
 
@@ -20,7 +22,7 @@
 #include "rampgen.h"
 #include "spll_1ph_sogi.h"
 #include "DCLF32.h"
-
+//#include "DCLF32.h"
 
 
 

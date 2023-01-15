@@ -14,11 +14,16 @@
 RAMPGEN rgen1;
 
 float32_t invSine = 0;
-float32_t invModIndex = 0.8;
+float32_t invModIndex = 0.7;
 float32_t invDutyPU = 0;
+float32_t refSig=0;
 
 //volatile float32_t adcRes = 0;
 volatile float32_t adcRes = 0;
+/*
+ *
+ */
+
 
 /*
  * ############################################################################
@@ -40,6 +45,14 @@ void main(void)
                      INV_DEADBAND_PWM_COUNT);
 
     setupADC();
+
+    /*
+     * TODO
+     * SETTING UP CONTROL LOOP
+     */
+    /*
+     *
+     */
 
     RAMPGEN_reset(&rgen1);
     rgen1.freq = (float32_t) (AC_FREQ);
@@ -88,6 +101,9 @@ volatile int16_t mainsVoltage[SAMPLENO]={0};
 volatile int16_t genVoltage[SAMPLENO]={0};
 volatile float32_t volts[SAMPLENO]={0};
 volatile int16_t errorVoltage[SAMPLENO]={0};
+volatile int16_t controlVoltage[SAMPLENO]={0};
+volatile float32_t pureControlVoltage[SAMPLENO]={0};
+
 volatile static int k = 0;
 /*
  * END DEBUG
@@ -108,18 +124,57 @@ interrupt void inverterISR(void)
 }    // MainISR Ends Here
 
 //================================================================
+volatile float32_t prev_feedbackVolt=0;
+volatile float32_t prev_controlOUT=0;
+volatile float32_t err =0;
+volatile float32_t prev_err=0;
+volatile float32_t integral=0;
+volatile float32_t controlOUT=0;
+volatile float32_t feedbackVolt=0;
+
+#define LARGE_SIG_VAL   0.7
+
+#define MAX_DT  0.95
+#define MIN_DT  -0.95
+
+#define MAX_CT_VAL  0.25        //so total control output will stay within 0.95 and 0.1
+#define MIN_CT_VAL  -0.6
+
+#define dT   0.0001     //0.1 milli Seconds
+#define fpi     1000        //1Khz bandwidth
+
+#define Kp      0.5
+#define Ki      0.1
+
+volatile float32_t A1=Kp*((fpi*dT/2)+1);
+volatile float32_t A0=Kp*((fpi*dT/2)-1);
+
+
 
 interrupt void adcISR(void)
 {
 
-    invDutyPU = invSine * invModIndex;
-
-    updateInverterPWM(INV_PWM1_BASE, INV_PWM2_BASE, invDutyPU);
 
 //    adcRes = (uint16_t) ((_GETRES_SOC0 + _GETRES_SOC1 + _GETRES_SOC2
 //            + _GETRES_SOC3) * 0.25f);
 //    adcRes = (uint16_t) ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER0);
+//
+    invDutyPU = invSine * invModIndex;
+
+    refSig= (float32_t)(-1.0f*invSine*325.27f);
+
     adcRes=(float32_t)(((float32_t)_GETRES_SOC0)*3.2f)/(4095.0f);
+
+    feedbackVolt=(float32_t)((adcRes-1.6f)*(1.0f/0.0032f));
+
+    err=(refSig-feedbackVolt);
+//
+      controlOUT=invDutyPU;
+////    controlOUT=-Kp*err;
+//    if(controlOUT>0.95)controlOUT=0.95;
+//    else if(controlOUT<-0.95)controlOUT=-0.95;
+
+
 
 #if DEBUG==1
     /*
@@ -159,12 +214,15 @@ interrupt void adcISR(void)
         {
             if (k < SAMPLENO)
             {
-                volts[k] = adcRes;
-                a[k]=(uint16_t)(1000.0f*adcRes);
-                mainsVoltage[k]=(int16_t)((adcRes-1.6f)*(1.0f/0.0032f));
-                genVoltage[k]=(int16_t)(-1.0f*invSine*325.27f);
-                errorVoltage[k]=mainsVoltage[k]-genVoltage[k];
-//            b[k]=(int32_t)(1000.0f*invDutyPU);
+//                volts[k] = adcRes;
+//                a[k]=(uint16_t)(1000.0f*adcRes);
+//                mainsVoltage[k]=(int16_t)((adcRes-1.6f)*(1.0f/0.0032f));
+//                genVoltage[k]=(int16_t)(-1.0f*invSine*325.27f);
+                mainsVoltage[k]=(int16_t)feedbackVolt;
+                genVoltage[k]=(int16_t)refSig;
+                controlVoltage[k]=(int16_t)(1000.0f*controlOUT);
+                pureControlVoltage[k]=controlOUT;
+                errorVoltage[k]=(int16_t)err;
                 k++;
             }
 
@@ -174,12 +232,17 @@ interrupt void adcISR(void)
                 reset_=0;
             }
         }
+
+
     }
     /*
      * END DEBUG
      */
+
 #endif
 
+    updateInverterPWM(INV_PWM1_BASE, INV_PWM2_BASE, controlOUT);
+//    updateInverterPWM(INV_PWM1_BASE, INV_PWM2_BASE, invSine);
     //TODO: CONTROL SYSTEM
 
 
