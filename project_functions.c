@@ -109,7 +109,23 @@ void setupADC(void)
 //
 //        ADC_setBurstModeConfig(ADCA_BASE, ADC_SOC_TRIG,5);
 //        ADC_enableBurstMode(ADCA_BASE);
+
+    /*========================================*/
+    /* SETTING UP ADC FOR SWTICH 3 BUTTON */
+    /*
+     *==========================================
+     */
+    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER4, ADC_SOC_TRIG, ADC_SWITCH_CHANNEL_IN,
+                   ACQPS_SYS_CLKS);
+
+
+    /*
+     *========================================
+     */
+
+
     ADC_enableConverter(ADCA_BASE);             // Power up the ADC
+
 
     DEVICE_DELAY_US(1000);      // Wait 1 ms after power-up before using the ADC
 

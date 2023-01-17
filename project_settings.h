@@ -49,8 +49,11 @@
 #define INV_PWM2_L_GPIO_PIN_CONFIG  GPIO_3_EPWM2B
 
 #define ACQPS_SYS_CLKS    50  //ADC ACQUISITION CLOCK CYCLES
-#define ADC_CHANNEL_IN           ADC_CH_ADCIN4
+#define ADC_CHANNEL_IN           ADC_CH_ADCIN4  //ADC_A4
 #define ADC_SOC_TRIG             ADC_TRIGGER_EPWM1_SOCA    //adc soc trigger by epwm interrupt
+
+//3 button switch settings
+#define ADC_SWITCH_CHANNEL_IN   ADC_CH_ADCIN6   //ADCINA6
 
 #define INV_ISR_TRIG_PWM_BASE           EPWM1_BASE         //interrupt module base
 #define INV_ISR                         INT_EPWM1          //interrupt vector number

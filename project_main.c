@@ -124,6 +124,8 @@ interrupt void inverterISR(void)
 }    // MainISR Ends Here
 
 //================================================================
+volatile uint16_t _SWITCH_STATS =0;
+
 volatile float32_t prev_feedbackVolt=0;
 volatile float32_t prev_controlOUT=0;
 volatile float32_t err =0;
@@ -153,7 +155,7 @@ volatile float32_t A0=Kp*((fpi*dT/2)-1);
 
 interrupt void adcISR(void)
 {
-
+    _SWITCH_STATS=(uint16_t)_GET_SWITCH_STATS_ADC;
 
 //    adcRes = (uint16_t) ((_GETRES_SOC0 + _GETRES_SOC1 + _GETRES_SOC2
 //            + _GETRES_SOC3) * 0.25f);
