@@ -96,15 +96,14 @@ void setupADC(void)
     ADC_setVREF(ADCA_BASE, ADC_REFERENCE_INTERNAL, ADC_REFERENCE_3_3V);
     ADC_setPrescaler(ADCA_BASE, ADC_CLK_DIV_2_0); // ADC clock prescaler = CPUCLK/4
 
-
     ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER0, ADC_SOC_TRIG, ADC_CHANNEL_IN,
-                 ACQPS_SYS_CLKS);
+    ACQPS_SYS_CLKS);
     ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER1, ADC_SOC_TRIG, ADC_CHANNEL_IN,
-                 ACQPS_SYS_CLKS);
+    ACQPS_SYS_CLKS);
     ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER2, ADC_SOC_TRIG, ADC_CHANNEL_IN,
-                 ACQPS_SYS_CLKS);
+    ACQPS_SYS_CLKS);
     ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER3, ADC_SOC_TRIG, ADC_CHANNEL_IN,
-                 ACQPS_SYS_CLKS);
+    ACQPS_SYS_CLKS);
 //        ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER4, ADC_SOC_TRIG, ADC_CHANNEL_IN, ACQPS_SYS_CLKS);
 //
 //        ADC_setBurstModeConfig(ADCA_BASE, ADC_SOC_TRIG,5);
@@ -115,23 +114,21 @@ void setupADC(void)
     /*
      *==========================================
      */
-    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER4, ADC_SOC_TRIG, ADC_SWITCH_CHANNEL_IN,
-                 10);
-    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER5, ADC_SOC_TRIG, ADC_SWITCH_CHANNEL_IN,
-                 10);
-    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER6, ADC_SOC_TRIG, ADC_SWITCH_CHANNEL_IN,
-                 10);
-    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER7, ADC_SOC_TRIG, ADC_SWITCH_CHANNEL_IN,
-                 10);
+    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER4, ADC_SOC_TRIG,
+                 ADC_SWITCH_CHANNEL_IN, 10);
+    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER5, ADC_SOC_TRIG,
+                 ADC_SWITCH_CHANNEL_IN, 10);
+    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER6, ADC_SOC_TRIG,
+                 ADC_SWITCH_CHANNEL_IN, 10);
+    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER7, ADC_SOC_TRIG,
+                 ADC_SWITCH_CHANNEL_IN, 10);
 
     /*
      *========================================
      */
     GPIO_setPadConfig(63, GPIO_PIN_TYPE_PULLUP); // disable pull up
 
-
     ADC_enableConverter(ADCA_BASE);             // Power up the ADC
-
 
     DEVICE_DELAY_US(1000);      // Wait 1 ms after power-up before using the ADC
 
@@ -278,5 +275,53 @@ void setupInverterPWM(uint32_t base1, uint32_t base2, uint16_t pwm_period_ticks,
     GPIO_setDirectionMode(INV_PWM2_L_GPIO, GPIO_DIR_MODE_OUT);
     GPIO_setPadConfig(INV_PWM2_L_GPIO, GPIO_PIN_TYPE_STD); // disable pull up
     GPIO_setPinConfig(INV_PWM2_L_GPIO_PIN_CONFIG);
+
+}
+
+/*
+ * SWITCH ADC KEYBOARD
+ */
+uint16_t previous_State = 0;
+uint16_t current_State = 0;
+
+inline uint16_t _GET_SWITCH_VAL()
+{
+    uint16_t SA0, SA1, SA2, temp, _sw_Stats;
+
+    SA0 = (uint16_t) _GET_SWITCH_A0;
+    SA1 = (uint16_t) _GET_SWITCH_A1;
+    SA2 = (uint16_t) _GET_SWITCH_A2;
+
+    temp = (SA0 + SA1 + SA2) / 3;
+
+    if (temp >= SW_A_Val - _SWITCH_ADC_RANGE
+            && temp <= SW_A_Val + _SWITCH_ADC_RANGE)
+    {
+        current_State = 5;
+    }
+    else if (temp >= SW_B_Val - _SWITCH_ADC_RANGE
+            && temp <= SW_B_Val + _SWITCH_ADC_RANGE)
+    {
+        current_State = 10;
+    }
+    else if (temp >= SW_C_Val - _SWITCH_ADC_RANGE
+            && temp <= SW_C_Val + _SWITCH_ADC_RANGE)
+    {
+        current_State = 15;
+    }
+    else
+        current_State = 0;
+
+    if (previous_State == 0)
+    {
+        _sw_Stats = current_State;
+    }
+    else
+        _sw_Stats = 0;
+
+    previous_State = current_State;
+    return _sw_Stats;
+    //if return is 6, its switch one pressed and valid
+    //if return is 11, its switch two pressed and valid... and so on
 
 }

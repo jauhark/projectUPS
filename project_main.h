@@ -29,6 +29,17 @@
 interrupt void inverterISR(void);
 interrupt void adcISR(void);
 
+/*
+ * Macros
+ */
+#define SAMPLENO 500
+/*
+ * Variables
+ */
+uint16_t adcRes=0;  //stores adc read result
+uint16_t mainsVoltage[SAMPLENO] ={0}; //array to log adcData
+uint16_t SW_PRESSED_VAL=0;  //stores switch state value, updated every pwm cycle
+
 //================================================================
 
 
