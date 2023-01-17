@@ -36,8 +36,8 @@ interrupt void adcISR(void);
 /*
  * Variables
  */
-uint16_t adcRes=0;  //stores adc read result
-uint16_t mainsVoltage[SAMPLENO] ={0}; //array to log adcData
+int16_t adcRes=0;  //stores adc read result
+int16_t mainsVoltage[SAMPLENO] ={0}; //array to log adcData
 uint16_t SW_PRESSED_VAL=0;  //stores switch state value, updated every pwm cycle
 
 //================================================================

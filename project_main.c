@@ -74,7 +74,8 @@ interrupt void inverterISR(void)
 
 interrupt void adcISR(void)
 {
-    adcRes=(float32_t)_GETRES_SOC0;
+    adcRes=(int16_t)_GETRES_SOC0-2047;
+
 
 #if DEBUG==1
     /*
@@ -107,7 +108,7 @@ interrupt void adcISR(void)
         {
             if (k < SAMPLENO)
             {
-                mainsVoltage[k]=(int16_t)adcRes;
+                mainsVoltage[k]=(int16_t)(adcRes);
                 k++;
             }
 
@@ -117,7 +118,6 @@ interrupt void adcISR(void)
                 logData=0;
             }
         }
-
 
     }
     /*
