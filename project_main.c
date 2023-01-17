@@ -152,19 +152,6 @@ volatile float32_t A1=Kp*((fpi*dT/2)+1);
 volatile float32_t A0=Kp*((fpi*dT/2)-1);
 
 
-uint16_t BT1_status=0;
-uint16_t BT1_FLAG=0;
-
-inline uint16_t checkBT1Pressed(){
-    BT1_FLAG=0;
-    BT1_status=(uint16_t)_GET_SWITCH_STATS_ADC;
-    if(BT1_status<=1600 && BT1_status >=1400)BT1_FLAG=1;
-    else BT1_FLAG=0;
-
-    clearInterruptADC();
-    return BT1_FLAG;
-}
-
 
 interrupt void adcISR(void)
 {
@@ -177,16 +164,12 @@ interrupt void adcISR(void)
 
     refSig= (float32_t)(-1.0f*invSine*325.27f);
 
-    adcRes=(float32_t)(((float32_t)_GETRES_SOC0)*3.2f)/(4095.0f);
+//    adcRes=(float32_t)(((float32_t)_GETRES_SOC0)*3.2f)/(4095.0f);
+    adcRes=(float32_t)_GETRES_SOC0;
+
 
     feedbackVolt=(float32_t)((adcRes-1.6f)*(1.0f/0.0032f));
 
-    err=(refSig-feedbackVolt);
-//
-      controlOUT=invDutyPU;
-////    controlOUT=-Kp*err;
-//    if(controlOUT>0.95)controlOUT=0.95;
-//    else if(controlOUT<-0.95)controlOUT=-0.95;
 
 
 
@@ -198,24 +181,13 @@ interrupt void adcISR(void)
     volatile static uint16_t reset_ = 0;
 
     //=======================================
-    static uint16_t count = 0;
 
-
-    while (checkBT1Pressed()==1)
-    {
-        count++;
-        if (count == 10)
-        {
-            //TODO after switch press make switch ONE
-            reset_ = 1;
-            GPIO_togglePin(LED_PIN);
-            kinit=0;
-
-        }
-        if (count > 10)
-            count = 20;
+    if(_GET_SWITCH_A()==1){
+        kinit=0;
+        reset_=1;
+        GPIO_togglePin(LED_PIN);
     }
-    count = 0;
+
     //=======================================
     if (reset_ == 1)
     {
@@ -234,7 +206,7 @@ interrupt void adcISR(void)
 //                a[k]=(uint16_t)(1000.0f*adcRes);
 //                mainsVoltage[k]=(int16_t)((adcRes-1.6f)*(1.0f/0.0032f));
 //                genVoltage[k]=(int16_t)(-1.0f*invSine*325.27f);
-                mainsVoltage[k]=(int16_t)feedbackVolt;
+                mainsVoltage[k]=(int16_t)adcRes;
                 genVoltage[k]=(int16_t)refSig;
                 controlVoltage[k]=(int16_t)(1000.0f*controlOUT);
                 pureControlVoltage[k]=controlOUT;

@@ -33,7 +33,31 @@ interrupt void adcISR();
 #define _GETRES_SOC3 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER3)
 
 //ADC BASED SWITCH
-#define _GET_SWITCH_STATS_ADC ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER4)
+#define _GET_SWITCH_A0 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER4)
+#define _GET_SWITCH_A1 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER5)
+#define _GET_SWITCH_A2 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER6)
+#define _GET_SWITCH_A3 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER7)
+#define _SWITCH_A_UPPERVAL 1600
+#define _SWITCH_A_LOWVAL    1400
+
+
+
+
+inline uint16_t _GET_SWITCH_A(){
+    uint16_t SA0, SA1, SA2, SA3;
+    uint16_t flag=0;
+
+    SA0=(uint16_t)_GET_SWITCH_A0;
+    SA1=(uint16_t)_GET_SWITCH_A1;
+    SA2=(uint16_t)_GET_SWITCH_A2;
+    SA3=(uint16_t)_GET_SWITCH_A3;
+    if((SA0>=_SWITCH_A_LOWVAL && SA0<=_SWITCH_A_UPPERVAL)&&
+            (SA1>=_SWITCH_A_LOWVAL && SA1<=_SWITCH_A_UPPERVAL)&&
+            (SA2>=_SWITCH_A_LOWVAL && SA2<=_SWITCH_A_UPPERVAL)&&
+            (SA3>=_SWITCH_A_LOWVAL && SA3<=_SWITCH_A_UPPERVAL))flag=1;
+    else flag=0;
+    return flag;
+}
 
 //----------------------------------------------------------------------
 //TODO updateInverterPWM()

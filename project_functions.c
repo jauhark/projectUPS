@@ -116,8 +116,13 @@ void setupADC(void)
      *==========================================
      */
     ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER4, ADC_SOC_TRIG, ADC_SWITCH_CHANNEL_IN,
-                   5);
-
+                 10);
+    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER5, ADC_SOC_TRIG, ADC_SWITCH_CHANNEL_IN,
+                 10);
+    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER6, ADC_SOC_TRIG, ADC_SWITCH_CHANNEL_IN,
+                 10);
+    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER7, ADC_SOC_TRIG, ADC_SWITCH_CHANNEL_IN,
+                 10);
 
     /*
      *========================================
