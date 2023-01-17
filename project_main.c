@@ -152,10 +152,22 @@ volatile float32_t A1=Kp*((fpi*dT/2)+1);
 volatile float32_t A0=Kp*((fpi*dT/2)-1);
 
 
+uint16_t BT1_status=0;
+uint16_t BT1_FLAG=0;
+
+inline uint16_t checkBT1Pressed(){
+    BT1_FLAG=0;
+    BT1_status=(uint16_t)_GET_SWITCH_STATS_ADC;
+    if(BT1_status<=1600 && BT1_status >=1400)BT1_FLAG=1;
+    else BT1_FLAG=0;
+
+    clearInterruptADC();
+    return BT1_FLAG;
+}
+
 
 interrupt void adcISR(void)
 {
-    _SWITCH_STATS=(uint16_t)_GET_SWITCH_STATS_ADC;
 
 //    adcRes = (uint16_t) ((_GETRES_SOC0 + _GETRES_SOC1 + _GETRES_SOC2
 //            + _GETRES_SOC3) * 0.25f);
@@ -187,7 +199,9 @@ interrupt void adcISR(void)
 
     //=======================================
     static uint16_t count = 0;
-    while (GPIO_readPin(SWITCH_GPIO) == 0)
+
+
+    while (checkBT1Pressed()==1)
     {
         count++;
         if (count == 10)

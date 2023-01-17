@@ -116,12 +116,13 @@ void setupADC(void)
      *==========================================
      */
     ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER4, ADC_SOC_TRIG, ADC_SWITCH_CHANNEL_IN,
-                   ACQPS_SYS_CLKS);
+                   5);
 
 
     /*
      *========================================
      */
+    GPIO_setPadConfig(63, GPIO_PIN_TYPE_PULLUP); // disable pull up
 
 
     ADC_enableConverter(ADCA_BASE);             // Power up the ADC

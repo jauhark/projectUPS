@@ -32,6 +32,7 @@ interrupt void adcISR();
 #define _GETRES_SOC2 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER2)
 #define _GETRES_SOC3 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER3)
 
+//ADC BASED SWITCH
 #define _GET_SWITCH_STATS_ADC ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER4)
 
 //----------------------------------------------------------------------
