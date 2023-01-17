@@ -1,0 +1,9 @@
+introduction to power supply topologies
+https://youtu.be/C8pCQ5AqJwA
+
+https://training.ti.com/fundamentals-power-supply-design
+
+steady state indctor principle
+https://youtube.com/clip/UgkxZ3b39bmheWxjOESZE6ggkKDZHAGXUJvn
+
+https://training.ti.com/c2000-digital-power-control-and-implementation

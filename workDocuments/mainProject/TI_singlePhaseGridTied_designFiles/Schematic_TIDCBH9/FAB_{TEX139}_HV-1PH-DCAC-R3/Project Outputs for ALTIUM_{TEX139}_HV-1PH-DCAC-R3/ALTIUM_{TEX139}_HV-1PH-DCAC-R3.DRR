@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+NCDrill File Report For: ALTIUM_{TEX139}_HV-1PH-DCAC-R3.PcbDoc   10/23/2015  11:49:48 AM
+---------------------------------------------------------------------------
+
+Layer Pair : Top Layer to Bottom Layer
+ASCII RoundHoles File : ALTIUM_{TEX139}_HV-1PH-DCAC-R3-RoundHoles.TXT
+ASCII SlotHoles File : ALTIUM_{TEX139}_HV-1PH-DCAC-R3-SlotHoles.TXT
+
+Tool         Hole Size           Hole Type     Hole Count Plated       Tool Travel
+---------------------------------------------------------------------------
+T1        14mil (0.3556mm)         Round          390              126.30 Inch (3208.02 mm)
+T2        28mil (0.7112mm)         Round          11               19.34 Inch (491.24 mm)
+T3        31.5mil (0.8001mm)       Round          6                8.25 Inch (209.61 mm)
+T4        33.07mil (0.83998mm)     Round          2                2.29 Inch (58.10 mm)
+T5        35.43mil (0.89992mm)     Round          102              46.26 Inch (1175.03 mm)
+T6        39.37mil (1mm)           Round          41               35.10 Inch (891.59 mm)
+T7        39.37mil (1mm)           Slot           3                1.24 Inch (31.55 mm)
+T8        43mil (1.0922mm)         Round          3                0.20 Inch (5.04 mm)
+T9        43.31mil (1.10007mm)     Round          2                0.31 Inch (7.82 mm)
+T10       47.24mil (1.1999mm)      Round          9                9.78 Inch (248.38 mm)
+T11       51.18mil (1.29997mm)     Round          19               27.07 Inch (687.54 mm)
+T12       55.12mil (1.40005mm)     Round          18               15.28 Inch (388.21 mm)
+T13       59.06mil (1.50012mm)     Round          2                1.12 Inch (28.32 mm)
+T14       62.99mil (1.59995mm)     Round          3                0.60 Inch (15.24 mm)
+T15       70mil (1.778mm)          Round          3                0.71 Inch (18.03 mm)
+T16       78.74mil (2mm)           Round          14               11.84 Inch (300.71 mm)
+T17       80mil (2.032mm)          Round          4                2.60 Inch (66.04 mm)
+T18       90.55mil (2.29997mm)     Round          2                0.39 Inch (10.00 mm)
+T19       98.43mil (2.50012mm)     Round          2                0.79 Inch (20.00 mm)
+T20       110.24mil (2.8001mm)     Round          8                7.20 Inch (182.82 mm)
+T21       137.8mil (3.50012mm)     Round          6                34.47 Inch (875.55 mm)
+T22       50mil (1.27mm)           Round          4         NPTH   3.85 Inch (97.79 mm)
+T23       180mil (4.572mm)         Round          2         NPTH   1.57 Inch (39.88 mm)
+---------------------------------------------------------------------------
+Totals                                            656              356.56 Inch (9056.51 mm)
+
+Total Processing Time (hh:mm:ss) : 00:00:00

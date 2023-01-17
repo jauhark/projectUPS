@@ -1,0 +1,3 @@
+Layer Pairs Export File for PCB: C:\1_2015_TEMP\TEX139\DAT\Final\ALTIUM_{TEX139}_HV-1PH-DCAC-R3.PcbDoc
+LayersSetName=Top_Bot_Thru_Holes|DrillFile=altium_{tex139}_hv-1ph-dcac-r3-roundholes.txt|DrillLayers=gtl,gbl
+LayersSetName=Top_Bot_Slot_Holes|DrillFile=altium_{tex139}_hv-1ph-dcac-r3-slotholes.txt|DrillLayers=gtl,gbl

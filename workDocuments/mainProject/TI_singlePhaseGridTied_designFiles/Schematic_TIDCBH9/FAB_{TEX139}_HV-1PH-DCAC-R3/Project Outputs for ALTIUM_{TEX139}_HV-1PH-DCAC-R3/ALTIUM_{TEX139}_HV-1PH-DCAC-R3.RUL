@@ -1,0 +1,6 @@
+DRC Rules Export File for PCB: C:\1_2015_TEMP\TEX139\DAT\Final\ALTIUM_{TEX139}_HV-1PH-DCAC-R3.PcbDoc
+RuleKind=ShortCircuit|RuleName=ShortCircuit|Scope=Board|Allowed=0
+RuleKind=SolderMaskExpansion|RuleName=SolderMaskExpansion|Scope=Board|Minimum=3.00
+RuleKind=Width|RuleName='Default' PADS rule_13|Scope=Board|Minimum=6.00
+RuleKind=Clearance|RuleName='Default' PADS rule_15|Scope=Board|Minimum=6.00
+RuleKind=Clearance|RuleName='Default' PADS rule_18|Scope=Board|Minimum=8.00

@@ -1,0 +1,23 @@
+Output: Gerber Files
+Type  : Gerber
+From  : Variant [[No Variations]] of Project [ALTIUM_{TEX139}_HV-1PH-DCAC-R3.PrjPcb]
+   Generated File[ALTIUM_{TEX139}_HV-1PH-DCAC-R3.GTL]
+   Generated File[ALTIUM_{TEX139}_HV-1PH-DCAC-R3.GBL]
+   Generated File[ALTIUM_{TEX139}_HV-1PH-DCAC-R3.GTO]
+   Generated File[ALTIUM_{TEX139}_HV-1PH-DCAC-R3.GTP]
+   Generated File[ALTIUM_{TEX139}_HV-1PH-DCAC-R3.GTS]
+   Generated File[ALTIUM_{TEX139}_HV-1PH-DCAC-R3.GBS]
+   Generated File[ALTIUM_{TEX139}_HV-1PH-DCAC-R3.GBP]
+   Generated File[ALTIUM_{TEX139}_HV-1PH-DCAC-R3.GBO]
+   Generated File[ALTIUM_{TEX139}_HV-1PH-DCAC-R3.GM5]
+   Generated File[ALTIUM_{TEX139}_HV-1PH-DCAC-R3.GM9]
+   Generated File[ALTIUM_{TEX139}_HV-1PH-DCAC-R3.GD1]
+   Generated File[ALTIUM_{TEX139}_HV-1PH-DCAC-R3.RUL]
+   Generated File[ALTIUM_{TEX139}_HV-1PH-DCAC-R3.EXTREP]
+   Generated File[ALTIUM_{TEX139}_HV-1PH-DCAC-R3.REP]
+
+
+Files Generated   : 14
+Documents Printed : 0
+
+Finished Output Generation At 11:52:03 AM On 10/23/2015
