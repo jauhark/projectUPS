@@ -26,19 +26,17 @@ void setupInverterPWM(uint32_t, uint32_t, uint16_t,
 
 interrupt void inverterISR();
 interrupt void adcISR();
-//
-/*
- * LOW PASS FILTER IMPLEMENTATION
- */
-
-
 /*
  * ADC Read result for signal reading
  */
-#define _GETRES_SOC0 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER0)
+//#define _GETRES_SOC0 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER0)
+#define _GETRES_IN_Idc ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER2);
+
+#define _GETRES_SOC0 ADC_readPPBResult(ADCARESULT_BASE, ADC_PPB_NUMBER1)
+
 #define _GETRES_SOC1 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER1)
-#define _GETRES_SOC2 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER2)
-#define _GETRES_SOC3 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER3)
+//#define _GETRES_SOC2 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER2)
+//#define _GETRES_SOC3 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER3)
 
 #define ADC_HALFPT 4096/2
 

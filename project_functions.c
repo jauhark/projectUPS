@@ -75,7 +75,7 @@ void setupADC(void)
 //
 //    ADC_setPrescaler(ADCA_BASE, ADC_CLK_DIV_2_0);
 //
-    ASysCtl_setAnalogReferenceInternal(ASYSCTL_VREFHIA);
+//    ASysCtl_setAnalogReferenceInternal(ASYSCTL_VREFHIA);
 //
 //    //power up the ADC
 //    ADC_enableConverter(ADCA_BASE);
@@ -94,16 +94,18 @@ void setupADC(void)
 
     ADC_disableConverter(ADCA_BASE);
     ADC_setVREF(ADCA_BASE, ADC_REFERENCE_INTERNAL, ADC_REFERENCE_3_3V);
+//    ADC_setVREF(ADCA_BASE, ADC_REFERENCE_EXTERNAL);
     ADC_setPrescaler(ADCA_BASE, ADC_CLK_DIV_2_0); // ADC clock prescaler = CPUCLK/4
 
-    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER0, ADC_SOC_TRIG, ADC_CHANNEL_IN,
+    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER0, ADC_SOC_TRIG, ADC_CHANNEL_IN_Vmains,
     ACQPS_SYS_CLKS);
-    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER1, ADC_SOC_TRIG, ADC_CHANNEL_IN,
+
+    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER2, ADC_SOC_TRIG, ADC_CHANNEL_IN_Idc,
     ACQPS_SYS_CLKS);
-    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER2, ADC_SOC_TRIG, ADC_CHANNEL_IN,
-    ACQPS_SYS_CLKS);
-    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER3, ADC_SOC_TRIG, ADC_CHANNEL_IN,
-    ACQPS_SYS_CLKS);
+//    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER2, ADC_SOC_TRIG, ADC_CHANNEL_IN,
+//    ACQPS_SYS_CLKS);
+//    ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER3, ADC_SOC_TRIG, ADC_CHANNEL_IN,
+//    ACQPS_SYS_CLKS);
 //        ADC_setupSOC(ADCA_BASE, ADC_SOC_NUMBER4, ADC_SOC_TRIG, ADC_CHANNEL_IN, ACQPS_SYS_CLKS);
 //
 //        ADC_setBurstModeConfig(ADCA_BASE, ADC_SOC_TRIG,5);
@@ -128,6 +130,14 @@ void setupADC(void)
      */
     GPIO_setPadConfig(63, GPIO_PIN_TYPE_PULLUP); // disable pull up
 
+    /*
+     * SETTING UP PPB
+     */
+    ADC_setupPPB(ADCA_BASE, ADC_PPB_NUMBER1, ADC_SOC_NUMBER0);
+//    ADC_enablePPBEvent(ADCA_BASE, ADC_PPB_NUMBER1, evtFlags);
+    ADC_setPPBReferenceOffset(ADCA_BASE, ADC_PPB_NUMBER1, 2047);
+    ADC_setPPBTripLimits(ADCA_BASE, ADC_PPB_NUMBER1, 1200, -1200);
+//    ADC_enablePPBEvent(ADCA_BASE, ADC_PPB_NUMBER1, ADC_EVT_ZERO);
     ADC_enableConverter(ADCA_BASE);             // Power up the ADC
 
     DEVICE_DELAY_US(1000);      // Wait 1 ms after power-up before using the ADC

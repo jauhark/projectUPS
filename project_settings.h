@@ -49,7 +49,8 @@
 #define INV_PWM2_L_GPIO_PIN_CONFIG  GPIO_3_EPWM2B
 
 #define ACQPS_SYS_CLKS    50  //ADC ACQUISITION CLOCK CYCLES
-#define ADC_CHANNEL_IN           ADC_CH_ADCIN4  //ADC_A4
+#define ADC_CHANNEL_IN_Vmains          ADC_CH_ADCIN4  //ADC_A4 voltage measurement
+#define ADC_CHANNEL_IN_Idc      ADC_CH_ADCIN8   //CurrentMeasuremetn
 #define ADC_SOC_TRIG             ADC_TRIGGER_EPWM1_SOCA    //adc soc trigger by epwm interrupt
 
 #define INV_ISR_TRIG_PWM_BASE           EPWM1_BASE         //interrupt module base
@@ -59,7 +60,8 @@
 //3 button switch settings
 #define ADC_SWITCH_CHANNEL_IN   ADC_CH_ADCIN6   //ADCINA6
 //LED output for indication
-#define LED_PIN 34
+#define LED_PIN 34  //onboard led
+#define LED_PIN_ZCROSS_DETECTION    23
 
 
 //================================================================
