@@ -1,4 +1,10 @@
 eclipse.preferences.version=1
+encoding//RELEASE/device/driverlib/ccs/Debug/subdir_rules.mk=UTF-8
+encoding//RELEASE/device/driverlib/ccs/Debug/subdir_vars.mk=UTF-8
+encoding//RELEASE/device/driverlib/ccs/Release/subdir_rules.mk=UTF-8
+encoding//RELEASE/device/driverlib/ccs/Release/subdir_vars.mk=UTF-8
+encoding//RELEASE/device/driverlib/subdir_rules.mk=UTF-8
+encoding//RELEASE/device/driverlib/subdir_vars.mk=UTF-8
 encoding//RELEASE/device/subdir_rules.mk=UTF-8
 encoding//RELEASE/device/subdir_vars.mk=UTF-8
 encoding//RELEASE/libraries/DCL/source/subdir_rules.mk=UTF-8

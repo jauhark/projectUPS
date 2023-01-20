@@ -60,8 +60,38 @@
 //3 button switch settings
 #define ADC_SWITCH_CHANNEL_IN   ADC_CH_ADCIN6   //ADCINA6
 //LED output for indication
-#define LED_PIN 34  //onboard led
+#define LED_PIN_SWITCH 34  //onboard led
 #define LED_PIN_ZCROSS_DETECTION    23
+
+
+/*
+ * SFRA SETTINGS
+ */
+#define SFRA_ISR_FREQ   INV_PWM_SWITCHING_FREQUENCY/CNTRL_ISR_FREQ_RATIO
+#define SFRA_FREQ_START 2
+#define SFRA_FREQ_STEP_MULTIPLY (float32_t)1.105
+#define SFRA_AMPLITUDE (float32_t)0.005
+#define SFRA_FREQ_LENGTH 100
+
+/* SFRA GUI SETTINGS */
+#define SFRA_GUI_SCI_BASE SCIA_BASE
+#define SFRA_GUI_VBUS_CLK 50000000
+#define SFRA_GUI_SCI_BAUDRATE   57600
+#define SFRA_GUI_SCIRX_GPIO 28
+#define SFRA_GUI_SCITX_GPIO 29
+#define SFRA_GUI_SCIRX_GPIO_PIN_CONFIG GPIO_28_SCIA_RX
+#define SFRA_GUI_SCITX_GPIO_PIN_CONFIG GPIO_29_SCIA_TX
+
+/* LED EN FOR SFRA COMM*/
+#define SFRA_GUI_LED_INDICATOR 1
+#define SFRA_GUI_LED_GPIO   LED_PIN_SWITCH
+#define SFRA_GUI_LED_GPIO_PIN_CONFIG GPIO_31_GPIO31
+
+
+/*
+ * SFRA SETTINGS END
+ */
+
 
 
 //================================================================

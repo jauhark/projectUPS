@@ -151,6 +151,7 @@ void SFRA_GUI_config(volatile uint32_t sci_base,
     // No loopback
     //
     SCI_disableLoopback(sci_base);
+//    SCI_enableLoopback(sci_base);
 
     SCI_enableInterrupt(sci_base, SCI_INT_RXRDY_BRKDT | SCI_INT_TXRDY);
 

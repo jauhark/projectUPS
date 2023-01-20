@@ -108,6 +108,8 @@ project_main.obj: D:/WORKSPACE/TI2/projectUPS/libraries/utilities/dlog/dlog_4ch.
 project_main.obj: D:/WORKSPACE/TI2/projectUPS/libraries/utilities/emavg/emavg.h
 project_main.obj: D:/WORKSPACE/TI2/projectUPS/libraries/utilities/rampgen/rampgen.h
 project_main.obj: D:/WORKSPACE/TI2/projectUPS/libraries/spll/spll_1ph_sogi.h
+project_main.obj: D:/WORKSPACE/TI2/projectUPS/libraries/sfra/sfra_f32.h
+project_main.obj: D:/WORKSPACE/TI2/projectUPS/libraries/sfra/sfra_gui_scicomms_driverlib.h
 
 ../project_main.c:
 
@@ -324,4 +326,8 @@ D:/WORKSPACE/TI2/projectUPS/libraries/utilities/emavg/emavg.h:
 D:/WORKSPACE/TI2/projectUPS/libraries/utilities/rampgen/rampgen.h:
 
 D:/WORKSPACE/TI2/projectUPS/libraries/spll/spll_1ph_sogi.h:
+
+D:/WORKSPACE/TI2/projectUPS/libraries/sfra/sfra_f32.h:
+
+D:/WORKSPACE/TI2/projectUPS/libraries/sfra/sfra_gui_scicomms_driverlib.h:
 

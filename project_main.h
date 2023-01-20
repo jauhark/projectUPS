@@ -24,6 +24,15 @@
 #include "DCLF32.h"
 //#include "DCLF32.h"
 
+/*
+ * SFRA CODE
+ */
+#include "sfra_f32.h"
+#include "sfra_gui_scicomms_driverlib.h"
+/*
+ * END
+ */
+
 
 
 interrupt void inverterISR(void);
@@ -33,14 +42,32 @@ interrupt void adcISR(void);
  * Macros
  */
 #define SAMPLENO 500
+
 /*
- * Variables
+ * Sfra Variables
+ */
+SFRA_F32 sfra1;
+float32_t plantMagVect[SFRA_FREQ_LENGTH];
+float32_t plantPhaseVect[SFRA_FREQ_LENGTH];
+float32_t olMagVect[SFRA_FREQ_LENGTH];
+float32_t olPhaseVect[SFRA_FREQ_LENGTH];
+float32_t clMagVect[SFRA_FREQ_LENGTH] ;
+float32_t clPhaseVect[SFRA_FREQ_LENGTH];
+float32_t freqVect[SFRA_FREQ_LENGTH];
+
+extern long FPUsinTable[];
+/*
+ * SPWM reference generation Variables
  */
 RAMPGEN rgen1;
 float32_t invSine=0;
 float32_t invDutyPU=0;
 float32_t invModIndex=0.7;
 
+
+/*
+ * Variables
+ */
 int16_t adcRes=0;  //stores adc read result
 int16_t adcResPrev=0;
 

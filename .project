@@ -24,6 +24,13 @@
 		<nature>org.eclipse.cdt.core.ccnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>sfra_gui_scicomms_driverlib.h</name>
+			<type>1</type>
+			<locationURI>PARENT-4-C2000WARE_DLIB_ROOT/libraries/sfra/gui/include/sfra_gui_scicomms_driverlib.h</locationURI>
+		</link>
+	</linkedResources>
 	<variableList>
 		<variable>
 			<name>C2000WARE_DLIB_ROOT</name>
