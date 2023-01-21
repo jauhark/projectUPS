@@ -6,7 +6,7 @@ SHELL = cmd.exe
 
 # Add inputs and outputs from these tool invocations to the build variables 
 LIB_SRCS += \
-../libraries/sfra/sfra_f32_tmu_eabi.lib 
+../libraries/sfra/sfra_f32_eabi.lib 
 
 C_SRCS += \
 ../libraries/sfra/sfra_gui_scicomms_driverlib.c 

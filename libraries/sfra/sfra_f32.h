@@ -7,8 +7,8 @@
 // AUTHOR: Manish Bhardwaj (C2000 Systems Solutions, Houston , TX)
 //
 //#############################################################################
-// $TI Release: C2000 Software Frequency Response Analyzer Library v1.50.01.00 $
-// $Release Date: Wed Jun 29 01:35:53 CDT 2022 $
+// $TI Release: C2000 Software Frequency Response Analyzer Library v1.50.02.00 $
+// $Release Date: Fri Dec 16 18:13:37 CST 2022 $
 // $Copyright:
 // Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //

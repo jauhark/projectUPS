@@ -165,9 +165,11 @@ static inline void setupInterrupt(void)
     clearInterruptADC();
     clearInterruptEPWM();
 
+    EALLOW;
     EINT;
 // Enable Global interrupt INTM
     ERTM;
+    EDIS;
 // Enable Global realtime interrupt DBGM
 }
 

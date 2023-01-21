@@ -11,8 +11,8 @@
 
 //================================================================
 //DEBUG VERSION IF DEBUG=1
-#define DEBUG 1
-//#define DEBUG 0
+//#define DEBUG 1
+#define DEBUG 0
 
 
 #include "project_functions.h"

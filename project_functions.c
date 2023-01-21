@@ -33,13 +33,20 @@ void setupDevice(void)
 
     // initialize CPU timers
 
-    // Initialize timer period to maximum
-    CPUTimer_setPeriod(CPUTIMER0_BASE, DEVICE_SYSCLK_FREQ / 1000); // 1Khz
-    // Initialize timer period to maximum
-    CPUTimer_setPeriod(CPUTIMER1_BASE, DEVICE_SYSCLK_FREQ / 100); // 100Hz
-    // Initialize timer period to maximum
-    CPUTimer_setPeriod(CPUTIMER2_BASE, DEVICE_SYSCLK_FREQ / 10); // 10Hz
-    // Initialize pre-scale counter to divide by 1 (SYSCLKOUT)
+
+    //
+    // Initialize timer period to 100Hz
+    //
+    CPUTimer_setPeriod(CPUTIMER0_BASE, DEVICE_SYSCLK_FREQ / 100 );
+    //
+    // Initialize timer period to 10Hz
+    //
+    CPUTimer_setPeriod(CPUTIMER1_BASE, DEVICE_SYSCLK_FREQ / 10 );
+    //
+    // Initialize timer period to 10KHz
+    //
+    CPUTimer_setPeriod(CPUTIMER2_BASE, DEVICE_SYSCLK_FREQ / 10000 );   // Initialize pre-scale counter to divide by 1 (SYSCLKOUT)
+
     CPUTimer_setPreScaler(CPUTIMER0_BASE, 0);
     // Initialize pre-scale counter to divide by 1 (SYSCLKOUT)
     CPUTimer_setPreScaler(CPUTIMER1_BASE, 0);

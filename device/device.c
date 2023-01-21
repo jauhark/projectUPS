@@ -5,8 +5,8 @@
 // TITLE:  Device setup for examples.
 //
 //#############################################################################
-// $TI Release: HV_1PH_DCAC v3.00.03.00 $
-// $Release Date: Wed Jun 29 01:35:52 CDT 2022 $
+// $TI Release: C2000 Software Frequency Response Analyzer Library v1.50.02.00 $
+// $Release Date: Fri Dec 16 18:13:37 CST 2022 $
 // $Copyright:
 // Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
@@ -19,12 +19,11 @@
 //
 #include "device.h"
 #include "driverlib.h"
-#ifdef __cplusplus
-using std::memcpy;
-#endif
 
-#define PASS 0
-#define FAIL 1
+// comment below line if not using DC-DC
+//#define USE_DC_DC
+// comment below line if not using INTOSC
+//#define USE_INTOSC
 
 uint32_t Example_PassCount = 0;
 uint32_t Example_Fail = 0;
@@ -36,6 +35,9 @@ uint32_t Example_Fail = 0;
 // and enabling the clocks to the peripherals.
 // The function also configures the GPIO pins 22 and 23 in digital mode.
 // To configure these pins as analog pins, use the function GPIO_setAnalogMode
+//
+// Note : In case XTAL is used as the PLL source, it is recommended to invoke
+// the Device_verifyXTAL() before configuring PLL
 //
 //*****************************************************************************
 void Device_init(void)
@@ -55,11 +57,8 @@ void Device_init(void)
     //
     memcpy(&RamfuncsRunStart, &RamfuncsLoadStart, (size_t)&RamfuncsLoadSize);
 
-    //
-    // Call Flash Initialization to setup flash waitstates. This function must
-    // reside in RAM.
-    //
-    Flash_initModule(FLASH0CTRL_BASE, FLASH0ECC_BASE, DEVICE_FLASH_WAITSTATES);
+    memcpy(&isrcodefuncsRunStart, &isrcodefuncsLoadStart,
+           (size_t)&isrcodefuncsLoadSize);
 #endif
 
     //
@@ -70,7 +69,7 @@ void Device_init(void)
     //
     // Make sure the LSPCLK divider is set to the default (divide by 4)
     //
-    SysCtl_setLowSpeedClock(SYSCTL_LSPCLK_PRESCALE_4);
+    SysCtl_setLowSpeedClock(SYSCTL_LSPCLK_PRESCALE_2);
 
     //
     // These asserts will check that the #defines for the clock rates in
@@ -82,16 +81,12 @@ void Device_init(void)
     ASSERT(SysCtl_getClock(DEVICE_OSCSRC_FREQ) == DEVICE_SYSCLK_FREQ);
     ASSERT(SysCtl_getLowSpeedClock(DEVICE_OSCSRC_FREQ) == DEVICE_LSPCLK_FREQ);
 
-#ifndef _FLASH
+#ifdef _FLASH
     //
-    // Call Device_cal function when run using debugger
-    // This function is called as part of the Boot code. The function is called
-    // in the Device_init function since during debug time resets, the boot code
-    // will not be executed and the gel script will reinitialize all the
-    // registers and the calibrated values will be lost.
-    // Sysctl_deviceCal is a wrapper function for Device_Cal
+    // Call Flash Initialization to setup flash waitstates. This function must
+    // reside in RAM.
     //
-    SysCtl_deviceCal();
+    Flash_initModule(FLASH0CTRL_BASE, FLASH0ECC_BASE, DEVICE_FLASH_WAITSTATES);
 #endif
 
     //
@@ -99,24 +94,24 @@ void Device_init(void)
     //
     Device_enableAllPeripherals();
 
-    //
-    //Disable DC DC in Analog block
-    //
-    ASysCtl_disableDCDC();
 
-    //
-    //Configure GPIO in Push Pull,Output Mode
-    //
-    GPIO_setPadConfig(22U, GPIO_PIN_TYPE_STD);
-    GPIO_setPadConfig(23U, GPIO_PIN_TYPE_STD);
-    GPIO_setDirectionMode(22U, GPIO_DIR_MODE_OUT);
-    GPIO_setDirectionMode(23U, GPIO_DIR_MODE_OUT);
+#ifdef USE_DC_DC
 
-    //
-    // Configure GPIO22 and GPIO23 as digital pins
-    //
-    GPIO_setAnalogMode(22U, GPIO_ANALOG_DISABLED);
-    GPIO_setAnalogMode(23U, GPIO_ANALOG_DISABLED);
+    ASysCtl_enableDCDC();
+
+    while(!ASysCtl_getSwitchSequenceStatus())
+    {
+        DEVICE_DELAY_US(80);
+    }
+
+
+    while(!ASysCtl_getInductorFaultStatus())
+     {
+         DEVICE_DELAY_US(80);
+     }
+
+    DEVICE_DELAY_US(80);
+#endif
 }
 
 //*****************************************************************************
@@ -203,6 +198,8 @@ void Device_enableAllPeripherals(void)
     SysCtl_enablePeripheral(SYSCTL_PERIPH_CLK_CLB2);
     SysCtl_enablePeripheral(SYSCTL_PERIPH_CLK_CLB3);
     SysCtl_enablePeripheral(SYSCTL_PERIPH_CLK_CLB4);
+
+    SysCtl_enablePeripheral(SYSCTL_PERIPH_CLK_DCC0);
 }
 
 //*****************************************************************************
@@ -222,6 +219,58 @@ void Device_initGPIO(void)
 
 //*****************************************************************************
 //
+// Function to verify the XTAL frequency
+// freq is the XTAL frequency in MHz
+// The function return true if the the actual XTAL frequency matches with the
+// input value
+//
+// Note that this function assumes that the PLL is not already configured and
+// hence uses SysClk freq = 10MHz for DCC calculation
+//
+//*****************************************************************************
+bool Device_verifyXTAL(float freq)
+{
+    //
+    // Use DCC to verify the XTAL frequency using INTOSC2 as reference clock
+    //
+
+    //
+    // Turn on XTAL and wait for it to power up using X1CNT
+    //
+    SysCtl_turnOnOsc(SYSCTL_OSCSRC_XTAL);
+    SysCtl_clearExternalOscCounterValue();
+    while(SysCtl_getExternalOscCounterValue() != SYSCTL_X1CNT_X1CNT_M);
+
+    //
+    // Enable DCC0 clock
+    //
+    SysCtl_enablePeripheral(SYSCTL_PERIPH_CLK_DCC0);
+
+    //
+    // Insert atleast 5 cycles delay after enabling the peripheral clock
+    //
+    asm(" RPT #5 || NOP");
+
+    //
+    // Configures XTAL as CLKSRC0 and INTOSC2 as CLKSRC1
+    // Fclk0 = XTAL frequency (input parameter)
+    // Fclk1 = INTOSC2 frequency = 10MHz
+    //
+    // Configuring DCC error tolerance of +/-1%
+    // INTOSC2 can have a variance in frequency of +/-10%
+    //
+    // Assuming PLL is not already configured, SysClk freq = 10MHz
+    //
+    // Note : Update the tolerance and INTOSC2 frequency variance as necessary.
+    //
+    return (DCC_verifyClockFrequency(DCC0_BASE,
+                                     DCC_COUNT1SRC_INTOSC2, 10.0F,
+                                     DCC_COUNT0SRC_XTAL, freq,
+                                     1.0F, 10.0F, 10.0F));
+
+}
+//*****************************************************************************
+//
 // Error handling function to be called when an ASSERT is violated
 //
 //*****************************************************************************
@@ -230,6 +279,6 @@ void __error__(char *filename, uint32_t line)
     //
     // An ASSERT condition was evaluated as false. You can use the filename and
     // line parameters to determine what went wrong.
-    //
-    ESTOP0;
-}
+      //
+      ESTOP0;
+  }

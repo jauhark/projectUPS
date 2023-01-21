@@ -302,6 +302,13 @@ extern uint16_t RamfuncsRunStart;
 extern uint16_t RamfuncsRunEnd;
 extern uint16_t RamfuncsRunSize;
 
+extern uint16_t isrcodefuncsLoadStart;
+extern uint16_t isrcodefuncsLoadEnd;
+extern uint16_t isrcodefuncsLoadSize;
+extern uint16_t isrcodefuncsRunStart;
+extern uint16_t isrcodefuncsRunEnd;
+extern uint16_t isrcodefuncsRunSize;
+
 #endif
 
 #define DEVICE_FLASH_WAITSTATES 4
