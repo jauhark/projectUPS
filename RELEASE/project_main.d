@@ -95,15 +95,15 @@ project_main.obj: D:/WORKSPACE/TI2/projectUPS/device/driverlib/spi.h
 project_main.obj: D:/WORKSPACE/TI2/projectUPS/device/driverlib/inc/hw_spi.h
 project_main.obj: D:/WORKSPACE/TI2/projectUPS/device/driverlib/version.h
 project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/stddef.h
-project_main.obj: D:/WORKSPACE/TI2/projectUPS/libraries/DCL/DCLF32.h
+project_main.obj: ../project_settings.h
+project_main.obj: D:/SOFTWARES/TI/C2000Ware_4_02_00_00/libraries/control/DCL/c28/include/DCLF32.h
 project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/math.h
 project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/_defs.h
 project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/machine/_limits.h
-project_main.obj: D:/WORKSPACE/TI2/projectUPS/libraries/DCL/DCL.h
+project_main.obj: D:/SOFTWARES/TI/C2000Ware_4_02_00_00/libraries/control/DCL/c28/include/DCL.h
 project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/complex.h
 project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/stdlib.h
 project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/stdlibf.h
-project_main.obj: ../project_settings.h
 project_main.obj: D:/WORKSPACE/TI2/projectUPS/libraries/utilities/dlog/dlog_4ch.h
 project_main.obj: D:/WORKSPACE/TI2/projectUPS/libraries/utilities/emavg/emavg.h
 project_main.obj: D:/WORKSPACE/TI2/projectUPS/libraries/utilities/rampgen/rampgen.h
@@ -301,7 +301,9 @@ D:/WORKSPACE/TI2/projectUPS/device/driverlib/version.h:
 
 D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/stddef.h:
 
-D:/WORKSPACE/TI2/projectUPS/libraries/DCL/DCLF32.h:
+../project_settings.h:
+
+D:/SOFTWARES/TI/C2000Ware_4_02_00_00/libraries/control/DCL/c28/include/DCLF32.h:
 
 D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/math.h:
 
@@ -309,15 +311,13 @@ D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/_defs.h:
 
 D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/machine/_limits.h:
 
-D:/WORKSPACE/TI2/projectUPS/libraries/DCL/DCL.h:
+D:/SOFTWARES/TI/C2000Ware_4_02_00_00/libraries/control/DCL/c28/include/DCL.h:
 
 D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/complex.h:
 
 D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/stdlib.h:
 
 D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/stdlibf.h:
-
-../project_settings.h:
 
 D:/WORKSPACE/TI2/projectUPS/libraries/utilities/dlog/dlog_4ch.h:
 

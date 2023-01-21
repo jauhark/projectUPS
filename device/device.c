@@ -269,6 +269,7 @@ bool Device_verifyXTAL(float freq)
                                      1.0F, 10.0F, 10.0F));
 
 }
+
 //*****************************************************************************
 //
 // Error handling function to be called when an ASSERT is violated
@@ -279,6 +280,6 @@ void __error__(char *filename, uint32_t line)
     //
     // An ASSERT condition was evaluated as false. You can use the filename and
     // line parameters to determine what went wrong.
-      //
-      ESTOP0;
-  }
+    //
+    ESTOP0;
+}

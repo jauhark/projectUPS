@@ -2,7 +2,6 @@
 "./project_main.obj"
 "./device/device.obj"
 "./device/f28004x_codestartbranch.obj"
-"./libraries/DCL/source/DCL_DF22_C1.obj"
 "./libraries/sfra/sfra_gui_scicomms_driverlib.obj"
 "../device/gridconnectedinvlclfltr_flash_cpu1.cmd"
 "../libraries/FPUfastRTS/rts2800_fpu32_fast_supplement.lib"

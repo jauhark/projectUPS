@@ -113,7 +113,6 @@ PDE_DEPS__QUOTED :=
 SUBDIRS := \
 . \
 device \
-libraries/DCL/source \
 libraries/FPUfastRTS \
 libraries/sfra \
 

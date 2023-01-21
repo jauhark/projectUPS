@@ -1,3 +1,4 @@
+
 MEMORY
 {
    /* BEGIN is used for the "boot to Flash" bootloader mode   */
@@ -131,6 +132,7 @@ SECTIONS
        .TI.ramfunc
        {
        }
+       dclfuncs
        ramfuncs
 
    } LOAD = FLASH_BANK0_SEC6,
@@ -186,5 +188,12 @@ SECTIONS
    .scratchpad      : > RAMLS0LS1
    .bss_cla         : > RAMLS0LS1
    controlVariables : > RAMLS0LS1
-
+   debugBuffers1: > RAMLS7
+   debugBuffers2: >RAMLS6
 }
+
+/*
+//===========================================================================
+// End of file.
+//===========================================================================
+*/
