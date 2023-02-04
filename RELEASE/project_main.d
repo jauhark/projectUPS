@@ -96,6 +96,11 @@ project_main.obj: D:/WORKSPACE/TI2/projectUPS/device/driverlib/inc/hw_spi.h
 project_main.obj: D:/WORKSPACE/TI2/projectUPS/device/driverlib/version.h
 project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/stddef.h
 project_main.obj: ../project_settings.h
+project_main.obj: D:/WORKSPACE/TI2/projectUPS/libraries/LcdDrive/lcdDrive.h
+project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/string.h
+project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/xlocale/_string.h
+project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/stdio.h
+project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/stdarg.h
 project_main.obj: D:/SOFTWARES/TI/C2000Ware_4_02_00_00/libraries/control/DCL/c28/include/DCLF32.h
 project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/math.h
 project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/_defs.h
@@ -302,6 +307,16 @@ D:/WORKSPACE/TI2/projectUPS/device/driverlib/version.h:
 D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/stddef.h:
 
 ../project_settings.h:
+
+D:/WORKSPACE/TI2/projectUPS/libraries/LcdDrive/lcdDrive.h:
+
+D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/string.h:
+
+D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/xlocale/_string.h:
+
+D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/stdio.h:
+
+D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/stdarg.h:
 
 D:/SOFTWARES/TI/C2000Ware_4_02_00_00/libraries/control/DCL/c28/include/DCLF32.h:
 

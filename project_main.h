@@ -18,7 +18,9 @@
 
 
 #include "project_functions.h"
-
+#include "lcdDrive.h"
+#include "string.h"
+#include "stdio.h"
 
 #include "DCLF32.h"
 #include "DCL.h"
@@ -38,7 +40,6 @@
  */
 
 
-
 interrupt void inverterISR(void);
 interrupt void adcISR(void);
 
@@ -46,11 +47,22 @@ interrupt void adcISR(void);
  * Macros
  */
 #define SAMPLENO 400
+/*
+ * LCD DISPLAY DATA
+ */
+char LCD_DATA[2][17]={{"HELLOWORLD"},{"NICE2MEETU"}};
+char LCD_VAL01[10]={0};
+uint16_t lcdVal1p000;
+uint16_t lcdVal0p100;
+uint16_t lcdVal0p010;
+uint16_t lcdVal0p001;
 
 #pragma SET_DATA_SECTION()
+
 /*
  * Sfra Variables
  */
+#if SFRA_ENABLED==1
 SFRA_F32 sfra1;
 float32_t plantMagVect[SFRA_FREQ_LENGTH];
 float32_t plantPhaseVect[SFRA_FREQ_LENGTH];
@@ -61,6 +73,7 @@ float32_t clPhaseVect[SFRA_FREQ_LENGTH];
 float32_t freqVect[SFRA_FREQ_LENGTH];
 
 extern long FPUsinTable[];
+#endif
 
 #pragma SET_DATA_SECTION("controlVariables")
 
@@ -70,28 +83,89 @@ extern long FPUsinTable[];
 RAMPGEN rgen1;
 float32_t invSine=0;
 float32_t invDutyPU=0;
-float32_t invModIndex=0.7;
+float32_t invModIndex=0;
+float32_t INVMOD_AVG =0.7;
 
+/*
+ * CONTROL TYPE
+ * -> AVERAGE CONTROL 1
+ * -> INSTANTANEOUS CONTROL 0
+ */
+
+/*===============================================================*/
+#if CONTROL_MODE ==INSTANT_CONTROL
+/* CODE FOR INSTANTANEOUS CONTROL */
 /*
  * DCL Control variables
  */
-#define _dclCoeff_B0  0.1429782
-#define _dclCoeff_B1  0.1618109
-#define _dclCoeff_B2  -0.1016189
-#define _dclCoeff_B3  -0.1204558
-#define _dclCoeff_A1  -0.2399017
-#define _dclCoeff_A2  -0.8659085
-#define _dclCoeff_A3  0.1058102
+
+#if CONTROL_TYPE ==TYPE3_CONTROL
+/* IF CONTROL MODE IS TYPE 3*/
+#define _dclCoeff_B0  0.0757265
+#define _dclCoeff_B1  0.0364835
+#define _dclCoeff_B2  -0.0284922
+#define _dclCoeff_B3  0.0037021
+#define _dclCoeff_A1  -0.3472386
+#define _dclCoeff_A2  -0.5571259
+#define _dclCoeff_A3  -0.0956355
 
 
 DCL_DF23 myCtrl = DF23_DEFAULTS;
+#endif
 
-DCL_PI myPiCtrl=PI_DEFAULTS;
+#if CONTROL_TYPE==TYPE2_CONTROL
+/* IF CONTRL MODE IS TYPE 2*/
+#define _dclCoeff_B0  0.0250841
+#define _dclCoeff_B1  0.0749941
+#define _dclCoeff_B2  0.0747368
+#define _dclCoeff_B3  0.0248267
+#define _dclCoeff_A1  0.9964153
+#define _dclCoeff_A2  -0.9999971
+#define _dclCoeff_A3  -0.9964182
 
+DCL_DF22 myCtrl;
+
+#endif
+
+#if CONTROL_TYPE==PI_CONTROL
+/* IF CONTROL MODE IS PARALLEL PI */
+#define _dclCoeff_Kp   -0.0195850
+#define _dclCoeff_Ki    0.0392699
+
+DCL_PI  myCtrl=PI_DEFAULTS;
+#endif
+
+#endif
+
+
+#define _dclCoeff_Kp   0.5
+#define _dclCoeff_Ki   0.2
+
+DCL_PI  myCtrl=PI_DEFAULTS;
+
+
+/*===============================================================*/
+#if CONTROL_MODE == AVERAGE_CONTROL
+float32_t ref_peakVal =0.7;
+float32_t OFFSET_CONTROL_VAL=0;
+float32_t OFFSET_ERROR=0;
+uint16_t halfCycleFlag=0;
+uint16_t sampleCount=0;
+volatile float32_t voltSumPHalf=0;
+volatile float32_t voltSumNHalf=0;
+volatile float32_t voltRMSTotalCycle=0;
+volatile float32_t voltPeakTotalCycle=0;
+volatile float32_t voltAverage=0;
+volatile float32_t voltAveragePrev=0;
+//#define MAINSADCGAINFACTOR -0.0012
+#endif
 
 /*
  * Variables
  */
+
+float32_t MAINSADCGAINFACTOR=-0.0012;
+
 int16_t adcRes=0;  //stores adc read result
 int16_t adcResPrev=0;
 float32_t error=0;
@@ -101,14 +175,9 @@ int16_t adcRes_Iin_Buffer[SAMPLENO]={0};
 
 float32_t voltVal=0;
 float32_t voltCompVal=0;
-uint16_t halfCycleFlag=0;
-uint16_t sampleCount=0;
-float32_t voltSumPHalf=0;
-float32_t voltSumNHalf=0;
-float32_t voltRMSTotalCycle=0;
-float32_t voltAverage=0;
-float32_t voltAveragePrev=0;
-#define MAINSADCGAINFACTOR -0.0012
+
+
+
 
 
 //int16_t mainsVoltage[SAMPLENO] ={0}; //array to log adc
@@ -118,7 +187,7 @@ float32_t rmsVoltage[SAMPLENO]={0};
 #pragma SET_DATA_SECTION("debugBuffers1")
 float32_t errorVals[SAMPLENO]={0};
 #pragma SET_DATA_SECTION("debugBuffers2")
-float32_t controlVals[SAMPLENO]={0};
+float32_t referenceVoltage[SAMPLENO]={0};
 uint16_t SW_PRESSED_VAL=0;  //stores switch state value, updated every pwm cycle
 
 int16_t sinReading[3]={0};

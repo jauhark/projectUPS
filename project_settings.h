@@ -20,6 +20,32 @@
 #define ECAPSYSCLOCK_FREQ   (100*1000000)
 
 /* Project Options*/
+//*****************************************************************************
+/* defining control mode */
+
+/* CONTROL_MODE*/
+#define AVERAGE_CONTROL 0
+#define INSTANT_CONTROL 1
+#define OPEN_LOOP       2
+
+/* CONTROL_TYPE */
+#define TYPE3_CONTROL   0
+#define TYPE2_CONTROL 1
+#define PI_CONTROL  2
+
+/*change here*/
+#define CONTROL_MODE AVERAGE_CONTROL
+
+#if CONTROL_MODE==INSTANT_CONTROL
+
+/*change here*/
+#define CONTROL_TYPE TYPE3_CONTROL
+
+#endif
+
+/*control mode ends here */
+//*****************************************************************************
+
 
 /* Power Stage Related Values*/
 #define AC_FREQ             50
@@ -67,6 +93,10 @@
 /*
  * SFRA SETTINGS
  */
+#define SFRA_ENABLED 0
+
+#if SFRA_ENABLED==1
+
 #define SFRA_ISR_FREQ   INV_PWM_SWITCHING_FREQUENCY/CNTRL_ISR_FREQ_RATIO
 #define SFRA_FREQ_START 2
 #define SFRA_FREQ_STEP_MULTIPLY (float32_t)1.047
@@ -87,7 +117,7 @@
 #define SFRA_GUI_LED_GPIO   LED_PIN_SWITCH
 #define SFRA_GUI_LED_GPIO_PIN_CONFIG GPIO_34_GPIO34
 
-
+#endif
 /*
  * SFRA SETTINGS END
  */

@@ -142,8 +142,8 @@ void setupADC(void)
      */
     ADC_setupPPB(ADCA_BASE, ADC_PPB_NUMBER1, ADC_SOC_NUMBER0);
 //    ADC_enablePPBEvent(ADCA_BASE, ADC_PPB_NUMBER1, evtFlags);
-    ADC_setPPBReferenceOffset(ADCA_BASE, ADC_PPB_NUMBER1, 2057);
-    ADC_setPPBTripLimits(ADCA_BASE, ADC_PPB_NUMBER1, 1200, -1200);
+    ADC_setPPBReferenceOffset(ADCA_BASE, ADC_PPB_NUMBER1, 2048);
+    ADC_setPPBTripLimits(ADCA_BASE, ADC_PPB_NUMBER1, 1700, -1700);
 //    ADC_enablePPBEvent(ADCA_BASE, ADC_PPB_NUMBER1, ADC_EVT_ZERO);
     ADC_enableConverter(ADCA_BASE);             // Power up the ADC
 

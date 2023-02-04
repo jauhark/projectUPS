@@ -14,6 +14,7 @@ ORDERED_OBJS += \
 "./project_main.obj" \
 "./device/device.obj" \
 "./device/f28004x_codestartbranch.obj" \
+"./libraries/LcdDrive/lcdDrive.obj" \
 "./libraries/sfra/sfra_gui_scicomms_driverlib.obj" \
 "../device/gridconnectedinvlclfltr_flash_cpu1.cmd" \
 "../libraries/FPUfastRTS/rts2800_fpu32_fast_supplement.lib" \
@@ -36,10 +37,12 @@ RMDIR := RMDIR /S/Q
 -include subdir_vars.mk
 -include device/subdir_vars.mk
 -include libraries/FPUfastRTS/subdir_vars.mk
+-include libraries/LcdDrive/subdir_vars.mk
 -include libraries/sfra/subdir_vars.mk
 -include subdir_rules.mk
 -include device/subdir_rules.mk
 -include libraries/FPUfastRTS/subdir_rules.mk
+-include libraries/LcdDrive/subdir_rules.mk
 -include libraries/sfra/subdir_rules.mk
 -include objects.mk
 
@@ -157,7 +160,7 @@ all: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
 projectUPS.out: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: C2000 Linker'
-	"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu0 -O2 --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all --define=_DEBUG --define=_FLASH --define=GCI --define=F28x_DEVICE --define=CPU1 --define=LARGE_MODEL --float_operations_allowed=32 --diag_suppress=10063 --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"projectUPS.map" --stack_size=0x200 --warn_sections -i"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/lib" -i"D:/SOFTWARES/TI/C2000Ware_4_02_00_00/libraries/control/DCL/c28/include" -i"D:/WORKSPACE/TI2/projectUPS/libraries/spll" -i"D:/WORKSPACE/TI2/projectUPS/libraries/sfra" -i"D:/WORKSPACE/TI2/projectUPS/libraries/FPUfastRTS" -i"D:/WORKSPACE/TI2/projectUPS/device/driverlib/ccs/Release" -i"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="projectUPS_linkInfo.xml" --entry_point=code_start --rom_model -o "projectUPS.out" $(ORDERED_OBJS)
+	"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu0 -Ooff --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all --define=_DEBUG --define=_FLASH --define=GCI --define=F28x_DEVICE --define=CPU1 --define=LARGE_MODEL --float_operations_allowed=32 --diag_suppress=10063 --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"projectUPS.map" --stack_size=0x200 --warn_sections -i"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/lib" -i"D:/SOFTWARES/TI/C2000Ware_4_02_00_00/libraries/control/DCL/c28/include" -i"D:/WORKSPACE/TI2/projectUPS/libraries/spll" -i"D:/WORKSPACE/TI2/projectUPS/libraries/sfra" -i"D:/WORKSPACE/TI2/projectUPS/libraries/FPUfastRTS" -i"D:/WORKSPACE/TI2/projectUPS/device/driverlib/ccs/Release" -i"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="projectUPS_linkInfo.xml" --entry_point=code_start --rom_model -o "projectUPS.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
@@ -171,8 +174,8 @@ projectUPS.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "project_functions.obj" "project_main.obj" "device\device.obj" "device\f28004x_codestartbranch.obj" "libraries\sfra\sfra_gui_scicomms_driverlib.obj" 
-	-$(RM) "project_functions.d" "project_main.d" "device\device.d" "libraries\sfra\sfra_gui_scicomms_driverlib.d" 
+	-$(RM) "project_functions.obj" "project_main.obj" "device\device.obj" "device\f28004x_codestartbranch.obj" "libraries\LcdDrive\lcdDrive.obj" "libraries\sfra\sfra_gui_scicomms_driverlib.obj" 
+	-$(RM) "project_functions.d" "project_main.d" "device\device.d" "libraries\LcdDrive\lcdDrive.d" "libraries\sfra\sfra_gui_scicomms_driverlib.d" 
 	-$(RM) "device\f28004x_codestartbranch.d" 
 	-@echo 'Finished clean'
 	-@echo ' '

@@ -114,5 +114,6 @@ SUBDIRS := \
 . \
 device \
 libraries/FPUfastRTS \
+libraries/LcdDrive \
 libraries/sfra \
 
