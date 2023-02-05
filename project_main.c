@@ -35,7 +35,7 @@ void main(void)
      rgen1.freq = (float32_t) (AC_FREQ);
      rgen1.stepAngleMax = (float32_t) (2.0f / INV_PWM_SWITCHING_FREQUENCY);
      */
-    _sineLTCounter=0;
+    _sineLTCounter = 0;
 
     //================================================================
     /*
@@ -106,6 +106,21 @@ void main(void)
     myCtrl.Umin = 0.1;
     myCtrl.Kp = _dclCoeff_Kp;
     myCtrl.Ki = _dclCoeff_Ki;
+
+    myOffsetControlPI.Umax=0.01;
+    myOffsetControlPI.Umin=-0.01;
+    myOffsetControlPI.Kp=0.05;
+    myOffsetControlPI.Ki=0.01;
+
+    DCL_resetDF23(&my3p3zCtrl);
+
+    my3p3zCtrl.b0 = _dclCoeff_B0;
+    my3p3zCtrl.b1 = _dclCoeff_B1;
+    my3p3zCtrl.b2 = _dclCoeff_B2;
+    my3p3zCtrl.b3 = _dclCoeff_B3;
+    my3p3zCtrl.a1 = _dclCoeff_A1;
+    my3p3zCtrl.a2 = _dclCoeff_A2;
+    my3p3zCtrl.a3 = _dclCoeff_A3;
 #endif
 //----------------------------------------------------------
     //================================================================
@@ -227,9 +242,10 @@ interrupt void inverterISR(void)
 {
 //    RAMPGEN_run(&rgen1);
 //    invSine = sinf((rgen1.out) * 6.283185307f);
-    invSine= _sineLTable[_sineLTCounter];
+    invSine = _sineLTable[_sineLTCounter];
     _sineLTCounter++;
-    if(_sineLTCounter>=200)_sineLTCounter=0;
+    if (_sineLTCounter >= 200)
+        _sineLTCounter = 0;
     clearInterruptEPWM();
 
 }    // MainISR Ends Here
@@ -258,74 +274,91 @@ interrupt void adcISR(void)
     /*
      * average voltage calculation
      */
-//    if (ADC_getPPBEventStatus(ADCA_BASE, ADC_PPB_NUMBER1) == ADC_EVT_ZERO)
-//    {
-//        if (adcRes > adcResPrev)
-//        {
-//
-//            GPIO_writePin(LED_PIN_ZCROSS_DETECTION, 1);
-//            /*
-//             * positive cycle detected
-//             *  halfCycleFlag=1
-//             * voltAverage calculates average voltage of previous -ve cycle
-//             */
-//            halfCycleFlag = 1;
-//
-//            voltAveragePrev = voltAverage;
-//            voltAverage = fabs((voltSumNHalf) / sampleCount);
-//            voltRMSTotalCycle = (voltAverage + voltAveragePrev) * 1.11 / 2.0f;
-//            voltPeakTotalCycle = (voltAverage + voltAveragePrev) * 0.7853981;
-//
-//            sampleCount = 0;
-//            voltSumPHalf = 0;
-//
-//        }
-//        else if (adcRes < adcResPrev)
-//        {
-//            GPIO_writePin(LED_PIN_ZCROSS_DETECTION, 0);
-//            /*
-//             * negative cycle detected
-//             *  halfCycleFlag=0
-//             * voltAverage calculates average voltage of previous +ve cycle
-//             */
-//            halfCycleFlag = 0;
-//
-//            voltAveragePrev = voltAverage;
-//            voltAverage = fabs((voltSumPHalf) / sampleCount);
-//            voltRMSTotalCycle = (voltAverage + voltAveragePrev) * 1.11 / 2.0f;
-//            voltPeakTotalCycle = (voltAverage + voltAveragePrev) * 0.7853981;
-//
-//            sampleCount = 0;
-//            voltSumNHalf = 0;
-//        }
-//
-//    }
-//
-//    if (halfCycleFlag)
-//    {
-//        /* positive cycle */
-//        voltSumPHalf += voltVal;
-//        sampleCount++;
-//    }
-//    else
-//    {
-//        /* negative cycle */
-//        sampleCount++;
-//        voltSumNHalf += voltVal;
-//    }
+    if (_sineLTCounter==0)
+    {
+
+        GPIO_writePin(LED_PIN_ZCROSS_DETECTION, 1);
+        /*
+         * positive cycle detected
+         *  halfCycleFlag=1
+         * voltAverage calculates average voltage of previous -ve cycle
+         */
+        halfCycleFlag = 1;
+
+        voltAveragePrev = voltAverage;
+
+        voltAverage = fabs((voltSumNHalf) / sampleCount);
+        voltRMSTotalCycle = (voltAverage + voltAveragePrev) * 1.11 / 2.0f;
+        voltPeakTotalCycle = (voltAverage + voltAveragePrev) * 0.7853981;
+
+        OFFSET_ERROR=voltAverage-voltAveragePrev;
+        OFFSET_CONTROL_VAL=DCL_runPI_C2(&myOffsetControlPI, 0, OFFSET_ERROR);
+
+        sampleCount = 0;
+        voltSumPHalf = 0;
+
+        /*
+         * PI CONTROL
+         */
+        invModIndex=DCL_runPI_C2(&myCtrl, ref_peakVal, voltPeakTotalCycle);
+
+
+    }
+    else if (_sineLTCounter==100)
+    {
+        GPIO_writePin(LED_PIN_ZCROSS_DETECTION, 0);
+        /*
+         * negative cycle detected
+         *  halfCycleFlag=0
+         * voltAverage calculates average voltage of previous +ve cycle
+         */
+        halfCycleFlag = 0;
+
+        voltAveragePrev = voltAverage;
+
+        voltAverage = fabs((voltSumPHalf) / sampleCount);
+        voltRMSTotalCycle = (voltAverage + voltAveragePrev) * 1.11 / 2.0f;
+        voltPeakTotalCycle = (voltAverage + voltAveragePrev) * 0.7853981;
+
+
+
+        sampleCount = 0;
+        voltSumNHalf = 0;
+
+        /*
+         * PI CONTROL
+         */
+        invModIndex=DCL_runPI_C2(&myCtrl, ref_peakVal, voltPeakTotalCycle);
+
+    }
+
+
+    if (halfCycleFlag)
+    {
+        /* positive cycle */
+        voltSumPHalf += voltVal;
+        sampleCount++;
+    }
+    else
+    {
+        /* negative cycle */
+        sampleCount++;
+        voltSumNHalf += voltVal;
+    }
     /*
      * END avg voltage calculation
      */
 
 #if CONTROL_MODE ==AVERAGE_CONTROL
     //--------------------------------------------------
-    invDutyPU = invSine * invModIndex;
+    invDutyPU = (invSine+OFFSET_CONTROL_VAL) * invModIndex;
     //--------------------------------------------------
+
 #endif
 
-    ADC_clearPPBEventStatus(ADCA_BASE, ADC_PPB_NUMBER1, ADC_EVT_ZERO);
-    ADC_clearPPBEventStatus(ADCA_BASE, ADC_PPB_NUMBER1, ADC_EVT_TRIPHI);
-    ADC_clearPPBEventStatus(ADCA_BASE, ADC_PPB_NUMBER1, ADC_EVT_TRIPLO);
+//    ADC_clearPPBEventStatus(ADCA_BASE, ADC_PPB_NUMBER1, ADC_EVT_ZERO);
+//    ADC_clearPPBEventStatus(ADCA_BASE, ADC_PPB_NUMBER1, ADC_EVT_TRIPHI);
+//    ADC_clearPPBEventStatus(ADCA_BASE, ADC_PPB_NUMBER1, ADC_EVT_TRIPLO);
 
     /*
      * AVREAGE CONTROL CODE ENDS
@@ -393,7 +426,7 @@ interrupt void adcISR(void)
 
 //    graph_1[k]=voltCompVal;
 //    graph_2[k]=error;
-    graph_1[k]=invDutyPU;
+    graph_1[k] = invDutyPU;
 //    graph_4[k]=controlVal;
 
     k++;

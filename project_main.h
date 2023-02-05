@@ -215,6 +215,20 @@ DCL_PI  myCtrl=PI_DEFAULTS;
 #define _dclCoeff_Ki    0.2
 
 DCL_PI myCtrl = PI_DEFAULTS;
+
+DCL_PI myOffsetControlPI=PI_DEFAULTS;
+
+/* IF CONTROL MODE IS TYPE 3*/
+#define _dclCoeff_B0  0.0649146
+#define _dclCoeff_B1  0.0321012
+#define _dclCoeff_B2  -0.0286150
+#define _dclCoeff_B3  0.0041336
+#define _dclCoeff_A1  -1.0047916
+#define _dclCoeff_A2  -0.2650723
+#define _dclCoeff_A3  0.2698639
+
+DCL_DF23 my3p3zCtrl = DF23_DEFAULTS;
+
 #endif
 
 /*===============================================================*/
