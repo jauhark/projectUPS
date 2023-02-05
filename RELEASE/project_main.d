@@ -2,7 +2,8 @@
 
 project_main.obj: ../project_main.c
 project_main.obj: ../project_main.h
-project_main.obj: ../project_functions.h
+project_main.obj: D:/WORKSPACE/TI2/projectUPS/libraries/LcdDrive/lcdDrive.h
+project_main.obj: D:/WORKSPACE/TI2/projectUPS/project_functions.h
 project_main.obj: D:/WORKSPACE/TI2/projectUPS/device/device.h
 project_main.obj: D:/WORKSPACE/TI2/projectUPS/device/driverlib.h
 project_main.obj: D:/WORKSPACE/TI2/projectUPS/device/driverlib/inc/hw_memmap.h
@@ -95,8 +96,7 @@ project_main.obj: D:/WORKSPACE/TI2/projectUPS/device/driverlib/spi.h
 project_main.obj: D:/WORKSPACE/TI2/projectUPS/device/driverlib/inc/hw_spi.h
 project_main.obj: D:/WORKSPACE/TI2/projectUPS/device/driverlib/version.h
 project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/stddef.h
-project_main.obj: ../project_settings.h
-project_main.obj: D:/WORKSPACE/TI2/projectUPS/libraries/LcdDrive/lcdDrive.h
+project_main.obj: D:/WORKSPACE/TI2/projectUPS/project_settings.h
 project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/string.h
 project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/xlocale/_string.h
 project_main.obj: D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/stdio.h
@@ -120,7 +120,9 @@ project_main.obj: D:/WORKSPACE/TI2/projectUPS/libraries/sfra/sfra_gui_scicomms_d
 
 ../project_main.h:
 
-../project_functions.h:
+D:/WORKSPACE/TI2/projectUPS/libraries/LcdDrive/lcdDrive.h:
+
+D:/WORKSPACE/TI2/projectUPS/project_functions.h:
 
 D:/WORKSPACE/TI2/projectUPS/device/device.h:
 
@@ -306,9 +308,7 @@ D:/WORKSPACE/TI2/projectUPS/device/driverlib/version.h:
 
 D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/stddef.h:
 
-../project_settings.h:
-
-D:/WORKSPACE/TI2/projectUPS/libraries/LcdDrive/lcdDrive.h:
+D:/WORKSPACE/TI2/projectUPS/project_settings.h:
 
 D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include/string.h:
 

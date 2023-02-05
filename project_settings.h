@@ -85,9 +85,11 @@
 
 //3 button switch settings
 #define ADC_SWITCH_CHANNEL_IN   ADC_CH_ADCIN6   //ADCINA6
+#define RELAY_SWITCH    58
 //LED output for indication
 #define LED_PIN_SWITCH 34  //onboard led
 #define LED_PIN_ZCROSS_DETECTION    39
+
 
 
 /*

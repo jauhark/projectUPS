@@ -338,7 +338,7 @@ inline uint16_t _GET_SWITCH_VAL()
 
     previous_State = current_State;
     return _sw_Stats;
-    //if return is 6, its switch one pressed and valid
-    //if return is 11, its switch two pressed and valid... and so on
+    //if return is 5, its switch one pressed and valid
+    //if return is 10, its switch two pressed and valid... and so on
 
 }

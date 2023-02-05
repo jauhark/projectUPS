@@ -8,7 +8,6 @@
 
 #include "project_main.h"
 
-
 /*
  * ###################################################################################
  * ###################################################################################
@@ -31,9 +30,12 @@ void main(void)
 
     setupADC();
 
-    RAMPGEN_reset(&rgen1);
-    rgen1.freq = (float32_t) (AC_FREQ);
-    rgen1.stepAngleMax = (float32_t) (2.0f / INV_PWM_SWITCHING_FREQUENCY);
+    /*
+     RAMPGEN_reset(&rgen1);
+     rgen1.freq = (float32_t) (AC_FREQ);
+     rgen1.stepAngleMax = (float32_t) (2.0f / INV_PWM_SWITCHING_FREQUENCY);
+     */
+    _sineLTCounter=0;
 
     //================================================================
     /*
@@ -91,28 +93,36 @@ void main(void)
 
 #if CONTROL_TYPE==PI_CONTROL
 
-    myCtrl.Umax=0.8;
-    myCtrl.Umin=-0.8;
+    myCtrl.Umax=0.1;
+    myCtrl.Umin=-0.1;
     myCtrl.Kp=_dclCoeff_Kp;
     myCtrl.Ki=_dclCoeff_Ki;
 
+#endif
+#endif
+
+#if CONTROL_MODE==AVERAGE_CONTROL
+    myCtrl.Umax = 0.85;
+    myCtrl.Umin = 0.1;
+    myCtrl.Kp = _dclCoeff_Kp;
+    myCtrl.Ki = _dclCoeff_Ki;
 #endif
 //----------------------------------------------------------
-#endif
-    myCtrl.Umax=0.9;
-    myCtrl.Umin=0.1;
-    myCtrl.Kp=_dclCoeff_Kp;
-    myCtrl.Ki=_dclCoeff_Ki;
-
     //================================================================
     /*
-     *SETUP LEDPIN at pin34
+     *SETUP LEDPINS
      */
     GPIO_setDirectionMode(LED_PIN_SWITCH, GPIO_DIR_MODE_OUT);
     GPIO_setPadConfig(LED_PIN_SWITCH, GPIO_PIN_TYPE_STD);
 
     GPIO_setDirectionMode(LED_PIN_ZCROSS_DETECTION, GPIO_DIR_MODE_OUT);
     GPIO_setPadConfig(LED_PIN_ZCROSS_DETECTION, GPIO_PIN_TYPE_STD);
+
+    /*
+     * SETUP RELAY PINS
+     */
+    GPIO_setDirectionMode(RELAY_SWITCH, GPIO_DIR_MODE_OUT);
+    GPIO_setPadConfig(RELAY_SWITCH, GPIO_PIN_TYPE_STD);
 
     /*
      * SETUP PINOUT for LCD_DRIVE
@@ -141,44 +151,70 @@ void main(void)
     // Enable PWM Clocks
     enablePWMCLKCounting();
 
-    uint16_t count=0;
+    uint16_t countLCD = 0;
+    uint16_t countSwitch = 0;
+    float32_t temp = 0;
 
     //================================================================
     while (1)
     {
         SW_PRESSED_VAL = _GET_SWITCH_VAL();
+        /*
+         * LCD DATA PARSING AND UPDATING
+         * ------------------------------------------------------------------
+         */
+        if (countLCD == 100)
+        {
+            temp = voltRMSTotalCycle;
+            memset(LCD_DATA[0], 0, sizeof(LCD_DATA[0]));
+            memset(LCD_DATA[1], 0, sizeof(LCD_DATA[1]));
+            lcdVal1p000 = (uint16_t) temp;
+            lcdVal0p100 = ((uint16_t) (temp * 10)) % (lcdVal1p000 * 10);
+            lcdVal0p010 = ((uint16_t) (temp * 100))
+                    % (lcdVal1p000 * 100 + lcdVal0p100 * 10);
+            lcdVal0p001 =
+                    ((uint16_t) (temp * 1000))
+                            % (lcdVal1p000 * 1000 + lcdVal0p100 * 100
+                                    + lcdVal0p010 * 10);
 
-        if(count==100){
-        float32_t temp=voltRMSTotalCycle;
-        memset(LCD_DATA[0], 0, sizeof(LCD_DATA[0]));
-        memset(LCD_DATA[1], 0, sizeof(LCD_DATA[1]));
-        lcdVal1p000=(uint16_t)temp;
-        lcdVal0p100=((uint16_t)(temp*10))%(lcdVal1p000*10);
-        lcdVal0p010=((uint16_t)(temp*100))%(lcdVal1p000*100+lcdVal0p100*10);
-        lcdVal0p001=((uint16_t)(temp*1000))%(lcdVal1p000*1000+lcdVal0p100*100+lcdVal0p010*10);
+            sprintf(LCD_DATA[0], "RMS: %u.%u%u%u", lcdVal1p000, lcdVal0p100,
+                    lcdVal0p010, lcdVal0p001);
 
-        sprintf(LCD_DATA[0], "RMS: %u.%u%u%u", lcdVal1p000, lcdVal0p100, lcdVal0p010, lcdVal0p001);
+            temp = voltPeakTotalCycle;
+            lcdVal1p000 = (uint16_t) temp;
+            lcdVal0p100 = ((uint16_t) (temp * 10)) % (lcdVal1p000 * 10);
+            lcdVal0p010 = ((uint16_t) (temp * 100))
+                    % (lcdVal1p000 * 100 + lcdVal0p100 * 10);
+            lcdVal0p001 =
+                    ((uint16_t) (temp * 1000))
+                            % (lcdVal1p000 * 1000 + lcdVal0p100 * 100
+                                    + lcdVal0p010 * 10);
 
-        temp=voltPeakTotalCycle;
-        lcdVal1p000=(uint16_t)temp;
-        lcdVal0p100=((uint16_t)(temp*10))%(lcdVal1p000*10);
-        lcdVal0p010=((uint16_t)(temp*100))%(lcdVal1p000*100+lcdVal0p100*10);
-        lcdVal0p001=((uint16_t)(temp*1000))%(lcdVal1p000*1000+lcdVal0p100*100+lcdVal0p010*10);
+            sprintf(LCD_DATA[1], "PEAK: %u.%u%u%u", lcdVal1p000, lcdVal0p100,
+                    lcdVal0p010, lcdVal0p001);
 
-        sprintf(LCD_DATA[1], "PEAK: %u.%u%u%u", lcdVal1p000, lcdVal0p100, lcdVal0p010, lcdVal0p001);
-
-        lcdDrive_updateLCD_DATA(LCD_DATA);
-        count=0;
+            lcdDrive_updateLCD_DATA(LCD_DATA);
+            countLCD = 0;
         }
-        count++;
+        countLCD++;
 
         lcdDrive_updateLCD();
+        /*
+         * -------------------------------------------------------------------
+         */
+
+        if (SW_PRESSED_VAL == 15)
+        {
+            GPIO_togglePin(RELAY_SWITCH);
+            DEVICE_DELAY_US(100000);
+        }
 
 #if SFRA_ENABLED==1
         SFRA_F32_runBackgroundTask(&sfra1);
         SFRA_GUI_runSerialHostComms(&sfra1);
         DEVICE_DELAY_US(9000); //10mS delay
 #endif
+        DEVICE_DELAY_US(1000);
     }
 }
 /*
@@ -189,12 +225,11 @@ void main(void)
 //TODO Inverter ISR Code
 interrupt void inverterISR(void)
 {
-    RAMPGEN_run(&rgen1);
-    invSine = sinf((rgen1.out) * 6.283185307f);
-
-    //TODO-Implement control system
-    //DONE ADC
-    //DONE PWM
+//    RAMPGEN_run(&rgen1);
+//    invSine = sinf((rgen1.out) * 6.283185307f);
+    invSine= _sineLTable[_sineLTCounter];
+    _sineLTCounter++;
+    if(_sineLTCounter>=200)_sineLTCounter=0;
     clearInterruptEPWM();
 
 }    // MainISR Ends Here
@@ -215,130 +250,91 @@ interrupt void adcISR(void)
 
     voltCompVal = ((float32_t) adcRes) * ((float32_t) MAINSADCGAINFACTOR);
 
-//    error=invSine-voltCompVal;
-
     //================================================================
-/*
- * AVERAGE CONTROL CODE
- */
-#if CONTROL_MODE ==AVERAGE_CONTROL
     //softStart
-    if(invModIndex<INVMOD_AVG)invModIndex+=0.0001;
+    if (invModIndex < INVMOD_AVG)
+        invModIndex += 0.0001;
 
-    if (ADC_getPPBEventStatus(ADCA_BASE, ADC_PPB_NUMBER1)==ADC_EVT_ZERO)
-    {
-        if (adcRes > adcResPrev)
-        {
+    /*
+     * average voltage calculation
+     */
+//    if (ADC_getPPBEventStatus(ADCA_BASE, ADC_PPB_NUMBER1) == ADC_EVT_ZERO)
+//    {
+//        if (adcRes > adcResPrev)
+//        {
+//
+//            GPIO_writePin(LED_PIN_ZCROSS_DETECTION, 1);
+//            /*
+//             * positive cycle detected
+//             *  halfCycleFlag=1
+//             * voltAverage calculates average voltage of previous -ve cycle
+//             */
+//            halfCycleFlag = 1;
+//
+//            voltAveragePrev = voltAverage;
+//            voltAverage = fabs((voltSumNHalf) / sampleCount);
+//            voltRMSTotalCycle = (voltAverage + voltAveragePrev) * 1.11 / 2.0f;
+//            voltPeakTotalCycle = (voltAverage + voltAveragePrev) * 0.7853981;
+//
+//            sampleCount = 0;
+//            voltSumPHalf = 0;
+//
+//        }
+//        else if (adcRes < adcResPrev)
+//        {
+//            GPIO_writePin(LED_PIN_ZCROSS_DETECTION, 0);
+//            /*
+//             * negative cycle detected
+//             *  halfCycleFlag=0
+//             * voltAverage calculates average voltage of previous +ve cycle
+//             */
+//            halfCycleFlag = 0;
+//
+//            voltAveragePrev = voltAverage;
+//            voltAverage = fabs((voltSumPHalf) / sampleCount);
+//            voltRMSTotalCycle = (voltAverage + voltAveragePrev) * 1.11 / 2.0f;
+//            voltPeakTotalCycle = (voltAverage + voltAveragePrev) * 0.7853981;
+//
+//            sampleCount = 0;
+//            voltSumNHalf = 0;
+//        }
+//
+//    }
+//
+//    if (halfCycleFlag)
+//    {
+//        /* positive cycle */
+//        voltSumPHalf += voltVal;
+//        sampleCount++;
+//    }
+//    else
+//    {
+//        /* negative cycle */
+//        sampleCount++;
+//        voltSumNHalf += voltVal;
+//    }
+    /*
+     * END avg voltage calculation
+     */
 
-            GPIO_writePin(LED_PIN_ZCROSS_DETECTION, 1);
-            /*
-             * positive cycle detected
-             *  halfCycleFlag=1
-             * voltAverage calculates average voltage of previous -ve cycle
-             */
-            halfCycleFlag=1;
-
-            voltAveragePrev=voltAverage;
-            voltAverage =fabs((voltSumNHalf)/ sampleCount);
-//            voltAverage=sqrt(voltSumNHalf/sampleCount);
-            voltRMSTotalCycle = (voltAverage + voltAveragePrev)*1.11/ 2.0f;
-            voltPeakTotalCycle=(voltAverage+voltAveragePrev)*0.7853981;
-
-
-            /*TODO:
-             * when previous negative cycle has higher power content
-             * than previous positive cycle, then increase the offset
-             */
-//            OFFSET_ERROR=voltAverage-voltAveragePrev;
-//            if(OFFSET_ERROR>0.001){
-//                /*
-//                 * voltaverage contains previous negative cycle values
-//                 * voltaverageprev contains previous previous positive cycle values
-//                 * if error is positive, then negative cycle contains more power
-//                 * positive offset should be added
-//                 */
-//                OFFSET_CONTROL_VAL+=-0.0001;
-//            }else if(OFFSET_ERROR<-0.001){
-//                OFFSET_CONTROL_VAL+=0.0001;
-//            }
-
-
-            sampleCount = 0;
-            voltSumPHalf=0;
-        }
-        else if (adcRes < adcResPrev)
-        {
-            GPIO_writePin(LED_PIN_ZCROSS_DETECTION, 0);
-            /*
-             * negative cycle detected
-             *  halfCycleFlag=0
-             * voltAverage calculates average voltage of previous +ve cycle
-             */
-            halfCycleFlag=0;
-
-            voltAveragePrev=voltAverage;
-            voltAverage =fabs((voltSumPHalf) / sampleCount);
-//            voltAverage=sqrt(voltSumPHalf/sampleCount);
-            voltRMSTotalCycle = (voltAverage + voltAveragePrev)*1.11/ 2.0f;
-            voltPeakTotalCycle=(voltAverage+voltAveragePrev)*0.7853981;
-            /*TODO:
-             * when previous positive cycle has higher power content
-             * than previous negative cycle, then decrease the offset
-             */
-//            OFFSET_ERROR=voltAverage-voltAveragePrev;
-//            if(OFFSET_ERROR>0.001){
-//                /*
-//                 * voltaverage contains previous positive cycle values
-//                 * voltaverageprev contains previous previous negative cycle values
-//                 * if error is positive, then positive cycle contains more power
-//                 * negative offset should be added
-//                 */
-//                OFFSET_CONTROL_VAL+=0.0001;
-//            }else if(OFFSET_ERROR<-0.001){
-//                OFFSET_CONTROL_VAL+=-0.0001;
-//            }
-
-            sampleCount=0;
-            voltSumNHalf=0;
-        }
-
-
-        invModIndex=DCL_runPI_C3(&myCtrl, ref_peakVal, voltPeakTotalCycle);
-
-    }
-
-    if (halfCycleFlag)
-    {
-        /* positive cycle */
-        voltSumPHalf += voltVal;
-//        voltSumPHalf += (voltVal*voltVal);
-        sampleCount++;
-    }
-    else
-    {
-        /* negative cycle */
-        sampleCount++;
-        voltSumNHalf += voltVal;
-//        voltSumNHalf+=(voltVal*voltVal);
-    }
-
+#if CONTROL_MODE ==AVERAGE_CONTROL
     //--------------------------------------------------
-//    invDutyPU=invSine*invModIndex+OFFSET_CONTROL_VAL;
-    invDutyPU=invSine*invModIndex;
+    invDutyPU = invSine * invModIndex;
     //--------------------------------------------------
+#endif
 
     ADC_clearPPBEventStatus(ADCA_BASE, ADC_PPB_NUMBER1, ADC_EVT_ZERO);
     ADC_clearPPBEventStatus(ADCA_BASE, ADC_PPB_NUMBER1, ADC_EVT_TRIPHI);
     ADC_clearPPBEventStatus(ADCA_BASE, ADC_PPB_NUMBER1, ADC_EVT_TRIPLO);
-#endif
-/*
- * AVREAGE CONTROL CODE ENDS
- */
+
+    /*
+     * AVREAGE CONTROL CODE ENDS
+     */
 
     //================================================================
-/*
- *  INSTANT CONTROL CODE STARTS
- *  */
+    /*
+     *  INSTANT CONTROL CODE STARTS
+     *  */
 #if CONTROL_MODE==INSTANT_CONTROL
 
 #if CONTROL_TYPE==TYPE3_CONTROL
@@ -347,10 +343,14 @@ interrupt void adcISR(void)
      */
 
     error=invSine-voltCompVal;
-    invDutyPU=DCL_runDF23_C4(&myCtrl, error );
+//    controlVal=0;
+    controlVal=DCL_runDF23_C4(&myCtrl, error );
 
-    GPIO_togglePin(LED_PIN_ZCROSS_DETECTION);
-//    invDutyPU=invSine*invModIndex;
+    if(controlVal>CtrlValLimit)controlVal=CtrlValLimit;
+    else if(controlVal<(float32_t)(-1.0f*CtrlValLimit))controlVal=(float32_t)(-1.0f*CtrlValLimit);
+
+    invDutyPU=invSine*invModIndex+controlVal;
+
 //    if(invDutyPU>0.9)invDutyPU=0.9;
 //    if(invDutyPU<-0.9)invDutyPU=-0.9;
     /*
@@ -362,21 +362,22 @@ interrupt void adcISR(void)
     /*TODO
      * CONTROL TYPE PI CONTROL CODE HERE
      */
-    invDutyPU=DCL_runPI_C3(&myCtrl, invSine, voltCompVal);
+    error=invSine-voltCompVal;
+    controlVal=DCL_runPI_C3(&myCtrl, invSine, voltCompVal);
+    invDutyPU=invSine*invModIndex+controlVal;
 
     /*
      * END CODE
      */
 #endif
 #endif
-/*
- * INSTANT CONTROL CODE ENDS
- */
+    /*
+     * INSTANT CONTROL CODE ENDS
+     */
     //================================================================
-
-/*
- * OPEN LOOP CONTROL
- */
+    /*
+     * OPEN LOOP CONTROL
+     */
 #if CONTROL_MODE==OPEN_LOOP
     invDutyPU=SFRA_F32_inject(invSine*invModIndex);
 #endif
@@ -390,14 +391,11 @@ interrupt void adcISR(void)
     volatile static uint16_t logData = 0;
     volatile static uint16_t k = 0;
 
-    mainsVoltage[k] = voltCompVal;
-//    rmsVoltage[k]=voltRMSTotalCycle*1.414314f*2.0f;
-//    rmsVoltage[k]=voltRMSTotalCycle;
-//    errorVals[k] = OFFSET_ERROR;
-//    errorVals[k]=invSine;
-//    rmsVoltage[k] = invSine;
-    referenceVoltage[k] = invSine ;
-    adcRes_Iin_Buffer[k] = adcRes_Iin;
+//    graph_1[k]=voltCompVal;
+//    graph_2[k]=error;
+    graph_1[k]=invDutyPU;
+//    graph_4[k]=controlVal;
+
     k++;
     if (k >= SAMPLENO)
         k = 0;
@@ -422,7 +420,6 @@ interrupt void adcISR(void)
 
     /*SFRA COLLECT*/
 //    SFRA_F32_collect((float*) &invDutyPU, (float*) &voltCompVal);
-
     clearInterruptADC();
 }
 /*

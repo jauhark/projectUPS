@@ -56,9 +56,9 @@ interrupt void adcISR();
  *        15: S3 Pressed, others OFF
  */
 
-#define SW_A_Val  1600
-#define SW_B_Val  800
-#define SW_C_Val  3500
+#define SW_A_Val  1300
+#define SW_B_Val  600
+#define SW_C_Val  3200
 
 #define _GET_SWITCH_A0 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER4)
 #define _GET_SWITCH_A1 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER5)
