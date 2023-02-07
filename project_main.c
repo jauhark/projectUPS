@@ -242,7 +242,7 @@ interrupt void inverterISR(void)
 {
 //    RAMPGEN_run(&rgen1);
 //    invSine = sinf((rgen1.out) * 6.283185307f);
-    invSine = _sineLTable[_sineLTCounter];
+    invSine = SFRA_F32_inject(_sineLTable[_sineLTCounter]);
     _sineLTCounter++;
     if (_sineLTCounter >= 200)
         _sineLTCounter = 0;
@@ -424,7 +424,7 @@ interrupt void adcISR(void)
     volatile static uint16_t logData = 0;
     volatile static uint16_t k = 0;
 
-//    graph_1[k]=voltCompVal;
+    graph_2[k]=voltCompVal;
 //    graph_2[k]=error;
     graph_1[k] = invDutyPU;
 //    graph_4[k]=controlVal;
@@ -452,7 +452,7 @@ interrupt void adcISR(void)
     adcResPrev = adcRes;
 
     /*SFRA COLLECT*/
-//    SFRA_F32_collect((float*) &invDutyPU, (float*) &voltCompVal);
+    SFRA_F32_collect((float*) &invDutyPU, (float*) &voltCompVal);
     clearInterruptADC();
 }
 /*

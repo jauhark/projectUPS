@@ -264,7 +264,7 @@ float32_t voltCompVal = 0;
 
 float32_t graph_1[SAMPLENO] = { 0 }; //array to log adcDataData
 //
-//float32_t graph_2[SAMPLENO]={0};
+float32_t graph_2[SAMPLENO]={0};
 //
 #pragma SET_DATA_SECTION("debugBuffers1")
 
