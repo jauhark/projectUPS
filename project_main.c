@@ -30,11 +30,6 @@ void main(void)
 
     setupADC();
 
-    /*
-     RAMPGEN_reset(&rgen1);
-     rgen1.freq = (float32_t) (AC_FREQ);
-     rgen1.stepAngleMax = (float32_t) (2.0f / INV_PWM_SWITCHING_FREQUENCY);
-     */
     _sineLTCounter = 0;
 
     //================================================================

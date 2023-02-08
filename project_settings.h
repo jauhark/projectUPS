@@ -95,7 +95,7 @@
 /*
  * SFRA SETTINGS
  */
-#define SFRA_ENABLED 1
+#define SFRA_ENABLED 0
 
 #if SFRA_ENABLED==1
 
