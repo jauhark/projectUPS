@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -82,7 +82,7 @@ void DMA_configBurst(uint32_t base, uint16_t size, int16_t srcStep,
     // Check the arguments.
     //
     ASSERT(DMA_isBaseValid(base));
-    ASSERT((size >= 1U) || (size <= 32U));
+    ASSERT((size >= 1U) && (size <= 32U));
 
     EALLOW;
 
@@ -108,7 +108,7 @@ void DMA_configTransfer(uint32_t base, uint32_t transferSize, int16_t srcStep,
     // Check the arguments.
     //
     ASSERT(DMA_isBaseValid(base));
-    ASSERT(transferSize <= 0x10000);
+    ASSERT(transferSize <= 0x10000U);
 
     EALLOW;
 
@@ -134,7 +134,7 @@ void DMA_configWrap(uint32_t base, uint32_t srcWrapSize, int16_t srcStep,
     // Check the arguments.
     //
     ASSERT(DMA_isBaseValid(base));
-    ASSERT((srcWrapSize <= 0x10000) || (destWrapSize <= 0x10000));
+    ASSERT((srcWrapSize <= 0x10000U) || (destWrapSize <= 0x10000U));
 
     EALLOW;
 

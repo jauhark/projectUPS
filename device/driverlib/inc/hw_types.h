@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -46,12 +46,20 @@
 // Macros for hardware access
 //
 //*****************************************************************************
-#define HWREG(x)                                                              \
-        (*((volatile uint32_t *)((uintptr_t)(x))))
+#if defined(__TMS320C28XX_CLA__)
+    #define HWREG(x)                                                          \
+            (*((volatile uint32_t *)((uintptr_t)(x))))
+    #define HWREGH(x)                                                         \
+            (*((volatile uint16_t *)((uintptr_t)(x))))
+#else
+    #define HWREG(x)                                                          \
+            (*((volatile uint32_t *)(x)))
+    #define HWREGH(x)                                                         \
+            (*((volatile uint16_t *)(x)))
+#endif
+
 #define HWREG_BP(x)                                                           \
         __byte_peripheral_32((uint32_t *)(x))
-#define HWREGH(x)                                                             \
-        (*((volatile uint16_t *)((uintptr_t)(x))))
 #define HWREGB(x)                                                             \
         __byte((int16_t *)(x),0)
 
@@ -62,6 +70,15 @@
 //*****************************************************************************
 #define STATUS_S_SUCCESS    (0)
 #define STATUS_E_FAILURE    (-1)
+
+//*****************************************************************************
+//
+// Definition of 8 bit types for USB Driver code to maintain portability
+// between byte and word addressable cores of C2000 Devices.
+//
+//*****************************************************************************
+typedef uint16_t uint8_t;
+typedef int16_t int8_t;
 
 //****************************************************************************
 //
@@ -101,5 +118,13 @@ typedef long double   float64_t;
 extern int16_t &__byte(int16_t *array, uint16_t byte_index);
 extern uint32_t &__byte_peripheral_32(uint32_t *x);
 #endif
+
+//
+// C++ Bool Compatibility
+//
+#if defined(__cplusplus)
+typedef bool _Bool;
+#endif
+
 
 #endif // HW_TYPES_H

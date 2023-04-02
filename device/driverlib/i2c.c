@@ -5,10 +5,8 @@
 // TITLE:  C28x I2C driver.
 //
 //###########################################################################
-//
-//
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -259,8 +257,6 @@ void
 I2C_configureModuleFrequency(uint32_t base, uint32_t sysclkHz)
 {
     uint32_t modPrescale;
-    uint32_t divider;
-    uint32_t dValue;
 
     //
     // Check the arguments.

@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -47,7 +47,7 @@
 // for use by application code.
 //
 //*****************************************************************************
-#define ADC_OFFSET_TRIM_OTP    0x70194U
+#define ADC_OFFSET_TRIM_OTP                     0x70194U
 
 #define ADC_VOLTAGE_REF_REG_OFFSET              8U
 
@@ -55,7 +55,7 @@
 // The following macro calculates the INL trim location in OTP memory
 // required to calibrate the ADC linearity.
 //
-#define ADC_getINLTrimOTPLoc(offset) ((uint16_t *)(0x701BFU + (0x6 * offset)))
+#define ADC_getINLTrimOTPLoc(offset) ((uint16_t *)(0x701BFU + (0x6U * offset)))
 
 //
 // TI-OTP key value expected to be programmed in trimmed device
@@ -184,14 +184,14 @@ ADC_setINLTrim(uint32_t base)
         // Update INL trim values to ADC trim registers
         //
         EALLOW;
-        for(i = 0U; i < 4U; i+=2)
+        for(i = 0U; i < 4U; i+=2U)
         {
 
             //
             // 16-bit writes are performed since the OTP source is not word
             // aligned.
             //
-            HWREGH(base + ADC_O_INLTRIM2 + i + 1) = (*inlTrimAddress++);
+            HWREGH(base + ADC_O_INLTRIM2 + i + 1U) = (*inlTrimAddress++);
             HWREGH(base + ADC_O_INLTRIM2 + i)     = (*inlTrimAddress++);
         }
         EDIS;

@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -778,7 +778,7 @@ XBAR_forceOutputLatch(XBAR_OutputNum output)
     // Set the bit that forces the corresponding OUTPUTLATCH bit.
     //
     HWREGH(OUTPUTXBAR_BASE + XBAR_O_OUTPUTLATCHFRC) =
-        0x1U << ((uint16_t)output / 2U);
+        (uint16_t)0x1U << ((uint16_t)output / 2U);
 }
 
 //*****************************************************************************
@@ -846,7 +846,7 @@ XBAR_enableEPWMMux(XBAR_TripNum trip, uint32_t muxes)
     //
     EALLOW;
 
-    HWREG(XBAR_EPWM_EN_REG_BASE + (uint16_t)trip) |= muxes;
+    HWREG(XBAR_EPWM_EN_REG_BASE + (uint32_t)trip) |= muxes;
 
     EDIS;
 }
@@ -878,7 +878,7 @@ XBAR_disableEPWMMux(XBAR_TripNum trip, uint32_t muxes)
     //
     EALLOW;
 
-    HWREG(XBAR_EPWM_EN_REG_BASE + (uint16_t)trip) &= ~(muxes);
+    HWREG(XBAR_EPWM_EN_REG_BASE + (uint32_t)trip) &= ~(muxes);
 
     EDIS;
 }
@@ -1065,7 +1065,7 @@ XBAR_enableCLBMux(XBAR_AuxSigNum auxSignal, uint32_t muxes)
     //
     EALLOW;
 
-    HWREG(XBAR_CLB_EN_REG_BASE + (uint16_t)auxSignal) |= muxes;
+    HWREG(XBAR_CLB_EN_REG_BASE + (uint32_t)auxSignal) |= muxes;
 
     EDIS;
 }
@@ -1097,7 +1097,7 @@ XBAR_disableCLBMux(XBAR_AuxSigNum auxSignal, uint32_t muxes)
     //
     EALLOW;
 
-    HWREG(XBAR_CLB_EN_REG_BASE + (uint16_t)auxSignal) &= ~(muxes);
+    HWREG(XBAR_CLB_EN_REG_BASE + (uint32_t)auxSignal) &= ~(muxes);
 
     EDIS;
 }

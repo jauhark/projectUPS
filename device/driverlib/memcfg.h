@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -177,6 +177,15 @@ extern "C"
 #define MEMCFG_NMVIOL_CLA1WRITE  0x00000020U //!< Non-master CLA1 write access
 #define MEMCFG_NMVIOL_CLA1FETCH  0x00000040U //!< Non-master CLA1 fetch access
 
+//*****************************************************************************
+//
+// Values that can be passed to MemCfg_enableViolationInterrupt()
+// MemCfg_disableViolationInterrupt(), MemCfg_forceViolationInterrupt(),
+// MemCfg_clearViolationInterruptStatus(), and MemCfg_getViolationAddress() as
+// the intFlags parameter. They also make up the return value of
+// MemCfg_getViolationInterruptStatus().
+//
+//*****************************************************************************
 #define MEMCFG_MVIOL_CPUFETCH    0x00010000U //!< Master CPU fetch access
 #define MEMCFG_MVIOL_CPUWRITE    0x00020000U //!< Master CPU write access
 #define MEMCFG_MVIOL_DMAWRITE    0x00040000U //!< Master DMA write access
@@ -240,7 +249,7 @@ typedef enum
 //*****************************************************************************
 typedef enum
 {
-    //! Functional mode
+    //! Functional mode. Test mode is disabled.
     MEMCFG_TEST_FUNCTIONAL   = 0,
     //! Writes allowed to data only
     MEMCFG_TEST_WRITE_DATA   = 1,

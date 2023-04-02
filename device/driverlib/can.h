@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -358,6 +358,103 @@ CAN_writeDataReg(const uint16_t *const data, uint32_t address,
         // Write out the data 8 bits at a time.
         //
         HWREGB(dataReg) = data[idx];
+
+        dataReg++;
+    }
+}
+
+//*****************************************************************************
+//
+//! \internal
+//!
+//! Copies data (all 16bits) from a buffer to the CAN Data registers.
+//!
+//! \param data is a pointer to the data to be written out to the CAN
+//! controller's data registers.
+//! \param address is a uint32_t value for the first register of the
+//! CAN controller's data registers.  For example, in order to use the IF1
+//! register set on CAN controller 0, the value would be: \b CANA_BASE \b +
+//! \b CAN_O_IF1DATA.
+//! \param size is the number of bytes to copy into the CAN controller.
+//!
+//! This function takes the steps necessary to copy data from a contiguous
+//! buffer in memory into the non-contiguous data registers used by the CAN
+//! controller.
+//!
+//! \return None.
+//
+//*****************************************************************************
+
+static inline void
+CAN_writeDataReg_16bit(const uint16_t *const data, uint32_t address,
+                 uint32_t size)
+{
+    uint32_t idx;
+    uint32_t dataReg = address;
+
+    //
+    // Check the dataReg.
+    //
+    ASSERT(dataReg != 0U);
+
+    //
+    // Loop always copies 1 byte per iteration.
+    //
+    for(idx = 0U; idx < size; idx++)
+    {
+        //
+        // Write out the data 8 bits at a time.
+        //
+        HWREGB(dataReg) = ((data[idx]) >> ((idx % 2) * 8));
+
+        dataReg++;
+    }
+}
+
+
+//*****************************************************************************
+//
+//! \internal
+//!
+//! Copies data (all 32bits) from a buffer to the CAN Data registers.
+//!
+//! \param data is a pointer to the data to be written out to the CAN
+//! controller's data registers.
+//! \param address is a uint32_t value for the first register of the
+//! CAN controller's data registers.  For example, in order to use the IF1
+//! register set on CAN controller 0, the value would be: \b CANA_BASE \b +
+//! \b CAN_O_IF1DATA.
+//! \param size is the number of bytes to copy into the CAN controller.
+//!
+//! This function takes the steps necessary to copy data from a contiguous
+//! buffer in memory into the non-contiguous data registers used by the CAN
+//! controller.
+//!
+//! \return None.
+//
+//*****************************************************************************
+
+static inline void
+CAN_writeDataReg_32bit(const uint32_t *const data, uint32_t address,
+                 uint32_t size)
+{
+    uint32_t idx;
+    uint32_t dataReg = address;
+
+    //
+    // Check the dataReg.
+    //
+    ASSERT(dataReg != 0U);
+
+    //
+    // Loop always copies 1 byte per iteration.
+    //
+    for(idx = 0U; idx < size; idx++)
+    {
+        //
+        // Write out the data 8 bits at a time.
+        //
+        HWREGB(dataReg) = ((data[idx]) >> ((idx % 4) * 8));
 
         dataReg++;
     }
@@ -1632,6 +1729,76 @@ CAN_sendMessage(uint32_t base, uint32_t objID, uint16_t msgLen,
 
 //*****************************************************************************
 //
+//! Sends a Message Object
+//!
+//! \param base is the base address of the CAN controller.
+//! \param objID is the object number to configure (1-32).
+//! \param msgLen is the number of bytes of data in the message object (0-8)
+//! \param msgData is a pointer to the message object's data (all 16 bits are sent)
+//!
+//! This function is used to transmit a message object and the message data,
+//! if applicable.
+//!
+//! \note The message object requested by the \e objID must first be setup
+//! using the CAN_setupMessageObject() function.
+//!
+//! \return None.
+//
+//*****************************************************************************
+
+extern void
+CAN_sendMessage_16bit(uint32_t base, uint32_t objID, uint16_t msgLen,
+                const uint16_t *msgData);
+
+//*****************************************************************************
+//
+//! Sends a Message Object
+//!
+//! \param base is the base address of the CAN controller.
+//! \param objID is the object number to configure (1-32).
+//! \param msgLen is the number of bytes of data in the message object (0-8)
+//! \param msgData is a pointer to the message object's data (all 32 bits are sent)
+//!
+//! This function is used to transmit a message object and the message data,
+//! if applicable.
+//!
+//! \note The message object requested by the \e objID must first be setup
+//! using the CAN_setupMessageObject() function.
+//!
+//! \return None.
+//
+//*****************************************************************************
+
+extern void
+CAN_sendMessage_32bit(uint32_t base, uint32_t objID, uint16_t msgLen,
+                const uint32_t *msgData);                
+
+//*****************************************************************************
+//
+//! Sends a Message Object while dynamically updating data length
+//!
+//! \param base is the base address of the CAN controller.
+//! \param objID is the object number to configure (1-32).
+//! \param msgLen is the number of bytes of data in the message object (0-8)
+//! \param msgData is a pointer to the message object's data
+//!
+//! This function is used to transmit a message object and the message data,
+//! if applicable and can be used to dynamically update the data length
+//! for every subsequent call of this function.
+//!
+//! \note The message object requested by the \e objID must first be setup
+//! using the CAN_setupMessageObject() function.
+//!
+//! \return None.
+//
+//*****************************************************************************
+
+extern void
+CAN_sendMessage_updateDLC(uint32_t base, uint32_t objID, uint16_t msgLen,
+                  const uint16_t *msgData);
+
+//*****************************************************************************
+//
 //! Sends a Remote Request Message Object
 //!
 //! \param base is the base address of the CAN controller.
@@ -1693,7 +1860,7 @@ CAN_readMessage(uint32_t base, uint32_t objID,
 //! Filled with read Data when the return value is true for this function.
 //!
 //! This function is used to read the data contents and the Message ID
-//! of the specified message object in the CAN controller.The Message returned
+//! of the specified message object in the CAN controller.The Message ID returned
 //! is stored in the \e msgID parameter and its type in \e frameType parameter.
 //! The data returned is stored in the \e msgData parameter.
 //!
@@ -1720,8 +1887,8 @@ extern bool CAN_readMessageWithID(uint32_t base,
 //! \param interface is the interface to use for the transfer. Valid value are
 //!        1 or 2.
 //! \param objID is the object number to transfer (1-32).
-//! \param direction is the of the transfer. False is Message RAM to IF, True
-//!        is IF to Message RAM.
+//! \param direction is the direction of the transfer.
+//!         False is Message RAM to IF, True is IF to Message RAM.
 //! \param dmaRequest asserts the DMA request line after a transfer if
 //!        set to True.
 //!
@@ -1753,6 +1920,23 @@ CAN_transferMessage(uint32_t base, uint16_t interface, uint32_t objID,
 //*****************************************************************************
 extern void
 CAN_clearMessage(uint32_t base, uint32_t objID);
+
+//*****************************************************************************
+//
+//! Disables specific message object
+//!
+//! \param base is the base address of the CAN controller.
+//! \param objID is the message object number to disable (1-32).
+//!
+//! This function disables the specific message object. Once the message object
+//! has been disabled it will be ignored by the message handler until it
+//! is configured again.
+//!
+//! \return None.
+//
+//*****************************************************************************
+extern void
+CAN_disableMessageObject(uint32_t base, uint32_t objID);
 
 //*****************************************************************************
 //

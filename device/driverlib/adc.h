@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -67,7 +67,6 @@ extern "C"
 #include "inc/hw_types.h"
 #include "cpu.h"
 #include "debug.h"
-
 //*****************************************************************************
 //
 // Useful defines used within the driver functions. Not intended for use by
@@ -141,14 +140,14 @@ extern "C"
 //*****************************************************************************
 typedef enum
 {
-    ADC_CLK_DIV_1_0 = 0,            //!< ADCCLK = (input clock) / 1.0
-    ADC_CLK_DIV_2_0 = 2,            //!< ADCCLK = (input clock) / 2.0
-    ADC_CLK_DIV_3_0 = 4,            //!< ADCCLK = (input clock) / 3.0
-    ADC_CLK_DIV_4_0 = 6,            //!< ADCCLK = (input clock) / 4.0
-    ADC_CLK_DIV_5_0 = 8,            //!< ADCCLK = (input clock) / 5.0
-    ADC_CLK_DIV_6_0 = 10,           //!< ADCCLK = (input clock) / 6.0
-    ADC_CLK_DIV_7_0 = 12,           //!< ADCCLK = (input clock) / 7.0
-    ADC_CLK_DIV_8_0 = 14            //!< ADCCLK = (input clock) / 8.0
+    ADC_CLK_DIV_1_0 = 0U,            //!< ADCCLK = (input clock) / 1.0
+    ADC_CLK_DIV_2_0 = 2U,            //!< ADCCLK = (input clock) / 2.0
+    ADC_CLK_DIV_3_0 = 4U,            //!< ADCCLK = (input clock) / 3.0
+    ADC_CLK_DIV_4_0 = 6U,            //!< ADCCLK = (input clock) / 4.0
+    ADC_CLK_DIV_5_0 = 8U,            //!< ADCCLK = (input clock) / 5.0
+    ADC_CLK_DIV_6_0 = 10U,           //!< ADCCLK = (input clock) / 6.0
+    ADC_CLK_DIV_7_0 = 12U,           //!< ADCCLK = (input clock) / 7.0
+    ADC_CLK_DIV_8_0 = 14U            //!< ADCCLK = (input clock) / 8.0
 } ADC_ClkPrescale;
 
 //*****************************************************************************
@@ -160,27 +159,27 @@ typedef enum
 //*****************************************************************************
 typedef enum
 {
-    ADC_TRIGGER_SW_ONLY     = 0,     //!< Software only
-    ADC_TRIGGER_CPU1_TINT0  = 1,     //!< CPU1 Timer 0, TINT0
-    ADC_TRIGGER_CPU1_TINT1  = 2,     //!< CPU1 Timer 1, TINT1
-    ADC_TRIGGER_CPU1_TINT2  = 3,     //!< CPU1 Timer 2, TINT2
-    ADC_TRIGGER_GPIO        = 4,     //!< GPIO, ADCEXTSOC
-    ADC_TRIGGER_EPWM1_SOCA  = 5,     //!< ePWM1, ADCSOCA
-    ADC_TRIGGER_EPWM1_SOCB  = 6,     //!< ePWM1, ADCSOCB
-    ADC_TRIGGER_EPWM2_SOCA  = 7,     //!< ePWM2, ADCSOCA
-    ADC_TRIGGER_EPWM2_SOCB  = 8,     //!< ePWM2, ADCSOCB
-    ADC_TRIGGER_EPWM3_SOCA  = 9,     //!< ePWM3, ADCSOCA
-    ADC_TRIGGER_EPWM3_SOCB  = 10,    //!< ePWM3, ADCSOCB
-    ADC_TRIGGER_EPWM4_SOCA  = 11,    //!< ePWM4, ADCSOCA
-    ADC_TRIGGER_EPWM4_SOCB  = 12,    //!< ePWM4, ADCSOCB
-    ADC_TRIGGER_EPWM5_SOCA  = 13,    //!< ePWM5, ADCSOCA
-    ADC_TRIGGER_EPWM5_SOCB  = 14,    //!< ePWM5, ADCSOCB
-    ADC_TRIGGER_EPWM6_SOCA  = 15,    //!< ePWM6, ADCSOCA
-    ADC_TRIGGER_EPWM6_SOCB  = 16,    //!< ePWM6, ADCSOCB
-    ADC_TRIGGER_EPWM7_SOCA  = 17,    //!< ePWM7, ADCSOCA
-    ADC_TRIGGER_EPWM7_SOCB  = 18,    //!< ePWM7, ADCSOCB
-    ADC_TRIGGER_EPWM8_SOCA  = 19,    //!< ePWM8, ADCSOCA
-    ADC_TRIGGER_EPWM8_SOCB  = 20    //!< ePWM8, ADCSOCB
+    ADC_TRIGGER_SW_ONLY     = 0U,     //!< Software only
+    ADC_TRIGGER_CPU1_TINT0  = 1U,     //!< CPU1 Timer 0, TINT0
+    ADC_TRIGGER_CPU1_TINT1  = 2U,     //!< CPU1 Timer 1, TINT1
+    ADC_TRIGGER_CPU1_TINT2  = 3U,     //!< CPU1 Timer 2, TINT2
+    ADC_TRIGGER_GPIO        = 4U,     //!< GPIO, ADCEXTSOC
+    ADC_TRIGGER_EPWM1_SOCA  = 5U,     //!< ePWM1, ADCSOCA
+    ADC_TRIGGER_EPWM1_SOCB  = 6U,     //!< ePWM1, ADCSOCB
+    ADC_TRIGGER_EPWM2_SOCA  = 7U,     //!< ePWM2, ADCSOCA
+    ADC_TRIGGER_EPWM2_SOCB  = 8U,     //!< ePWM2, ADCSOCB
+    ADC_TRIGGER_EPWM3_SOCA  = 9U,     //!< ePWM3, ADCSOCA
+    ADC_TRIGGER_EPWM3_SOCB  = 10U,    //!< ePWM3, ADCSOCB
+    ADC_TRIGGER_EPWM4_SOCA  = 11U,    //!< ePWM4, ADCSOCA
+    ADC_TRIGGER_EPWM4_SOCB  = 12U,    //!< ePWM4, ADCSOCB
+    ADC_TRIGGER_EPWM5_SOCA  = 13U,    //!< ePWM5, ADCSOCA
+    ADC_TRIGGER_EPWM5_SOCB  = 14U,    //!< ePWM5, ADCSOCB
+    ADC_TRIGGER_EPWM6_SOCA  = 15U,    //!< ePWM6, ADCSOCA
+    ADC_TRIGGER_EPWM6_SOCB  = 16U,    //!< ePWM6, ADCSOCB
+    ADC_TRIGGER_EPWM7_SOCA  = 17U,    //!< ePWM7, ADCSOCA
+    ADC_TRIGGER_EPWM7_SOCB  = 18U,    //!< ePWM7, ADCSOCB
+    ADC_TRIGGER_EPWM8_SOCA  = 19U,    //!< ePWM8, ADCSOCA
+    ADC_TRIGGER_EPWM8_SOCB  = 20U    //!< ePWM8, ADCSOCB
 } ADC_Trigger;
 
 //*****************************************************************************
@@ -192,22 +191,22 @@ typedef enum
 //*****************************************************************************
 typedef enum
 {
-    ADC_CH_ADCIN0,               //!< ADCIN0 is converted
-    ADC_CH_ADCIN1,               //!< ADCIN1 is converted
-    ADC_CH_ADCIN2,               //!< ADCIN2 is converted
-    ADC_CH_ADCIN3,               //!< ADCIN3 is converted
-    ADC_CH_ADCIN4,               //!< ADCIN4 is converted
-    ADC_CH_ADCIN5,               //!< ADCIN5 is converted
-    ADC_CH_ADCIN6,               //!< ADCIN6 is converted
-    ADC_CH_ADCIN7,               //!< ADCIN7 is converted
-    ADC_CH_ADCIN8,               //!< ADCIN8 is converted
-    ADC_CH_ADCIN9,               //!< ADCIN9 is converted
-    ADC_CH_ADCIN10,              //!< ADCIN10 is converted
-    ADC_CH_ADCIN11,              //!< ADCIN11 is converted
-    ADC_CH_ADCIN12,              //!< ADCIN12 is converted
-    ADC_CH_ADCIN13,              //!< ADCIN13 is converted
-    ADC_CH_ADCIN14,              //!< ADCIN14 is converted
-    ADC_CH_ADCIN15               //!< ADCIN15 is converted
+    ADC_CH_ADCIN0  = 0U,          //!< ADCIN0 is converted
+    ADC_CH_ADCIN1  = 1U,          //!< ADCIN1 is converted
+    ADC_CH_ADCIN2  = 2U,          //!< ADCIN2 is converted
+    ADC_CH_ADCIN3  = 3U,          //!< ADCIN3 is converted
+    ADC_CH_ADCIN4  = 4U,          //!< ADCIN4 is converted
+    ADC_CH_ADCIN5  = 5U,          //!< ADCIN5 is converted
+    ADC_CH_ADCIN6  = 6U,          //!< ADCIN6 is converted
+    ADC_CH_ADCIN7  = 7U,          //!< ADCIN7 is converted
+    ADC_CH_ADCIN8  = 8U,          //!< ADCIN8 is converted
+    ADC_CH_ADCIN9  = 9U,          //!< ADCIN9 is converted
+    ADC_CH_ADCIN10 = 10U,         //!< ADCIN10 is converted
+    ADC_CH_ADCIN11 = 11U,         //!< ADCIN11 is converted
+    ADC_CH_ADCIN12 = 12U,         //!< ADCIN12 is converted
+    ADC_CH_ADCIN13 = 13U,         //!< ADCIN13 is converted
+    ADC_CH_ADCIN14 = 14U,         //!< ADCIN14 is converted
+    ADC_CH_ADCIN15 = 15U          //!< ADCIN15 is converted
 } ADC_Channel;
 
 //*****************************************************************************
@@ -219,9 +218,9 @@ typedef enum
 typedef enum
 {
     //! Occurs at the end of the acquisition window
-    ADC_PULSE_END_OF_ACQ_WIN = 0x00,
+    ADC_PULSE_END_OF_ACQ_WIN = 0x00U,
     //! Occurs at the end of the conversion
-    ADC_PULSE_END_OF_CONV    = 0x04
+    ADC_PULSE_END_OF_CONV    = 0x04U
 } ADC_PulseMode;
 
 //*****************************************************************************
@@ -232,10 +231,10 @@ typedef enum
 //*****************************************************************************
 typedef enum
 {
-    ADC_INT_NUMBER1,        //!< ADCINT1 Interrupt
-    ADC_INT_NUMBER2,        //!< ADCINT2 Interrupt
-    ADC_INT_NUMBER3,        //!< ADCINT3 Interrupt
-    ADC_INT_NUMBER4         //!< ADCINT4 Interrupt
+    ADC_INT_NUMBER1 = 0U,        //!< ADCINT1 Interrupt
+    ADC_INT_NUMBER2 = 1U,        //!< ADCINT2 Interrupt
+    ADC_INT_NUMBER3 = 2U,        //!< ADCINT3 Interrupt
+    ADC_INT_NUMBER4 = 3U        //!< ADCINT4 Interrupt
 } ADC_IntNumber;
 
 //*****************************************************************************
@@ -246,10 +245,10 @@ typedef enum
 //*****************************************************************************
 typedef enum
 {
-    ADC_PPB_NUMBER1,        //!< Post-processing block 1
-    ADC_PPB_NUMBER2,        //!< Post-processing block 2
-    ADC_PPB_NUMBER3,        //!< Post-processing block 3
-    ADC_PPB_NUMBER4         //!< Post-processing block 4
+    ADC_PPB_NUMBER1 = 0U,        //!< Post-processing block 1
+    ADC_PPB_NUMBER2 = 1U,        //!< Post-processing block 2
+    ADC_PPB_NUMBER3 = 2U,        //!< Post-processing block 3
+    ADC_PPB_NUMBER4 = 3U        //!< Post-processing block 4
 } ADC_PPBNumber;
 
 //*****************************************************************************
@@ -263,22 +262,22 @@ typedef enum
 //*****************************************************************************
 typedef enum
 {
-    ADC_SOC_NUMBER0,        //!< SOC/EOC number 0
-    ADC_SOC_NUMBER1,        //!< SOC/EOC number 1
-    ADC_SOC_NUMBER2,        //!< SOC/EOC number 2
-    ADC_SOC_NUMBER3,        //!< SOC/EOC number 3
-    ADC_SOC_NUMBER4,        //!< SOC/EOC number 4
-    ADC_SOC_NUMBER5,        //!< SOC/EOC number 5
-    ADC_SOC_NUMBER6,        //!< SOC/EOC number 6
-    ADC_SOC_NUMBER7,        //!< SOC/EOC number 7
-    ADC_SOC_NUMBER8,        //!< SOC/EOC number 8
-    ADC_SOC_NUMBER9,        //!< SOC/EOC number 9
-    ADC_SOC_NUMBER10,       //!< SOC/EOC number 10
-    ADC_SOC_NUMBER11,       //!< SOC/EOC number 11
-    ADC_SOC_NUMBER12,       //!< SOC/EOC number 12
-    ADC_SOC_NUMBER13,       //!< SOC/EOC number 13
-    ADC_SOC_NUMBER14,       //!< SOC/EOC number 14
-    ADC_SOC_NUMBER15        //!< SOC/EOC number 15
+    ADC_SOC_NUMBER0  = 0U,        //!< SOC/EOC number 0
+    ADC_SOC_NUMBER1  = 1U,        //!< SOC/EOC number 1
+    ADC_SOC_NUMBER2  = 2U,        //!< SOC/EOC number 2
+    ADC_SOC_NUMBER3  = 3U,        //!< SOC/EOC number 3
+    ADC_SOC_NUMBER4  = 4U,        //!< SOC/EOC number 4
+    ADC_SOC_NUMBER5  = 5U,        //!< SOC/EOC number 5
+    ADC_SOC_NUMBER6  = 6U,        //!< SOC/EOC number 6
+    ADC_SOC_NUMBER7  = 7U,        //!< SOC/EOC number 7
+    ADC_SOC_NUMBER8  = 8U,        //!< SOC/EOC number 8
+    ADC_SOC_NUMBER9  = 9U,        //!< SOC/EOC number 9
+    ADC_SOC_NUMBER10 = 10U,       //!< SOC/EOC number 10
+    ADC_SOC_NUMBER11 = 11U,       //!< SOC/EOC number 11
+    ADC_SOC_NUMBER12 = 12U,       //!< SOC/EOC number 12
+    ADC_SOC_NUMBER13 = 13U,       //!< SOC/EOC number 13
+    ADC_SOC_NUMBER14 = 14U,       //!< SOC/EOC number 14
+    ADC_SOC_NUMBER15 = 15U        //!< SOC/EOC number 15
 } ADC_SOCNumber;
 
 //*****************************************************************************
@@ -289,9 +288,9 @@ typedef enum
 //*****************************************************************************
 typedef enum
 {
-    ADC_INT_SOC_TRIGGER_NONE,       //!< No ADCINT will trigger the SOC
-    ADC_INT_SOC_TRIGGER_ADCINT1,    //!< ADCINT1 will trigger the SOC
-    ADC_INT_SOC_TRIGGER_ADCINT2     //!< ADCINT2 will trigger the SOC
+    ADC_INT_SOC_TRIGGER_NONE = 0U,       //!< No ADCINT will trigger the SOC
+    ADC_INT_SOC_TRIGGER_ADCINT1 = 1U,    //!< ADCINT1 will trigger the SOC
+    ADC_INT_SOC_TRIGGER_ADCINT2 = 2U    //!< ADCINT2 will trigger the SOC
 } ADC_IntSOCTrigger;
 
 //*****************************************************************************
@@ -302,23 +301,23 @@ typedef enum
 //*****************************************************************************
 typedef enum
 {
-    ADC_PRI_ALL_ROUND_ROBIN,        //!< Round robin mode is used for all
-    ADC_PRI_SOC0_HIPRI,             //!< SOC 0 hi pri, others in round robin
-    ADC_PRI_THRU_SOC1_HIPRI,        //!< SOC 0-1 hi pri, others in round robin
-    ADC_PRI_THRU_SOC2_HIPRI,        //!< SOC 0-2 hi pri, others in round robin
-    ADC_PRI_THRU_SOC3_HIPRI,        //!< SOC 0-3 hi pri, others in round robin
-    ADC_PRI_THRU_SOC4_HIPRI,        //!< SOC 0-4 hi pri, others in round robin
-    ADC_PRI_THRU_SOC5_HIPRI,        //!< SOC 0-5 hi pri, others in round robin
-    ADC_PRI_THRU_SOC6_HIPRI,        //!< SOC 0-6 hi pri, others in round robin
-    ADC_PRI_THRU_SOC7_HIPRI,        //!< SOC 0-7 hi pri, others in round robin
-    ADC_PRI_THRU_SOC8_HIPRI,        //!< SOC 0-8 hi pri, others in round robin
-    ADC_PRI_THRU_SOC9_HIPRI,        //!< SOC 0-9 hi pri, others in round robin
-    ADC_PRI_THRU_SOC10_HIPRI,       //!< SOC 0-10 hi pri, others in round robin
-    ADC_PRI_THRU_SOC11_HIPRI,       //!< SOC 0-11 hi pri, others in round robin
-    ADC_PRI_THRU_SOC12_HIPRI,       //!< SOC 0-12 hi pri, others in round robin
-    ADC_PRI_THRU_SOC13_HIPRI,       //!< SOC 0-13 hi pri, others in round robin
-    ADC_PRI_THRU_SOC14_HIPRI,       //!< SOC 0-14 hi pri, SOC15 in round robin
-    ADC_PRI_ALL_HIPRI               //!< All priorities based on SOC number
+    ADC_PRI_ALL_ROUND_ROBIN = 0U,    //!< Round robin mode is used for all
+    ADC_PRI_SOC0_HIPRI      = 1U,    //!< SOC 0 hi pri, others in round robin
+    ADC_PRI_THRU_SOC1_HIPRI = 2U,    //!< SOC 0-1 hi pri, others in round robin
+    ADC_PRI_THRU_SOC2_HIPRI = 3U,    //!< SOC 0-2 hi pri, others in round robin
+    ADC_PRI_THRU_SOC3_HIPRI = 4U,    //!< SOC 0-3 hi pri, others in round robin
+    ADC_PRI_THRU_SOC4_HIPRI = 5U,    //!< SOC 0-4 hi pri, others in round robin
+    ADC_PRI_THRU_SOC5_HIPRI = 6U,    //!< SOC 0-5 hi pri, others in round robin
+    ADC_PRI_THRU_SOC6_HIPRI = 7U,    //!< SOC 0-6 hi pri, others in round robin
+    ADC_PRI_THRU_SOC7_HIPRI = 8U,    //!< SOC 0-7 hi pri, others in round robin
+    ADC_PRI_THRU_SOC8_HIPRI = 9U,    //!< SOC 0-8 hi pri, others in round robin
+    ADC_PRI_THRU_SOC9_HIPRI = 10U,   //!< SOC 0-9 hi pri, others in round robin
+    ADC_PRI_THRU_SOC10_HIPRI = 11U,  //!< SOC 0-10 hi pri, others in round robin
+    ADC_PRI_THRU_SOC11_HIPRI = 12U,  //!< SOC 0-11 hi pri, others in round robin
+    ADC_PRI_THRU_SOC12_HIPRI = 13U,  //!< SOC 0-12 hi pri, others in round robin
+    ADC_PRI_THRU_SOC13_HIPRI = 14U,  //!< SOC 0-13 hi pri, others in round robin
+    ADC_PRI_THRU_SOC14_HIPRI = 15U,  //!< SOC 0-14 hi pri, SOC15 in round robin
+    ADC_PRI_ALL_HIPRI = 16U          //!< All priorities based on SOC number
 } ADC_PriorityMode;
 
 //*****************************************************************************
@@ -329,8 +328,8 @@ typedef enum
 //*****************************************************************************
 typedef enum
 {
-    ADC_REFERENCE_INTERNAL,
-    ADC_REFERENCE_EXTERNAL
+    ADC_REFERENCE_INTERNAL = 0U,
+    ADC_REFERENCE_EXTERNAL = 1U
 } ADC_ReferenceMode;
 
 //*****************************************************************************
@@ -342,8 +341,8 @@ typedef enum
 //*****************************************************************************
 typedef enum
 {
-    ADC_REFERENCE_3_3V,
-    ADC_REFERENCE_2_5V
+    ADC_REFERENCE_3_3V = 0U,
+    ADC_REFERENCE_2_5V = 1U
 } ADC_ReferenceVoltage;
 
 //*****************************************************************************
@@ -354,21 +353,21 @@ typedef enum
 //*****************************************************************************
 typedef enum
 {
-    ADC_OSDETECT_MODE_DISABLED            = 0x0, //!< Open/Shorts detection cir-
+    ADC_OSDETECT_MODE_DISABLED            = 0x0U,//!< Open/Shorts detection cir-
                                                  //!< cuit(O/S DC) is disabled
-    ADC_OSDETECT_MODE_VSSA                = 0x1, //!< O/S DC is enabled at zero
+    ADC_OSDETECT_MODE_VSSA                = 0x1U,//!< O/S DC is enabled at zero
                                                  //!< scale
-    ADC_OSDETECT_MODE_VDDA                = 0x2, //!< O/S DC is enabled at full
+    ADC_OSDETECT_MODE_VDDA                = 0x2U,//!< O/S DC is enabled at full
                                                  //!< scale
-    ADC_OSDETECT_MODE_5BY12_VDDA          = 0x3, //!< O/S DC is enabled at 5/12
+    ADC_OSDETECT_MODE_5BY12_VDDA          = 0x3U,//!< O/S DC is enabled at 5/12
                                                  //!< scale
-    ADC_OSDETECT_MODE_7BY12_VDDA          = 0x4, //!< O/S DC is enabled at 7/12
+    ADC_OSDETECT_MODE_7BY12_VDDA          = 0x4U,//!< O/S DC is enabled at 7/12
                                                  //!< scale
-    ADC_OSDETECT_MODE_5K_PULLDOWN_TO_VSSA = 0x5, //!< O/S DC is enabled at 5K
+    ADC_OSDETECT_MODE_5K_PULLDOWN_TO_VSSA = 0x5U,//!< O/S DC is enabled at 5K
                                                  //!< pulldown to VSSA
-    ADC_OSDETECT_MODE_5K_PULLUP_TO_VDDA   = 0x6, //!< O/S DC is enabled at 5K
+    ADC_OSDETECT_MODE_5K_PULLUP_TO_VDDA   = 0x6U,//!< O/S DC is enabled at 5K
                                                  //!< pullup to VDDA
-    ADC_OSDETECT_MODE_7K_PULLDOWN_TO_VSSA = 0x7  //!< O/S DC is enabled at 7K
+    ADC_OSDETECT_MODE_7K_PULLDOWN_TO_VSSA = 0x7U //!< O/S DC is enabled at 7K
                                                  //!< pulldown to VSSA
 } ADC_OSDetectMode;
 
@@ -707,7 +706,7 @@ ADC_forceSOC(uint32_t base, ADC_SOCNumber socNumber)
     //
     // Write to the register that will force a 1 to the corresponding SOC flag
     //
-    HWREGH(base + ADC_O_SOCFRC1) = (1U << (uint16_t)socNumber);
+    HWREGH(base + ADC_O_SOCFRC1) = ((uint16_t)1U << (uint16_t)socNumber);
 }
 
 //*****************************************************************************
@@ -806,7 +805,7 @@ ADC_clearInterruptStatus(uint32_t base, ADC_IntNumber adcIntNum)
     //
     // Clear the specified interrupt.
     //
-    HWREGH(base + ADC_O_INTFLGCLR) = 1U << (uint16_t)adcIntNum;
+    HWREGH(base + ADC_O_INTFLGCLR) = (uint16_t)1U << (uint16_t)adcIntNum;
 }
 
 //*****************************************************************************
@@ -871,7 +870,7 @@ ADC_clearInterruptOverflowStatus(uint32_t base, ADC_IntNumber adcIntNum)
     //
     // Clear the specified interrupt overflow bit.
     //
-    HWREGH(base + ADC_O_INTOVFCLR) = 1U << (uint16_t)adcIntNum;
+    HWREGH(base + ADC_O_INTOVFCLR) = (uint16_t)1U << (uint16_t)adcIntNum;
 }
 
 //*****************************************************************************
@@ -907,7 +906,8 @@ ADC_readResult(uint32_t resultBase, ADC_SOCNumber socNumber)
     //
     // Return the ADC result for the selected SOC.
     //
-    return(HWREGH(resultBase + ADC_RESULTx_OFFSET_BASE + socNumber));
+    return(HWREGH(resultBase + (uint32_t)ADC_RESULTx_OFFSET_BASE +
+                  (uint32_t)socNumber));
 }
 
 //*****************************************************************************
@@ -967,7 +967,7 @@ ADC_setBurstModeConfig(uint32_t base, ADC_Trigger trigger, uint16_t burstSize)
     // Check the arguments.
     //
     ASSERT(ADC_isBaseValid(base));
-    ASSERT((trigger & ~0x1FU) == 0U);
+    ASSERT(((uint16_t)trigger & ~((uint16_t)0x1FU)) == 0U);
     ASSERT((burstSize >= 1U) && (burstSize <= 16U));
 
     //
@@ -1109,7 +1109,8 @@ ADC_configOSDetectMode(uint32_t base, ADC_OSDetectMode modeVal)
     //
     EALLOW;
     HWREGH(base + ADC_O_OSDETECT) = ((HWREGH(base + ADC_O_OSDETECT) &
-                                     (~ADC_OSDETECT_DETECTCFG_M)) | modeVal);
+                                     (~ADC_OSDETECT_DETECTCFG_M)) |
+                                     (uint16_t)modeVal);
     EDIS;
 }
 
@@ -1467,8 +1468,8 @@ ADC_readPPBResult(uint32_t resultBase, ADC_PPBNumber ppbNumber)
     //
     // Return the result of selected PPB.
     //
-    return((int32_t)HWREG(resultBase + ADC_PPBxRESULT_OFFSET_BASE +
-           (ppbNumber * 2U)));
+    return((int32_t)HWREG(resultBase + (uint32_t)ADC_PPBxRESULT_OFFSET_BASE +
+           ((uint32_t)ppbNumber * (uint32_t)2U)));
 }
 
 //*****************************************************************************

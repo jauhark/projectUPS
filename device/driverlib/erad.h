@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -94,7 +94,7 @@ extern "C"
 //
 // Macro function to get the HWBP event number from the base address
 //
-#define ERAD_BUSCOMP_BASE_TO_EVENT(base) ((base >> 3) & 0x07)
+#define ERAD_BUSCOMP_BASE_TO_EVENT(base) ((base >> 3U) & 0x07U)
 
 //*****************************************************************************
 //
@@ -242,7 +242,7 @@ typedef enum
 //! to configure a bus comparator.
 //
 //*****************************************************************************
-typedef struct ERAD_BusComp_Config
+typedef struct
 {
     uint32_t               mask;        //!< Mask to be used for comparing
     uint32_t               reference;   //!< Reference value to be compared
@@ -258,7 +258,7 @@ typedef struct ERAD_BusComp_Config
 //! the required modules appropriately for each use case.
 //
 //*****************************************************************************
-typedef struct ERAD_Profile_Params
+typedef struct
 {
     uint32_t                start_address;  //!< Start address
     uint32_t                end_address;    //!< End address
@@ -275,7 +275,7 @@ typedef struct ERAD_Profile_Params
 //! counter appropriately.
 //
 //*****************************************************************************
-typedef struct ERAD_Counter_Config
+typedef struct
 {
     ERAD_Counter_Input_Event event;        //!< Input Event to be counted
     ERAD_Counter_Event_Mode  event_mode;   //!< Active / rising edge
@@ -295,7 +295,7 @@ typedef struct ERAD_Counter_Config
 //! \b ERAD_BUSCOMP_BUS_DRAB  : for data read access to the address
 //
 //*****************************************************************************
-typedef struct ERAD_Count_Params
+typedef struct
 {
     uint32_t                address;    //!< Address to compare
     uint32_t                mask;       //!< Mask for the address compare
@@ -372,13 +372,13 @@ ERAD_isValidCounterBase(uint32_t base)
 //
 //*****************************************************************************
 static inline ERAD_Owner
-ERAD_getOwnership()
+ERAD_getOwnership(void)
 {
     //
     // Read Global Owner register and return value
     //
-    return((ERAD_Owner)(HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_OWNER) &
-                        ERAD_GLBL_OWNER_OWNER_M) >> ERAD_GLBL_OWNER_OWNER_S);
+    return((ERAD_Owner)((HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_OWNER) &
+                         ERAD_GLBL_OWNER_OWNER_M) >> ERAD_GLBL_OWNER_OWNER_S));
 }
 
 //*****************************************************************************
@@ -400,7 +400,7 @@ ERAD_setOwnership(ERAD_Owner owner)
     //
     EALLOW;
     HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_OWNER) =
-                (owner & ERAD_GLBL_OWNER_OWNER_M) << ERAD_GLBL_OWNER_OWNER_S;
+        ((uint16_t)owner & ERAD_GLBL_OWNER_OWNER_M) << ERAD_GLBL_OWNER_OWNER_S;
     EDIS;
 }
 
@@ -556,7 +556,7 @@ ERAD_initModule(ERAD_Owner owner)
 //
 //*****************************************************************************
 static inline uint16_t
-ERAD_getHaltStatus()
+ERAD_getHaltStatus(void)
 {
     //
     // Read and return from the global register
@@ -579,7 +579,7 @@ ERAD_getHaltStatus()
 //
 //*****************************************************************************
 static inline uint16_t
-ERAD_getEventStatus()
+ERAD_getEventStatus(void)
 {
     //
     // Read and return from the global register

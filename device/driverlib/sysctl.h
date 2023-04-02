@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -131,6 +131,24 @@ extern "C"
 #define SYSCTL_BOOT_ROM_POR       0x2000U
 #define SYSCTL_BOOT_ROM_XRS       0x1000U
 
+#define SYSCTL_DEVICECAL_CONTEXT_SAVE asm(" PUSH ACC  \n\
+                                            PUSH DP   \n\
+                                            PUSH XAR0 \n\
+                                            PUSH XAR2 \n\
+                                            PUSH XAR3 \n\
+                                            PUSH XAR4 \n\
+                                            PUSH XAR5 \n\
+                                           ")
+
+#define SYSCTL_DEVICECAL_CONTEXT_RESTORE  asm(" POP XAR5 \n\
+                                                POP XAR4 \n\
+                                                POP XAR3 \n\
+                                                POP XAR2 \n\
+                                                POP XAR0 \n\
+                                                POP DP   \n\
+                                                POP ACC  \n\
+                                              ")
+
 //
 // Device_cal function which is available in OTP memory
 // This function is called in SysCtl_resetPeripheral after resetting
@@ -151,7 +169,7 @@ extern "C"
 //
 // Mask and shift for Output Clock Divider value in config
 //
-#define SYSCTL_ODIV_M        (uint32_t)0x00700000U
+#define SYSCTL_ODIV_M        0x00700000UL
 #define SYSCTL_ODIV_S        20U
 
 //!
@@ -160,8 +178,8 @@ extern "C"
 #define SYSCTL_ODIV(x)       ((((uint32_t)(x) - 1U) << SYSCTL_ODIV_S) &        \
                                   SYSCTL_ODIV_M)
 
-#define SYSCTL_SYSDIV_M     0x00001F80U // Mask for SYSDIV value in config
-#define SYSCTL_SYSDIV_S     7U          // Shift for SYSDIV value in config
+#define SYSCTL_SYSDIV_M     0x00001F80UL // Mask for SYSDIV value in config
+#define SYSCTL_SYSDIV_S     7U           // Shift for SYSDIV value in config
 
 //! Macro to format system clock divider value. x must be 1 or even values up
 //! to 126.
@@ -170,8 +188,8 @@ extern "C"
 //
 // Integer multiplier (IMULT)
 //
-#define SYSCTL_IMULT_M      0x0000007FU // Mask for IMULT value in config
-#define SYSCTL_IMULT_S      0U          // Shift for IMULT value in config
+#define SYSCTL_IMULT_M      0x0000007FUL // Mask for IMULT value in config
+#define SYSCTL_IMULT_S      0U           // Shift for IMULT value in config
 //! Macro to format integer multiplier value. x is a number from 1 to 127.
 //!
 #define SYSCTL_IMULT(x)     (((x) << SYSCTL_IMULT_S) & SYSCTL_IMULT_M)
@@ -180,13 +198,13 @@ extern "C"
 //
 // Fractional multiplier (FMULT)
 //
-#define SYSCTL_FMULT_M      0x00006000U // Mask for FMULT value in config
+#define SYSCTL_FMULT_M      0x00006000UL // Mask for FMULT value in config
 #define SYSCTL_FMULT_S      13U         // Shift for FMULT value in config
-#define SYSCTL_FMULT_NONE   0x00000000U //!< No fractional multiplier
-#define SYSCTL_FMULT_0      0x00000000U //!< No fractional multiplier
-#define SYSCTL_FMULT_1_4    0x00002000U //!< Fractional multiplier of 0.25
-#define SYSCTL_FMULT_1_2    0x00004000U //!< Fractional multiplier of 0.50
-#define SYSCTL_FMULT_3_4    0x00006000U //!< Fractional multiplier of 0.75
+#define SYSCTL_FMULT_NONE   0x00000000UL //!< No fractional multiplier
+#define SYSCTL_FMULT_0      0x00000000UL //!< No fractional multiplier
+#define SYSCTL_FMULT_1_4    0x00002000UL //!< Fractional multiplier of 0.25
+#define SYSCTL_FMULT_1_2    0x00004000UL //!< Fractional multiplier of 0.50
+#define SYSCTL_FMULT_3_4    0x00006000UL //!< Fractional multiplier of 0.75
 
 //
 // Oscillator source
@@ -194,22 +212,22 @@ extern "C"
 // Also used with the SysCtl_selectOscSource(), SysCtl_turnOnOsc(),
 // and SysCtl_turnOffOsc() functions as the oscSource parameter.
 //
-#define SYSCTL_OSCSRC_M         0x00030000U // Mask for OSCSRC value in config
-#define SYSCTL_OSCSRC_S         16U         // Shift for OSCSRC value in config
+#define SYSCTL_OSCSRC_M         0x00030000UL // Mask for OSCSRC value in config
+#define SYSCTL_OSCSRC_S         16U          // Shift for OSCSRC value in config
 //! Internal oscillator INTOSC2
-#define SYSCTL_OSCSRC_OSC2      0x00000000U
+#define SYSCTL_OSCSRC_OSC2      0x00000000UL
 //! External oscillator (XTAL) in crystal mode
-#define SYSCTL_OSCSRC_XTAL      0x00010000U
+#define SYSCTL_OSCSRC_XTAL      0x00010000UL
 //! External oscillator (XTAL) in single-ended mode
-#define SYSCTL_OSCSRC_XTAL_SE   0x00030000U
+#define SYSCTL_OSCSRC_XTAL_SE   0x00030000UL
 //! Internal oscillator INTOSC1
-#define SYSCTL_OSCSRC_OSC1      0x00020000U
+#define SYSCTL_OSCSRC_OSC1      0x00020000UL
 
 //
 // Enable/disable PLL
 //
-#define SYSCTL_PLL_ENABLE       0x80000000U //!< Enable PLL
-#define SYSCTL_PLL_DISABLE      0x00000000U //!< Disable PLL
+#define SYSCTL_PLL_ENABLE       0x80000000UL //!< Enable PLL
+#define SYSCTL_PLL_DISABLE      0x00000000UL //!< Disable PLL
 
 //
 // Number of PLL retries for SW work around
@@ -734,13 +752,7 @@ SysCtl_deviceCal(void)
     //
     // Save the core registers used by Device_cal function in the stack
     //
-    asm(" PUSH ACC");
-    asm(" PUSH DP");
-    asm(" PUSH XAR0");
-    asm(" PUSH XAR2");
-    asm(" PUSH XAR3");
-    asm(" PUSH XAR4");
-    asm(" PUSH XAR5");
+    SYSCTL_DEVICECAL_CONTEXT_SAVE;
 
     //
     // Call the Device_cal function
@@ -750,13 +762,7 @@ SysCtl_deviceCal(void)
     //
     // Restore the core registers
     //
-    asm(" POP XAR5");
-    asm(" POP XAR4");
-    asm(" POP XAR3");
-    asm(" POP XAR2");
-    asm(" POP XAR0");
-    asm(" POP DP");
-    asm(" POP ACC");
+    SYSCTL_DEVICECAL_CONTEXT_RESTORE;
 }
 
 //*****************************************************************************
@@ -794,17 +800,15 @@ SysCtl_resetPeripheral(SysCtl_PeripheralSOFTPRES peripheral)
     //
     // Sets the appropriate reset bit and then clears it.
     //
-    HWREG(DEVCFG_BASE + SYSCTL_O_SOFTPRES0 + regIndex) |=
-        ((uint32_t)1U << bitIndex);
-    HWREG(DEVCFG_BASE + SYSCTL_O_SOFTPRES0 + regIndex) &=
-        ~((uint32_t)1U << bitIndex);
+    HWREG(DEVCFG_BASE + SYSCTL_O_SOFTPRES0 + regIndex) |=  (1UL << bitIndex);
+    HWREG(DEVCFG_BASE + SYSCTL_O_SOFTPRES0 + regIndex) &= ~(1UL << bitIndex);
 
     //
     // Call Device_cal function
     //
-    if(((peripheral & SYSCTL_PERIPH_REG_M) == 0xDU) ||      // ADCx
-       ((peripheral & SYSCTL_PERIPH_REG_M) == 0xFU) ||      // PGAx
-       ((peripheral & SYSCTL_PERIPH_REG_M) == 0x10U)        // DACx
+    if((((uint16_t)peripheral & SYSCTL_PERIPH_REG_M) == 0xDU) ||      // ADCx
+       (((uint16_t)peripheral & SYSCTL_PERIPH_REG_M) == 0xFU) ||      // PGAx
+       (((uint16_t)peripheral & SYSCTL_PERIPH_REG_M) == 0x10U)        // DACx
        )
     {
         SysCtl_deviceCal();
@@ -851,8 +855,7 @@ SysCtl_enablePeripheral(SysCtl_PeripheralPCLOCKCR peripheral)
     //
     // Turn on the module clock.
     //
-    HWREG(CPUSYS_BASE + SYSCTL_O_PCLKCR0 + regIndex) |=
-        ((uint32_t)1U << bitIndex);
+    HWREG(CPUSYS_BASE + SYSCTL_O_PCLKCR0 + regIndex) |= (1UL << bitIndex);
     EDIS;
 }
 
@@ -887,8 +890,7 @@ SysCtl_disablePeripheral(SysCtl_PeripheralPCLOCKCR peripheral)
     //
     // Turn off the module clock.
     //
-    HWREG(CPUSYS_BASE + SYSCTL_O_PCLKCR0 + regIndex) &=
-        ~((uint32_t)1U << bitIndex);
+    HWREG(CPUSYS_BASE + SYSCTL_O_PCLKCR0 + regIndex) &= ~(1UL << bitIndex);
     EDIS;
 }
 
@@ -926,7 +928,7 @@ SysCtl_resetDevice(void)
     // The device should have reset, so this should never be reached.  Just in
     // case, loop forever.
     //
-    while(1)
+    while((bool)1)
     {
     }
 }
@@ -991,9 +993,12 @@ SysCtl_getResetCause(void)
 //! Clears reset reasons.
 //!
 //! \param rstCauses are the reset causes to be cleared; must be a logical
-//! OR of \b SYSCTL_CAUSE_POR, \b SYSCTL_CAUSE_XRS, \b SYSCTL_CAUSE_WDRS,
-//! \b SYSCTL_CAUSE_NMIWDRS,
-//! and/or \b SYSCTL_CAUSE_SCCRESET.
+//! OR of
+//! - \b SYSCTL_CAUSE_POR - Power-on reset
+//! - \b SYSCTL_CAUSE_XRS - External reset pin
+//! - \b SYSCTL_CAUSE_WDRS - Watchdog reset
+//! - \b SYSCTL_CAUSE_NMIWDRS - NMI watchdog reset
+//! - \b SYSCTL_CAUSE_SCCRESET - SCCRESETn reset from DCSM
 //!
 //! This function clears the specified sticky reset reasons.  Once cleared,
 //! another reset for the same reason can be detected, and a reset for a
@@ -1364,7 +1369,7 @@ SysCtl_enableLPMWakeupPin(uint32_t pin)
     //
     ASSERT(pin <= 63U);
 
-    pinMask = (uint32_t)1U << (uint32_t)(pin % 32U);
+    pinMask = 1UL << (pin % 32U);
 
     EALLOW;
 
@@ -1406,7 +1411,7 @@ SysCtl_disableLPMWakeupPin(uint32_t pin)
     //
     ASSERT(pin <= 63U);
 
-    pinMask = (uint32_t)1U << (uint32_t)(pin % 32U);
+    pinMask = 1UL << (pin % 32U);
 
     EALLOW;
 
@@ -1678,7 +1683,7 @@ SysCtl_setWatchdogPredivider(SysCtl_WDPredivider predivider)
 {
     uint16_t regVal;
 
-    regVal = (uint16_t)predivider | (uint16_t)SYSCTL_WD_CHKBITS;
+    regVal = (uint16_t)predivider | SYSCTL_WD_CHKBITS;
 
     EALLOW;
 
@@ -1925,7 +1930,7 @@ SysCtl_getNMIFlagStatus(void)
 //
 //*****************************************************************************
 static inline bool
-SysCtl_isNMIFlagSet(uint32_t nmiFlags)
+SysCtl_isNMIFlagSet(uint16_t nmiFlags)
 {
     //
     // Check the arguments.
@@ -1939,7 +1944,7 @@ SysCtl_isNMIFlagSet(uint32_t nmiFlags)
                          SYSCTL_NMI_PIEVECTERR    |
                          SYSCTL_NMI_CLBNMI        |
                          SYSCTL_NMI_SWERR
-                         )) == 0);
+                         )) == 0U);
 
     //
     // Read the flag register and return true if any of them are set.
@@ -1971,7 +1976,7 @@ SysCtl_isNMIFlagSet(uint32_t nmiFlags)
 //
 //*****************************************************************************
 static inline void
-SysCtl_clearNMIStatus(uint32_t nmiFlags)
+SysCtl_clearNMIStatus(uint16_t nmiFlags)
 {
     //
     // Check the arguments.
@@ -1985,7 +1990,7 @@ SysCtl_clearNMIStatus(uint32_t nmiFlags)
                          SYSCTL_NMI_PIEVECTERR    |
                          SYSCTL_NMI_CLBNMI        |
                          SYSCTL_NMI_SWERR
-                         )) == 0);
+                         )) == 0U);
 
     EALLOW;
 
@@ -2042,7 +2047,7 @@ SysCtl_clearAllNMIFlags(void)
 //
 //*****************************************************************************
 static inline void
-SysCtl_forceNMIFlags(uint32_t nmiFlags)
+SysCtl_forceNMIFlags(uint16_t nmiFlags)
 {
     //
     // Check the arguments.
@@ -2056,7 +2061,7 @@ SysCtl_forceNMIFlags(uint32_t nmiFlags)
                          SYSCTL_NMI_PIEVECTERR    |
                          SYSCTL_NMI_CLBNMI        |
                          SYSCTL_NMI_SWERR
-                        )) == 0);
+                        )) == 0U);
 
     EALLOW;
 
@@ -2182,7 +2187,7 @@ SysCtl_getNMIShadowFlagStatus(void)
 //
 //*****************************************************************************
 static inline bool
-SysCtl_isNMIShadowFlagSet(uint32_t nmiFlags)
+SysCtl_isNMIShadowFlagSet(uint16_t nmiFlags)
 {
     //
     // Check the arguments.
@@ -2196,7 +2201,7 @@ SysCtl_isNMIShadowFlagSet(uint32_t nmiFlags)
                          SYSCTL_NMI_PIEVECTERR    |
                          SYSCTL_NMI_CLBNMI        |
                          SYSCTL_NMI_SWERR
-                        )) == 0);
+                        )) == 0U);
 
     //
     // Read the flag register and return true if any of them are set.
@@ -2377,7 +2382,7 @@ SysCtl_setPeripheralAccessControl(SysCtl_AccessPeripheral peripheral,
     HWREGH(PERIPHAC_BASE + (uint16_t)peripheral) =
         (HWREGH(PERIPHAC_BASE + (uint16_t)peripheral) &
          ~(0x3U << (uint16_t)master)) |
-        ((uint32_t)permission << (uint16_t)master);
+        ((uint16_t)permission << (uint16_t)master);
 
     EDIS;
 }
@@ -2409,7 +2414,7 @@ SysCtl_setPeripheralAccessControl(SysCtl_AccessPeripheral peripheral,
 //! - \b SYSCTL_ACCESS_NONE      - No read or write access
 //
 //*****************************************************************************
-static inline uint32_t
+static inline uint16_t
 SysCtl_getPeripheralAccessControl(SysCtl_AccessPeripheral peripheral,
                                   SysCtl_AccessMaster master)
 {

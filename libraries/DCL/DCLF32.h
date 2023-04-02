@@ -32,7 +32,7 @@ extern "C" {
 
 //! \brief          Defines the DCL_PID shadow parameter set
 //!
-typedef volatile struct dcl_pid_sps {
+typedef struct dcl_pid_sps {
     float32_t Kp;       //!< Proportional gain
     float32_t Ki;       //!< Integral gain
     float32_t Kd;       //!< Derivative gain
@@ -49,7 +49,7 @@ typedef volatile struct dcl_pid_sps {
 
 //! \brief          Defines the DCL_PID active controller structure
 //!
-typedef volatile struct dcl_pid {
+typedef struct dcl_pid {
     float32_t Kp;       //!< Proportional gain
     float32_t Ki;       //!< Integral gain
     float32_t Kd;       //!< Derivative gain
@@ -400,7 +400,7 @@ extern float32_t DCL_runPID_C4(DCL_PID *p, float32_t rk, float32_t yk, float32_t
 
 //! \brief          Defines the DCL_PI shadow parameter set
 //!
-typedef volatile struct dcl_pi_sps {
+typedef struct dcl_pi_sps {
     float32_t Kp;       //!< Proportional gain
     float32_t Ki;       //!< Integral gain
     float32_t Umax;     //!< Upper control saturation limit
@@ -415,7 +415,7 @@ typedef volatile struct dcl_pi_sps {
 
 //! \brief          Defines the DCL_PI controller structure
 //!
-typedef volatile struct dcl_pi {
+typedef struct dcl_pi {
     float32_t Kp;       //!< Proportional gain
     float32_t Ki;       //!< Integral gain
     float32_t i10;      //!< I storage
@@ -690,7 +690,7 @@ extern float32_t DCL_runPI_C7(DCL_PI *p, float32_t rk, float32_t yk);
 
 //! \brief          Defines the DCL_PI2 shadow parameter set
 //!
-typedef volatile struct dcl_pi2_sps {
+typedef struct dcl_pi2_sps {
     float32_t Kp;       //!< Proportional gain
     float32_t Ki;       //!< Integral gain
     float32_t Umax;     //!< Upper saturation limit
@@ -701,7 +701,7 @@ typedef volatile struct dcl_pi2_sps {
 
 //! \brief          Defines the DCL_PI2 controller structure
 //!
-typedef volatile struct dcl_pi2 {
+typedef struct dcl_pi2 {
     float32_t Kp;       //!< Proportional gain
     float32_t Ki;       //!< Integral gain
     float32_t i6;       //!< Integrator 1 storage
@@ -817,7 +817,7 @@ static inline float32_t DCL_runPI2_C1(DCL_PI2 *p, float32_t rk, float32_t yk)
 
 //! \brief          Defines the DCL_DF11 shadow parameter set
 //!
-typedef volatile struct dcl_df11_sps {
+typedef struct dcl_df11_sps {
     float32_t b0;   //!< b0
     float32_t b1;   //!< b1
     float32_t a1;   //!< a1
@@ -827,7 +827,7 @@ typedef volatile struct dcl_df11_sps {
 
 //! \brief          Defines the DCL_DF11 controller structure
 //!
-typedef volatile struct dcl_df11 {
+typedef struct dcl_df11 {
     float32_t b0;   //!< b0
     float32_t b1;   //!< b1
     float32_t a1;   //!< a1
@@ -973,7 +973,7 @@ static inline float32_t DCL_runDF11_C2(DCL_DF11 *p, float32_t ek)
 
 //! \brief          Defines the DCL_DF13 shadow parameter set
 //!
-typedef volatile struct dcl_df13_sps {
+typedef struct dcl_df13_sps {
     float32_t b0;  //!< b0
     float32_t b1;  //!< b1
     float32_t b2;  //!< b2
@@ -988,7 +988,7 @@ typedef volatile struct dcl_df13_sps {
 
 //! \brief          Defines the DCL_DF13 controller structure
 //!
-typedef volatile struct dcl_df13 {
+typedef struct dcl_df13 {
     // coefficients
     float32_t b0;   //!< b0
     float32_t b1;   //!< b1
@@ -1205,7 +1205,7 @@ static inline float32_t DCL_runDF13_C6(DCL_DF13 *p, float32_t ek, float32_t uk)
 
 //! \brief          Defines the DCL_DF22 shadow parameter set
 //!
-typedef volatile struct dcl_df22_sps {
+typedef struct dcl_df22_sps {
     float32_t b0;   //!< b0
     float32_t b1;   //!< b1
     float32_t b2;   //!< b2
@@ -1217,7 +1217,7 @@ typedef volatile struct dcl_df22_sps {
 
 //! \brief          Defines the DCL_DF22 controller structure
 //!
-typedef volatile struct dcl_df22 {
+typedef struct dcl_df22 {
     float32_t b0;   //!< b0
     float32_t b1;   //!< b1
     float32_t b2;   //!< b2
@@ -1495,7 +1495,7 @@ static inline void DCL_runDF22_C6(DCL_DF22 *p, float32_t ek, float32_t uk)
 
 //! \brief          Defines the DCL_DF23 shadow parameter set
 //!
-typedef volatile struct dcl_df23_sps {
+typedef struct dcl_df23_sps {
     float32_t b0;   //!< b0
     float32_t b1;   //!< b1
     float32_t b2;   //!< b2
@@ -1509,7 +1509,7 @@ typedef volatile struct dcl_df23_sps {
 
 //! \brief          Defines the DCL_DF23 controller structure
 //!
-typedef volatile struct dcl_df23 {
+typedef struct dcl_df23 {
     // coefficients
     float32_t b0;   //!< b0
     float32_t b1;   //!< b1
@@ -1745,7 +1745,7 @@ static inline int16_t DCL_runClamp_C2(float32_t *data, float32_t Umax, float32_t
 
 //! \brief          Defines the shadow DCL_GSM structure
 //!
-typedef volatile struct dcl_gsm_sps {
+typedef struct dcl_gsm_sps {
     float32_t   m[GSM_N];       //!< sector gain array
     float32_t   c[GSM_N+1];     //!< sector offset array
 } DCL_GSM_SPS;
@@ -1756,7 +1756,7 @@ typedef volatile struct dcl_gsm_sps {
 //! \brief          Defines the DCL_GSM structure
 //!                 Consists of gains and offsets for each linear section
 //!
-typedef volatile struct dcl_gsm {
+typedef struct dcl_gsm {
     float32_t   m[GSM_N];       //!< sector gain array
     float32_t   c[GSM_N+1];     //!< sector offset array
     float32_t   h;              //!< interval size

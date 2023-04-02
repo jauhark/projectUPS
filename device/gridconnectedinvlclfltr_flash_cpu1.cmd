@@ -36,9 +36,12 @@ MEMORY
 
    /* BANK 1 */
    FLASH_BANK1_SEC0  : origin = 0x090000, length = 0x001000	/* on-chip Flash */
-   FLASH_BANK1_SEC1_2_3_4  : origin = 0x091000, length = 0x004000	/* on-chip Flash */
-   FLASH_BANK1_SEC5  : origin = 0x095000, length = 0x001000	/* on-chip Flash */
+   FLASH_BANK1_SEC1_2_3_4  : origin = 0x091000, length = 0x005000	/* on-chip Flash */
+
+   //FLASH_BANK1_SEC5  : origin = 0x095000, length = 0x001000	/* on-chip Flash */
+
    FLASH_BANK1_SEC6  : origin = 0x096000, length = 0x001000	/* on-chip Flash */
+
    FLASH_BANK1_SEC7  : origin = 0x097000, length = 0x001000	/* on-chip Flash */
    FLASH_BANK1_SEC8_9_10  : origin = 0x098000, length = 0x03000	/* on-chip Flash */
    FLASH_BANK1_SEC11 : origin = 0x09B000, length = 0x001000	/* on-chip Flash */

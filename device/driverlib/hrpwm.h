@@ -6,7 +6,7 @@
 //
 //#############################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -223,7 +223,7 @@ typedef enum
 #define HRPWM_setTimeBaseCounter                 EPWM_setTimeBaseCounter
 #define HRPWM_setCountModeAfterSync              EPWM_setCountModeAfterSync
 #define HRPWM_setClockPrescaler                  EPWM_setClockPrescaler
-#define HRPWM_swForceSyncPulse                   EPWM_swForceSyncPulse
+#define HRPWM_swForceSyncPulse                   EPWM_forceSyncPulse
 #define HRPWM_setSyncOutPulseMode                EPWM_setSyncOutPulseMode
 #define HRPWM_setPeriodLoadMode                  EPWM_setPeriodLoadMode
 #define HRPWM_setTimeBaseCounterMode             EPWM_setTimeBaseCounterMode
@@ -262,9 +262,14 @@ typedef enum
                                   EPWM_setActionQualifierContSWForceShadowMode
 #define HRPWM_setActionQualifierContSWForceAction                             \
                                   EPWM_setActionQualifierContSWForceAction
+/* HRPWM_setActionQualifierSwAction is kept for compatibility,
+use HRPWM_setActionQualifierSWAction*/
 #define HRPWM_setActionQualifierSwAction        EPWM_setActionQualifierSwAction
+#define HRPWM_setActionQualifierSWAction        EPWM_setActionQualifierSWAction
+/* HRPWM_forceActionQualifierSwAction  is kept for compatibility,
+use HRPWM_forceActionQualifierSWAction*/
 #define HRPWM_forceActionQualifierSwAction    EPWM_forceActionQualifierSwAction
-
+#define HRPWM_forceActionQualifierSWAction    EPWM_forceActionQualifierSWAction
 //
 // Dead Band Module related APIs
 //
@@ -322,7 +327,7 @@ typedef enum
 // HRPWM_getTripZoneInterruptStatus API define is obsolete please use
 // HRPWM_getTripZoneFlagStatus going forward.
 //
-#define HRPWM_getTripZoneInterruptStatus        HRPWM_getTripZoneFlagStatus
+#define HRPWM_getTripZoneInterruptStatus        EPWM_getTripZoneFlagStatus
 #define HRPWM_getTripZoneFlagStatus             EPWM_getTripZoneFlagStatus
 
 //
@@ -1386,7 +1391,7 @@ HRPWM_setRisingEdgeDelay(uint32_t base, uint32_t redCount)
     // Check the arguments
     //
     ASSERT(HRPWM_isBaseValid(base));
-    ASSERT(redCount < 0x200000);
+    ASSERT(redCount < 0x200000U);
 
     //
     // Set the consolidated RED (Rising Edge Delay) count
@@ -1450,7 +1455,7 @@ HRPWM_setFallingEdgeDelay(uint32_t base, uint32_t fedCount)
     // Check the arguments
     //
     ASSERT(HRPWM_isBaseValid(base));
-    ASSERT(fedCount < 0x200000);
+    ASSERT(fedCount < 0x200000U);
 
     //
     // Set the High Resolution FED (Falling Edge Delay) count

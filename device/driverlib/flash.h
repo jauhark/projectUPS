@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -828,6 +828,7 @@ Flash_getUncorrectableErrorAddressHigh(uint32_t eccBase)
 static inline Flash_ErrorStatus
 Flash_getLowErrorStatus(uint32_t eccBase)
 {
+    uint32_t errorStatus;
     //
     // Check the arguments.
     //
@@ -836,8 +837,8 @@ Flash_getLowErrorStatus(uint32_t eccBase)
     //
     // Get the Low Error Status bits
     //
-    return((Flash_ErrorStatus)(HWREG(eccBase + FLASH_O_ERR_STATUS) &
-            (uint32_t)0x7U));
+    errorStatus = (HWREG(eccBase + FLASH_O_ERR_STATUS) & 0x7UL);
+    return((Flash_ErrorStatus)errorStatus);
 }
 
 //*****************************************************************************
@@ -856,6 +857,7 @@ Flash_getLowErrorStatus(uint32_t eccBase)
 static inline Flash_ErrorStatus
 Flash_getHighErrorStatus(uint32_t eccBase)
 {
+    uint32_t errorStatus;
     //
     // Check the arguments.
     //
@@ -864,8 +866,8 @@ Flash_getHighErrorStatus(uint32_t eccBase)
     //
     // Get the High Error Status bits
     //
-    return((Flash_ErrorStatus)((HWREG(eccBase + FLASH_O_ERR_STATUS) >>
-            16U) & (uint32_t)0x7U));
+    errorStatus = ((HWREG(eccBase + FLASH_O_ERR_STATUS) >> 16U) & 0x7UL);
+    return((Flash_ErrorStatus)errorStatus);
 }
 
 //*****************************************************************************
@@ -995,9 +997,13 @@ Flash_getLowErrorType(uint32_t eccBase)
     //
     if((HWREG(eccBase + FLASH_O_ERR_POS) & FLASH_ERR_POS_ERR_TYPE_L)
                                 == FLASH_ERR_POS_ERR_TYPE_L)
+    {
         errorType =  FLASH_ECC_ERR;
+    }
     else
+    {
         errorType =  FLASH_DATA_ERR;
+    }
 
     return(errorType);
 }
@@ -1029,9 +1035,13 @@ Flash_getHighErrorType(uint32_t eccBase)
     //
     if((HWREG(eccBase + FLASH_O_ERR_POS) & FLASH_ERR_POS_ERR_TYPE_H)
                                 == FLASH_ERR_POS_ERR_TYPE_H)
+    {
         errorType =  FLASH_ECC_ERR;
+    }
     else
+    {
         errorType =  FLASH_DATA_ERR;
+    }
 
     return(errorType);
 }

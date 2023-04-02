@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -68,7 +68,7 @@ extern void __error__(char *filename, uint32_t line);
                              __error__(__FILE__, __LINE__);                   \
                          }                                                    \
                      }                                                        \
-                     while(0)
+                     while((_Bool)0)
 #else
 //
 // When called from CLA application. Update as needed.
@@ -80,7 +80,7 @@ extern void __error__(char *filename, uint32_t line);
                              __mdebugstop();                                  \
                          }                                                    \
                      }                                                        \
-                     while(0)
+                     while((_Bool)0)
 #endif
 #else
 #define ASSERT(expr)

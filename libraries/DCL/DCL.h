@@ -145,7 +145,7 @@ static inline void DCL_restoreInts(int16_t v)
 //!                 controller structs.  It contains data used for testing and
 //!                 configuring the controller, as well as for error checking.
 //!
-typedef volatile struct dcl_css {
+typedef struct dcl_css {
     float32_t tpt;      //!< Test point
     float32_t T;        //!< Controller period in seconds
     uint32_t sts;       //!< Status word
@@ -339,7 +339,7 @@ static inline bool DCL_isStablePn3(float32_t a0, float32_t a1, float32_t a2, flo
 //!                 three complex zeros, three complex poles, and a real gain.
 //!                 All frequencies must be specified in radians/sec.
 //!
-typedef volatile struct dcl_zpk3 {
+typedef struct dcl_zpk3 {
     float complex z1;
     float complex z2;
     float complex z3;

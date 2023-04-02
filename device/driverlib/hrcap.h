@@ -6,7 +6,7 @@
 //
 //#############################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -308,8 +308,8 @@ static inline void
 HRCAP_enableCalibrationInterrupt(uint32_t base, uint16_t intFlags)
 {
     ASSERT(HRCAP_isBaseValid(base));
-    ASSERT(intFlags & (HRCAP_CALIBRATION_DONE |
-                       HRCAP_CALIBRATION_PERIOD_OVERFLOW));
+    ASSERT((intFlags & ~(HRCAP_CALIBRATION_DONE |
+                       HRCAP_CALIBRATION_PERIOD_OVERFLOW)) == 0);
 
     EALLOW;
 
@@ -339,8 +339,8 @@ static inline void
 HRCAP_disableCalibrationInterrupt(uint32_t base, uint16_t intFlags)
 {
     ASSERT(HRCAP_isBaseValid(base));
-    ASSERT(intFlags & (HRCAP_CALIBRATION_DONE |
-                       HRCAP_CALIBRATION_PERIOD_OVERFLOW));
+    ASSERT((intFlags & ~(HRCAP_CALIBRATION_DONE |
+                       HRCAP_CALIBRATION_PERIOD_OVERFLOW)) == 0);
 
     EALLOW;
 
@@ -459,8 +459,8 @@ static inline void
 HRCAP_forceCalibrationFlags(uint32_t base, uint16_t flag)
 {
     ASSERT(HRCAP_isBaseValid(base));
-    ASSERT((flag & (HRCAP_CALIBRATION_DONE |
-                    HRCAP_CALIBRATION_PERIOD_OVERFLOW)));
+    ASSERT((flag & ~(HRCAP_CALIBRATION_DONE |
+                    HRCAP_CALIBRATION_PERIOD_OVERFLOW)) == 0);
 
     EALLOW;
 

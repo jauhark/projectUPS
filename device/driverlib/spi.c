@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -339,13 +339,13 @@ SPI_pollingFIFOTransaction(uint32_t base, uint16_t charLength,
     // Determine the number of 16-level words from number of words to be
     // transmitted / received
     //
-    uint16_t numOfSixteenWords = numOfWords / SPI_FIFO_TXFULL;
+    uint16_t numOfSixteenWords = numOfWords / (uint16_t)SPI_FIFO_TXFULL;
 
     //
     // Determine the number of remaining words from number of words to be
     // transmitted / received
     //
-    uint16_t remainingWords = numOfWords % SPI_FIFO_TXFULL;
+    uint16_t remainingWords = numOfWords % (uint16_t)SPI_FIFO_TXFULL;
 
     uint16_t count = 0;
     uint16_t i = 0;
@@ -361,21 +361,24 @@ SPI_pollingFIFOTransaction(uint32_t base, uint16_t charLength,
         //
         // Fill-up the SPI Transmit FIFO buffers
         //
-        for(i = 1; i <= SPI_FIFO_TXFULL; i++)
+        for(i = 1; i <= (uint16_t)SPI_FIFO_TXFULL; i++)
         {
-            SPI_writeDataBlockingFIFO(base, pTxBuffer[txBuffer_pos++] <<
+            SPI_writeDataBlockingFIFO(base, pTxBuffer[txBuffer_pos] <<
                                             (16U - charLength));
+            txBuffer_pos++;
         }
 
         //
         // Wait till SPI Receive FIFO buffer is full
         //
-        while(SPI_getRxFIFOStatus(base) < SPI_FIFO_RXFULL);
+        while(SPI_getRxFIFOStatus(base) < SPI_FIFO_RXFULL)
+        {
+        }
 
         //
         // Read the SPI Receive FIFO buffers
         //
-        for(i = 1U; i <= SPI_FIFO_RXFULL; i++)
+        for(i = 1U; i <= (uint16_t)SPI_FIFO_RXFULL; i++)
         {
             if(pRxBuffer == NULL)
             {
@@ -383,7 +386,8 @@ SPI_pollingFIFOTransaction(uint32_t base, uint16_t charLength,
             }
             else
             {
-                pRxBuffer[rxBuffer_pos++] = SPI_readDataBlockingFIFO(base);
+                pRxBuffer[rxBuffer_pos] = SPI_readDataBlockingFIFO(base);
+                rxBuffer_pos++;
             }
         }
 
@@ -395,14 +399,17 @@ SPI_pollingFIFOTransaction(uint32_t base, uint16_t charLength,
     //
     for(i = 0U; i < remainingWords; i++)
     {
-        SPI_writeDataBlockingFIFO(base, pTxBuffer[txBuffer_pos++] <<
+        SPI_writeDataBlockingFIFO(base, pTxBuffer[txBuffer_pos] <<
                                         (16U - charLength));
+        txBuffer_pos++;
     }
 
     //
     // Wait till SPI Receive FIFO buffer remaining words
     //
-    while(SPI_getRxFIFOStatus(base) < remainingWords);
+    while((uint16_t)SPI_getRxFIFOStatus(base) < remainingWords)
+    {
+    }
 
     //
     // Read the SPI Receive FIFO buffers
@@ -415,7 +422,8 @@ SPI_pollingFIFOTransaction(uint32_t base, uint16_t charLength,
         }
         else
         {
-            pRxBuffer[rxBuffer_pos++] = SPI_readDataBlockingFIFO(base);
+            pRxBuffer[rxBuffer_pos] = SPI_readDataBlockingFIFO(base);
+            rxBuffer_pos++;
         }
     }
 
@@ -450,9 +458,9 @@ SPI_transmit24Bits(uint32_t base, uint32_t data, uint16_t txDelay)
     //
     // Fill Transmit buffer with appropriate data
     //
-    txBuffer[0] = (uint16_t)(data>> 16U);   // data[23:16]
-    txBuffer[1] = (uint16_t)(data)>> 8U;    // data[15:8]
-    txBuffer[2] = (uint16_t)(data)& 0x00FF; // data[7:0]
+    txBuffer[0] = (uint16_t)(data >> 16U);   // data[23:16]
+    txBuffer[1] = (uint16_t)(data) >> 8U;    // data[15:8]
+    txBuffer[2] = (uint16_t)(data) & 0x00FFU; // data[7:0]
 
     //
     // Three 8-bits make a 24-bit
@@ -555,7 +563,7 @@ SPI_receive24Bits(uint32_t base, SPI_endianess endianness, uint16_t dummyData,
     else
     {
         //
-        // SPI_DATA_BIG_ENDIAN
+        // BIG_ENDIAN
         //
         rxData = ((uint32_t)rxBuffer[0] << 16) |
                  ((uint32_t)rxBuffer[1] << 8)  |

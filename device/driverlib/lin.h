@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -205,16 +205,17 @@ extern "C"
 // LIN_setSCIInterruptLevel0() and LIN_setSCIInterruptLevel1().
 //
 //*****************************************************************************
-#define LIN_SCI_INT_BREAK    (0x1U)         //!< Break Detect
-#define LIN_SCI_INT_WAKEUP   (0x2U)         //!< Wakeup
-#define LIN_SCI_INT_TX       (0x100U)       //!< Transmit Buffer
-#define LIN_SCI_INT_RX       (0x200U)       //!< Receive Buffer
-#define LIN_SCI_INT_TX_DMA   (0x10000U)     //!< DMA Transmit
-#define LIN_SCI_INT_RX_DMA   (0x20000U)     //!< DMA Receive
-#define LIN_SCI_INT_PARITY   (0x1000000U)   //!< Parity Error
-#define LIN_SCI_INT_OVERRUN  (0x2000000U)   //!< Overrun Error
-#define LIN_SCI_INT_FRAME    (0x4000000U)   //!< Framing Error
-#define LIN_SCI_INT_ALL      (0x7000303U)   //!< All Interrupts
+#define LIN_SCI_INT_BREAK       (0x1U)         //!< Break Detect
+#define LIN_SCI_INT_WAKEUP      (0x2U)         //!< Wakeup
+#define LIN_SCI_INT_TX          (0x100U)       //!< Transmit Buffer
+#define LIN_SCI_INT_RX          (0x200U)       //!< Receive Buffer
+#define LIN_SCI_INT_TX_DMA      (0x10000U)     //!< DMA Transmit
+#define LIN_SCI_INT_RX_DMA      (0x20000U)     //!< DMA Receive
+#define LIN_SCI_INT_RX_DMA_ALL  (0x40000U)     //!< DMA Receive All
+#define LIN_SCI_INT_PARITY      (0x1000000U)   //!< Parity Error
+#define LIN_SCI_INT_OVERRUN     (0x2000000U)   //!< Overrun Error
+#define LIN_SCI_INT_FRAME       (0x4000000U)   //!< Framing Error
+#define LIN_SCI_INT_ALL         (0x7000303U)   //!< All Interrupts
 
 #endif // DOXYGEN_PDF_IGNORE
 
@@ -2287,15 +2288,16 @@ LIN_disableSCIModuleErrors(uint32_t base, uint32_t errors)
 //!
 //!  To set individual flags, the \e intFlags parameter can be the logical
 //!  OR of any of the following:
-//! - \b LIN_SCI_INT_BREAK    - Break Detect
-//! - \b LIN_SCI_INT_WAKEUP   - Wakeup
-//! - \b LIN_SCI_INT_TX       - Transmit Buffer
-//! - \b LIN_SCI_INT_RX       - Receive Buffer
-//! - \b LIN_SCI_INT_TX_DMA   - DMA Transmit
-//! - \b LIN_SCI_INT_RX_DMA   - DMA Receive
-//! - \b LIN_SCI_INT_PARITY   - Parity Error
-//! - \b LIN_SCI_INT_OVERRUN  - Overrun Error
-//! - \b LIN_SCI_INT_FRAME    - Framing Error
+//! - \b LIN_SCI_INT_BREAK      - Break Detect
+//! - \b LIN_SCI_INT_WAKEUP     - Wakeup
+//! - \b LIN_SCI_INT_TX         - Transmit Buffer
+//! - \b LIN_SCI_INT_RX         - Receive Buffer
+//! - \b LIN_SCI_INT_TX_DMA     - DMA Transmit
+//! - \b LIN_SCI_INT_RX_DMA     - DMA Receive
+//! - \b LIN_SCI_INT_RX_DMA_ALL - DMA Receive All
+//! - \b LIN_SCI_INT_PARITY     - Parity Error
+//! - \b LIN_SCI_INT_OVERRUN    - Overrun Error
+//! - \b LIN_SCI_INT_FRAME      - Framing Error
 //!
 //! \return None.
 //
@@ -2331,15 +2333,16 @@ LIN_enableSCIInterrupt(uint32_t base, uint32_t intFlags)
 //!
 //!  To disable individual flags, the \e intFlags parameter can be the logical
 //!  OR of any of the following:
-//! - \b LIN_SCI_INT_BREAK    - Break Detect
-//! - \b LIN_SCI_INT_WAKEUP   - Wakeup
-//! - \b LIN_SCI_INT_TX       - Transmit Buffer
-//! - \b LIN_SCI_INT_RX       - Receive Buffer
-//! - \b LIN_SCI_INT_TX_DMA   - DMA Transmit
-//! - \b LIN_SCI_INT_RX_DMA   - DMA Receive
-//! - \b LIN_SCI_INT_PARITY   - Parity Error
-//! - \b LIN_SCI_INT_OVERRUN  - Overrun Error
-//! - \b LIN_SCI_INT_FRAME    - Framing Error
+//! - \b LIN_SCI_INT_BREAK      - Break Detect
+//! - \b LIN_SCI_INT_WAKEUP     - Wakeup
+//! - \b LIN_SCI_INT_TX         - Transmit Buffer
+//! - \b LIN_SCI_INT_RX         - Receive Buffer
+//! - \b LIN_SCI_INT_TX_DMA     - DMA Transmit
+//! - \b LIN_SCI_INT_RX_DMA     - DMA Receive
+//! - \b LIN_SCI_INT_RX_DMA_ALL - DMA Receive All
+//! - \b LIN_SCI_INT_PARITY     - Parity Error
+//! - \b LIN_SCI_INT_OVERRUN    - Overrun Error
+//! - \b LIN_SCI_INT_FRAME      - Framing Error
 //!
 //! \return None.
 //
@@ -2374,15 +2377,16 @@ LIN_disableSCIInterrupt(uint32_t base, uint32_t intFlags)
 //!
 //!  To clear individual flags, the \e intFlags parameter can be the logical
 //!  OR of any of the following:
-//! - \b LIN_SCI_INT_BREAK    - Break Detect
-//! - \b LIN_SCI_INT_WAKEUP   - Wakeup
-//! - \b LIN_SCI_INT_TX       - Transmit Buffer
-//! - \b LIN_SCI_INT_RX       - Receive Buffer
-//! - \b LIN_SCI_INT_TX_DMA   - DMA Transmit
-//! - \b LIN_SCI_INT_RX_DMA   - DMA Receive
-//! - \b LIN_SCI_INT_PARITY   - Parity Error
-//! - \b LIN_SCI_INT_OVERRUN  - Overrun Error
-//! - \b LIN_SCI_INT_FRAME    - Framing Error
+//! - \b LIN_SCI_INT_BREAK      - Break Detect
+//! - \b LIN_SCI_INT_WAKEUP     - Wakeup
+//! - \b LIN_SCI_INT_TX         - Transmit Buffer
+//! - \b LIN_SCI_INT_RX         - Receive Buffer
+//! - \b LIN_SCI_INT_TX_DMA     - DMA Transmit
+//! - \b LIN_SCI_INT_RX_DMA     - DMA Receive
+//! - \b LIN_SCI_INT_RX_DMA_ALL - DMA Receive All
+//! - \b LIN_SCI_INT_PARITY     - Parity Error
+//! - \b LIN_SCI_INT_OVERRUN    - Overrun Error
+//! - \b LIN_SCI_INT_FRAME      - Framing Error
 //!
 //! \return None.
 //
@@ -2418,15 +2422,16 @@ LIN_clearSCIInterruptStatus(uint32_t base, uint32_t intFlags)
 //!
 //!  To set individual flags, the \e intFlags parameter can be the logical
 //!  OR of any of the following:
-//! - \b LIN_SCI_INT_BREAK    - Break Detect
-//! - \b LIN_SCI_INT_WAKEUP   - Wakeup
-//! - \b LIN_SCI_INT_TX       - Transmit Buffer
-//! - \b LIN_SCI_INT_RX       - Receive Buffer
-//! - \b LIN_SCI_INT_TX_DMA   - DMA Transmit
-//! - \b LIN_SCI_INT_RX_DMA   - DMA Receive
-//! - \b LIN_SCI_INT_PARITY   - Parity Error
-//! - \b LIN_SCI_INT_OVERRUN  - Overrun Error
-//! - \b LIN_SCI_INT_FRAME    - Framing Error
+//! - \b LIN_SCI_INT_BREAK      - Break Detect
+//! - \b LIN_SCI_INT_WAKEUP     - Wakeup
+//! - \b LIN_SCI_INT_TX         - Transmit Buffer
+//! - \b LIN_SCI_INT_RX         - Receive Buffer
+//! - \b LIN_SCI_INT_TX_DMA     - DMA Transmit
+//! - \b LIN_SCI_INT_RX_DMA     - DMA Receive
+//! - \b LIN_SCI_INT_RX_DMA_ALL - DMA Receive All
+//! - \b LIN_SCI_INT_PARITY     - Parity Error
+//! - \b LIN_SCI_INT_OVERRUN    - Overrun Error
+//! - \b LIN_SCI_INT_FRAME      - Framing Error
 //!
 //! \return None.
 //
@@ -2462,15 +2467,16 @@ LIN_setSCIInterruptLevel0(uint32_t base, uint32_t intFlags)
 //!
 //!  To set individual flags, the \e intFlags parameter can be the logical
 //!  OR of any of the following:
-//! - \b LIN_SCI_INT_BREAK    - Break Detect
-//! - \b LIN_SCI_INT_WAKEUP   - Wakeup
-//! - \b LIN_SCI_INT_TX       - Transmit Buffer
-//! - \b LIN_SCI_INT_RX       - Receive Buffer
-//! - \b LIN_SCI_INT_TX_DMA   - DMA Transmit
-//! - \b LIN_SCI_INT_RX_DMA   - DMA Receive
-//! - \b LIN_SCI_INT_PARITY   - Parity Error
-//! - \b LIN_SCI_INT_OVERRUN  - Overrun Error
-//! - \b LIN_SCI_INT_FRAME    - Framing Error
+//! - \b LIN_SCI_INT_BREAK      - Break Detect
+//! - \b LIN_SCI_INT_WAKEUP     - Wakeup
+//! - \b LIN_SCI_INT_TX         - Transmit Buffer
+//! - \b LIN_SCI_INT_RX         - Receive Buffer
+//! - \b LIN_SCI_INT_TX_DMA     - DMA Transmit
+//! - \b LIN_SCI_INT_RX_DMA     - DMA Receive
+//! - \b LIN_SCI_INT_RX_DMA_ALL - DMA Receive All
+//! - \b LIN_SCI_INT_PARITY     - Parity Error
+//! - \b LIN_SCI_INT_OVERRUN    - Overrun Error
+//! - \b LIN_SCI_INT_FRAME      - Framing Error
 //!
 //! \return None.
 //

@@ -15,30 +15,23 @@
 #include "project_settings.h"
 
 
-
-
-void setupDevice();
-void setupADC();
-void disablePWMCLKCounting();
-void enablePWMCLKCounting();
-void setupInverterPWM(uint32_t, uint32_t, uint16_t,
-                      uint16_t, uint16_t);
-
-interrupt void inverterISR();
-interrupt void adcISR();
 /*
  * ADC Read result for signal reading
  */
-//#define _GETRES_SOC0 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER0)
-#define _GETRES_IN_Idc ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER2);
+#define PPB_OFFSET_VAL 2048
 
-#define _GETRES_SOC0 ADC_readPPBResult(ADCARESULT_BASE, ADC_PPB_NUMBER1)
+#define TRIP_HIGH_VAL 1700
+#define TRIP_LOW_VAL -1700
 
-#define _GETRES_SOC1 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER1)
-//#define _GETRES_SOC2 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER2)
-//#define _GETRES_SOC3 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER3)
+#define _GETRES_invInst_V ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER0)
+#define _GETRES_mainsInst_V ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER1)
+#define _GETRES_invLoad_I ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER2)
+#define _GETRES_battBus_V ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER3)
+#define _GETRES_battChrg_I  ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER4)
 
-#define ADC_HALFPT 4096/2
+#define _GET_SWITCH_A0 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER5)
+#define _GET_SWITCH_A1 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER6)
+
 
 //----------------------------------------------------------------------
 /* ADC BASED SWITCH KEYBOARD
@@ -55,17 +48,43 @@ interrupt void adcISR();
  *        10: S2 Pressed, others OFF
  *        15: S3 Pressed, others OFF
  */
+#define LCD_DEBUGMODE_WINDOW 6
 
-#define SW_A_Val  1300
-#define SW_B_Val  600
-#define SW_C_Val  3200
+#define SW01_SP 5
+#define SW02_SP 10
+#define SW03_SP 15
+#define SW01_LP 50
+#define SW02_LP 55
+#define SW03_LP 60
 
-#define _GET_SWITCH_A0 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER4)
-#define _GET_SWITCH_A1 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER5)
-#define _GET_SWITCH_A2 ADC_readResult(ADCARESULT_BASE, ADC_SOC_NUMBER6)
-#define _SWITCH_ADC_RANGE 200
 
-inline uint16_t _GET_SWITCH_VAL();
+#define SW_ONOFF    SW03_SP
+#define SW_SCROLL   SW02_SP
+#define SW_LOCK     SW01_SP
+#define SW_DEBUG    SW01_LP
+
+#define SW_01_Val  2600
+#define SW_02_Val  3550
+#define SW_03_Val  3200
+
+#define SW_tolerance 100
+
+inline void _GET_SWITCH_VAL(uint16_t *);
+
+void setupDevice();
+void setupADC();
+void disablePWMCLKCounting();
+void enablePWMCLKCounting();
+void setupInverterPWM(uint32_t, uint32_t, uint16_t,
+                      uint16_t, uint16_t);
+void setupChargerPWM(uint32_t , uint32_t, uint16_t);
+void parseFloatForLCD(float32_t temp, uint16_t *parsedVal);
+void readADCValues(float32_t *,float32_t *,  float32_t *, float32_t *, float32_t *);
+void runPowerMeasurement(uint16_t, float32_t, float32_t, float32_t *, float32_t *);
+
+interrupt void inverterISR();
+interrupt void adcISR();
+//================================================================
 
 //----------------------------------------------------------------------
 //TODO updateInverterPWM()
@@ -75,9 +94,8 @@ static inline void updateInverterPWM(uint32_t base1, uint32_t base2,
     uint16_t invDuty;
     uint16_t invDuty180;
 
-
-    invDuty = ((float32_t) (INV_PWM_PERIOD / 2.0f)) * (1.0f - duty);
-    invDuty180 = ((float32_t) (INV_PWM_PERIOD / 2.0f)) * (1.0f + duty);
+    invDuty = ((float32_t) (INV_PWM_PERIOD / 2.0f)) * (1.0f + duty);
+    invDuty180 = ((float32_t) (INV_PWM_PERIOD / 2.0f)) * (1.0f - duty);
 
     if (invDuty == (EPWM_getTimeBasePeriod(base1)))
     {
@@ -90,6 +108,39 @@ static inline void updateInverterPWM(uint32_t base1, uint32_t base2,
 
     EPWM_setCounterCompareValue(base1, EPWM_COUNTER_COMPARE_A, invDuty);
     EPWM_setCounterCompareValue(base2, EPWM_COUNTER_COMPARE_A, invDuty180);
+
+    /*
+     *
+     */
+    EPWM_setActionQualifierActionComplete(
+            base1,
+            EPWM_AQ_OUTPUT_A,
+            EPWM_AQ_OUTPUT_LOW_ZERO | EPWM_AQ_OUTPUT_NO_CHANGE_PERIOD
+                    | EPWM_AQ_OUTPUT_HIGH_UP_CMPA
+                    | EPWM_AQ_OUTPUT_LOW_DOWN_CMPA);
+
+    EPWM_setActionQualifierActionComplete(
+            base2,
+            EPWM_AQ_OUTPUT_A,
+            EPWM_AQ_OUTPUT_LOW_ZERO | EPWM_AQ_OUTPUT_NO_CHANGE_PERIOD
+                    | EPWM_AQ_OUTPUT_HIGH_UP_CMPA
+                    | EPWM_AQ_OUTPUT_LOW_DOWN_CMPA);
+    /*
+     *
+     */
+
+}
+//----------------------------------------------------------------------
+//TODO chargerPWM()
+static inline void updateChargerPWM(uint32_t base1, uint32_t base2,
+                                     float32_t duty)
+{
+    uint16_t invDuty;
+
+    invDuty = ((float32_t) (INV_PWM_PERIOD) * duty);
+
+    EPWM_setCounterCompareValue(base1, EPWM_COUNTER_COMPARE_A, invDuty);
+    EPWM_setCounterCompareValue(base2, EPWM_COUNTER_COMPARE_A, invDuty);
 
     /*
      *
@@ -173,10 +224,9 @@ static inline void setupInterrupt(void)
 // Enable Global realtime interrupt DBGM
 }
 
-
+//----------------------------------------------------------------------
 
 //================================================================
-
 
 
 

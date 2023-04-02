@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -513,10 +513,8 @@ typedef enum{
   PMBUS_TRANSACTION_READWORD      = 9U,  //!< Read word
   PMBUS_TRANSACTION_BLOCKWRPC     = 10U  //!< Block write, then process call
 }PMBus_Transaction;
-#if PMBUS_INCLUDE_CRC8_TABLE == 0x1U
-//! CRC table for the polynomial x^8+x^2+x^1+1 or 0x7 (File scope only)
-extern const uint16_t PMBus_crc8Table[256U];
-#endif //PMBUS_INCLUDE_CRC8_TABLE == 0x1U
 
-
+#ifdef __cplusplus
+}
+#endif
 #endif // PMBUS_COMMON_H

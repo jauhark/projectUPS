@@ -5,10 +5,8 @@
 // TITLE:  C28x I2C driver.
 //
 //###########################################################################
-//
-//
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -1330,7 +1328,7 @@ I2C_clearInterruptStatus(uint32_t base, uint32_t intFlags);
 //! \param sysclkHz is the rate of the clock supplied to the I2C module
 //! (SYSCLK) in Hz.
 //!
-//! This function configures I2C module clock frequency by initializing 
+//! This function configures I2C module clock frequency by initializing
 //! prescale register based on SYSCLK frequency.
 //! Note that the I2C module \b must be put into
 //! reset before calling this function. You can do this with the function

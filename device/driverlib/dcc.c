@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -92,6 +92,7 @@ DCC_verifyClockFrequency(uint32_t base,
     uint32_t count0;
     uint32_t valid;
     uint32_t count1;
+    bool     status;
 
     //
     // Check the arguments.
@@ -107,12 +108,12 @@ DCC_verifyClockFrequency(uint32_t base,
     //
     if(freq1 > freq0)
     {
-        total_error = (uint32_t)(2.0F + 2.0F * (freq_sysclk / freq0));
+        total_error = (uint32_t)(2.0F + (2.0F * (freq_sysclk / freq0)));
     }
     else
     {
-        total_error = (uint32_t)(2.0F * (freq0 / freq1) +
-                                 2.0F * (freq_sysclk / freq0));
+        total_error = (uint32_t)((2.0F * (freq0 / freq1)) +
+                                 (2.0F * (freq_sysclk / freq0)));
     }
 
     //
@@ -138,7 +139,7 @@ DCC_verifyClockFrequency(uint32_t base,
     // Counter1 = Window * (Fclk1 / Fclk0)
     //
     count0 = window - total_error;
-    valid  = 2 * total_error;
+    valid  = 2U * total_error;
     count1 = window * freq1 / freq0;
 
     //
@@ -184,19 +185,23 @@ DCC_verifyClockFrequency(uint32_t base,
     //
     // Wait until Error or Done Flag is generated
     //
-    while((DCC_getSingleShotStatus(base) | DCC_getErrorStatus(base)) == 0);
+    while(!(DCC_getSingleShotStatus(base) || DCC_getErrorStatus(base)))
+    {
+    }
 
     //
     // Returns true if DCC completes without error
     //
-    if(DCC_getSingleShotStatus(base) == 1U)
+    if(DCC_getSingleShotStatus(base))
     {
-        return(true);
+        status = true;
     }
     else
     {
-        return(false);
+        status = false;
     }
+
+    return(status);
 }
 
 //*****************************************************************************
@@ -231,7 +236,7 @@ DCC_measureClockFrequency(uint32_t base,
     // Digitization error = 8 Clock0 cycles
     // Total DCC error = Async Error + Digitization error
     //
-    total_error = (uint32_t)(2.0F + 2.0F * (freq_sysclk / freq0));
+    total_error = (uint32_t)(2.0F + (2.0F * (freq_sysclk / freq0)));
     total_error += 8U;
 
     //
@@ -252,7 +257,7 @@ DCC_measureClockFrequency(uint32_t base,
     // Counter1 = Maximum counter value (0xFFFFF)
     //
     count0 = window - total_error;
-    valid  = 2 * total_error;
+    valid  = 2U * total_error;
     count1 = 0xFFFFFU;
 
     //
@@ -298,7 +303,9 @@ DCC_measureClockFrequency(uint32_t base,
     //
     // Wait until Error or Done Flag is generated
     //
-    while((DCC_getSingleShotStatus(base) | DCC_getErrorStatus(base)) == 0);
+    while(!(DCC_getSingleShotStatus(base) || DCC_getErrorStatus(base)))
+    {
+    }
 
     //
     // Calculate the difference of the current counter
@@ -351,12 +358,12 @@ DCC_continuousMonitor(uint32_t base,
     //
     if(freq1 > freq0)
     {
-        total_error = (uint32_t)(2.0F + 2.0F * (freq_sysclk / freq0));
+        total_error = (uint32_t)(2.0F + (2.0F * (freq_sysclk / freq0)));
     }
     else
     {
-        total_error = (uint32_t)(2.0F * (freq0 / freq1) +
-                                 2.0F * (freq_sysclk / freq0));
+        total_error = (uint32_t)((2.0F * (freq0 / freq1)) +
+                                 (2.0F * (freq_sysclk / freq0)));
     }
 
     //
@@ -377,12 +384,12 @@ DCC_continuousMonitor(uint32_t base,
 
     //
     // DCC counter configuration :
-    // Counter0 = Window - Total Error
+    // Counter0 = Window - Total     Error
     // Valid0 = 2 * Total Error
     // Counter1 = Window * (Fclk1 / Fclk0)
     //
     count0 = window - total_error;
-    valid  = 2 * total_error;
+    valid  = 2U * total_error;
     count1 = window * freq1 / freq0;
 
     //

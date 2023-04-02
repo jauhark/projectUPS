@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -289,7 +289,7 @@ MemCfg_setProtection(uint32_t memSection, uint32_t protectMode)
     //
     regOffset = (shiftVal & ~(0x1FU)) >> 4U;
     shiftVal &= 0x0001FU;
-    maskVal = MEMCFG_XACCPROTX_M << shiftVal;
+    maskVal = (uint32_t)MEMCFG_XACCPROTX_M << shiftVal;
     regVal = protectMode << shiftVal;
 
     //

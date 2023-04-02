@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -151,8 +151,8 @@ SysCtl_getClock(uint32_t clockInHz)
         oscSource = HWREG(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &
                     (uint32_t)SYSCTL_CLKSRCCTL1_OSCCLKSRCSEL_M;
 
-        if((oscSource == ((uint32_t)SYSCTL_OSCSRC_OSC2 >> SYSCTL_OSCSRC_S)) ||
-           (oscSource == ((uint32_t)SYSCTL_OSCSRC_OSC1 >> SYSCTL_OSCSRC_S)))
+        if((oscSource == (SYSCTL_OSCSRC_OSC2 >> SYSCTL_OSCSRC_S)) ||
+           (oscSource == (SYSCTL_OSCSRC_OSC1 >> SYSCTL_OSCSRC_S)))
         {
             clockOut = SYSCTL_DEFAULT_OSC_FREQ;
         }
@@ -268,26 +268,24 @@ SysCtl_setClock(uint32_t config)
         //
         // Get the PLL multiplier settings from config
         //
-        pllMult  = (uint32_t)((config & SYSCTL_IMULT_M) <<
-                              SYSCTL_SYSPLLMULT_IMULT_S);
+        pllMult  = ((config & SYSCTL_IMULT_M) << SYSCTL_SYSPLLMULT_IMULT_S);
 
-        pllMult |= (uint32_t)(((config & SYSCTL_FMULT_M) >> SYSCTL_FMULT_S) <<
+        pllMult |= (((config & SYSCTL_FMULT_M) >> SYSCTL_FMULT_S) <<
                               SYSCTL_SYSPLLMULT_FMULT_S);
 
-        pllMult |= (uint32_t)(((config & SYSCTL_ODIV_M) >> SYSCTL_ODIV_S) <<
+        pllMult |= (((config & SYSCTL_ODIV_M) >> SYSCTL_ODIV_S) <<
                               SYSCTL_SYSPLLMULT_ODIV_S);
 
         //
         // Get the PLL multipliers currently programmed
         //
-        mult  = (uint32_t)((HWREG(CLKCFG_BASE + SYSCTL_O_SYSPLLMULT) &
-                            (uint32_t)SYSCTL_SYSPLLMULT_IMULT_M) >>
-                           (uint32_t)SYSCTL_SYSPLLMULT_IMULT_S);
+        mult  = ((HWREG(CLKCFG_BASE + SYSCTL_O_SYSPLLMULT) &
+                SYSCTL_SYSPLLMULT_IMULT_M) >> SYSCTL_SYSPLLMULT_IMULT_S);
 
-        mult |= (uint32_t)(HWREG(CLKCFG_BASE + SYSCTL_O_SYSPLLMULT) &
-                                 SYSCTL_SYSPLLMULT_FMULT_M);
+        mult |= (HWREG(CLKCFG_BASE + SYSCTL_O_SYSPLLMULT) &
+                 SYSCTL_SYSPLLMULT_FMULT_M);
 
-        mult |= (uint32_t)(HWREG(CLKCFG_BASE + SYSCTL_O_SYSPLLMULT) &
+        mult |= (HWREG(CLKCFG_BASE + SYSCTL_O_SYSPLLMULT) &
                            SYSCTL_SYSPLLMULT_ODIV_M);
 
         //
@@ -348,9 +346,9 @@ SysCtl_setClock(uint32_t config)
                     //
                     status = SysCtl_isPLLValid(oscSource,
                                               (config &
-                                              ((uint32_t)SYSCTL_IMULT_M |
-                                               (uint32_t)SYSCTL_FMULT_M |
-                                               (uint32_t)SYSCTL_ODIV_M)));
+                                              (SYSCTL_IMULT_M |
+                                               SYSCTL_FMULT_M |
+                                               SYSCTL_ODIV_M)));
 
                     //
                     // Check DCC Status, if no error break the loop
@@ -457,7 +455,7 @@ SysCtl_selectXTAL(void)
     HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) =
     ((HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &
       (~SYSCTL_CLKSRCCTL1_OSCCLKSRCSEL_M)) |
-     ((uint32_t)SYSCTL_OSCSRC_XTAL >> SYSCTL_OSCSRC_S));
+     (SYSCTL_OSCSRC_XTAL >> SYSCTL_OSCSRC_S));
     EDIS;
 
     //
@@ -483,7 +481,7 @@ SysCtl_selectXTAL(void)
         HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) =
         ((HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &
           (~SYSCTL_CLKSRCCTL1_OSCCLKSRCSEL_M)) |
-         ((uint32_t)SYSCTL_OSCSRC_XTAL >> SYSCTL_OSCSRC_S));
+         (SYSCTL_OSCSRC_XTAL >> SYSCTL_OSCSRC_S));
         EDIS;
     }
 }
@@ -516,7 +514,7 @@ SysCtl_selectXTALSingleEnded(void)
     HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) =
     ((HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &
       (~SYSCTL_CLKSRCCTL1_OSCCLKSRCSEL_M)) |
-     ((uint32_t)SYSCTL_OSCSRC_XTAL >> SYSCTL_OSCSRC_S));
+     (SYSCTL_OSCSRC_XTAL >> SYSCTL_OSCSRC_S));
     EDIS;
 
     //
@@ -537,9 +535,9 @@ SysCtl_selectXTALSingleEnded(void)
 void
 SysCtl_selectOscSource(uint32_t oscSource)
 {
-    ASSERT((oscSource == SYSCTL_OSCSRC_OSC1) |
-           (oscSource == SYSCTL_OSCSRC_OSC2) |
-           (oscSource == SYSCTL_OSCSRC_XTAL) |
+    ASSERT((oscSource == SYSCTL_OSCSRC_OSC1) ||
+           (oscSource == SYSCTL_OSCSRC_OSC2) ||
+           (oscSource == SYSCTL_OSCSRC_XTAL) ||
            (oscSource == SYSCTL_OSCSRC_XTAL_SE));
 
     //
@@ -586,7 +584,7 @@ SysCtl_selectOscSource(uint32_t oscSource)
             HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) =
                    (HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &
                     ~SYSCTL_CLKSRCCTL1_OSCCLKSRCSEL_M) |
-                   ((uint32_t)SYSCTL_OSCSRC_OSC1 >> SYSCTL_OSCSRC_S);
+                   (SYSCTL_OSCSRC_OSC1 >> SYSCTL_OSCSRC_S);
 
             break;
 

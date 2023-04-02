@@ -6,7 +6,7 @@
 //
 //#############################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -176,8 +176,8 @@ DCSM_getZone1FlashEXEStatus(DCSM_Sector sector)
         //
         // Get the EXE status of the Flash Sector
         //
-        status = (DCSM_EXEOnlyStatus)((regValue >> statusBitShift) &
-                                    (uint16_t)0x01U);
+        status = (DCSM_EXEOnlyStatus)((uint16_t)((regValue >> statusBitShift) &
+                                    (uint16_t)0x01U));
     }
     return(status);
 }

@@ -113,7 +113,12 @@ PDE_DEPS__QUOTED :=
 SUBDIRS := \
 . \
 device \
+device/driverlib \
+device/driverlib/ccs/Debug \
+device/driverlib/ccs/Release \
+libraries/DCL/source \
 libraries/FPUfastRTS \
 libraries/LcdDrive \
+libraries \
 libraries/sfra \
 

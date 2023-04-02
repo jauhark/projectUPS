@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -116,8 +116,8 @@ XBAR_setEPWMMuxConfig(XBAR_TripNum trip, XBAR_EPWMMuxConfig muxConfig)
     //
     EALLOW;
 
-    HWREG(XBAR_EPWM_CFG_REG_BASE + offset) =
-        (HWREG(XBAR_EPWM_CFG_REG_BASE + offset) & ~((uint32_t)0x3U << shift)) |
+    HWREG(XBAR_EPWM_CFG_REG_BASE + (uint32_t)offset) =
+        (HWREG(XBAR_EPWM_CFG_REG_BASE + (uint32_t)offset) & ~((uint32_t)0x3U << shift)) |
         (((uint32_t)muxConfig & 0x3U) << shift);
 
     EDIS;
@@ -158,8 +158,8 @@ XBAR_setCLBMuxConfig(XBAR_AuxSigNum auxSignal, XBAR_CLBMuxConfig muxConfig)
     EALLOW;
 
 
-    HWREG(XBAR_CLB_CFG_REG_BASE + offset) =
-        (HWREG(XBAR_CLB_CFG_REG_BASE + offset) & ~((uint32_t)0x3U << shift)) |
+    HWREG(XBAR_CLB_CFG_REG_BASE + (uint32_t)offset) =
+        (HWREG(XBAR_CLB_CFG_REG_BASE + (uint32_t)offset) & ~((uint32_t)0x3U << shift)) |
         (((uint32_t)muxConfig & 0x3U) << shift);
 
     EDIS;

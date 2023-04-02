@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -190,14 +190,7 @@ CAN_setBitTiming(uint32_t base, uint16_t prescaler,
     // Clear the config change bit, and restore the init bit.
     //
     savedInit &= ~((uint16_t)CAN_CTL_CCE);
-
-    //
-    // If Init was not set before, then clear it.
-    //
-    if((savedInit & CAN_CTL_INIT) == CAN_CTL_INIT)
-    {
-        savedInit &= ~((uint16_t)CAN_CTL_INIT);
-    }
+    
     HWREGH(base + CAN_O_CTL) = savedInit;
 }
 
@@ -519,6 +512,276 @@ CAN_sendMessage(uint32_t base, uint32_t objID, uint16_t msgLen,
 
 //*****************************************************************************
 //
+// CAN_sendMessage_16bit
+//
+//*****************************************************************************
+void
+CAN_sendMessage_16bit(uint32_t base, uint32_t objID, uint16_t msgLen,
+                const uint16_t *msgData)
+{
+    uint32_t msgCtrl = 0U;
+
+    //
+    // Check the arguments.
+    //
+    ASSERT(CAN_isBaseValid(base));
+    ASSERT((objID <= 32U) && (objID > 0U));
+    ASSERT(msgLen <= 8U);
+
+    //
+    // Set IF command to read message object control value
+    //
+    // Set up the request for data from the message object.
+    // Transfer the message object to the IF register.
+    //
+    HWREG_BP(base + CAN_O_IF1CMD) = ((uint32_t)CAN_IF1CMD_CONTROL |
+                                     (objID & CAN_IF1CMD_MSG_NUM_M));
+
+    //
+    // Wait for busy bit to clear
+    //
+    while((HWREGH(base + CAN_O_IF1CMD) & CAN_IF1CMD_BUSY) == CAN_IF1CMD_BUSY)
+    {
+    }
+
+    //
+    // Read IF message control
+    //
+    msgCtrl = HWREGH(base + CAN_O_IF1MCTL);
+
+    //
+    // Check provided DLC size with actual Message DLC size
+    //
+    ASSERT((msgCtrl & CAN_IF1MCTL_DLC_M) == msgLen);
+
+    //
+    // Write the data out to the CAN Data registers.
+    //
+    CAN_writeDataReg_16bit(msgData, (base + CAN_O_IF1DATA),
+                     (msgCtrl & CAN_IF1MCTL_DLC_M));
+
+    //
+    //  Set Data to be transferred from IF
+    //
+    if(msgLen > 0U)
+    {
+        msgCtrl = CAN_IF1CMD_DATA_B | CAN_IF1CMD_DATA_A;
+    }
+    else
+    {
+        msgCtrl = 0U;
+    }
+
+    //
+    // Set Direction to write
+    //
+    // Set Tx Request Bit
+    //
+    // Transfer the message object to the message object specified by
+    // objID.
+    //
+    HWREG_BP(base + CAN_O_IF1CMD) = (msgCtrl | (uint32_t)CAN_IF1CMD_DIR |
+                                     (uint32_t)CAN_IF1CMD_TXRQST |
+                                     (objID & CAN_IF1CMD_MSG_NUM_M));
+}
+
+//*****************************************************************************
+//
+// CAN_sendMessage_32bit
+//
+//*****************************************************************************
+void
+CAN_sendMessage_32bit(uint32_t base, uint32_t objID, uint16_t msgLen,
+                const uint32_t *msgData)
+{
+    uint32_t msgCtrl = 0U;
+
+    //
+    // Check the arguments.
+    //
+    ASSERT(CAN_isBaseValid(base));
+    ASSERT((objID <= 32U) && (objID > 0U));
+    ASSERT(msgLen <= 8U);
+
+    //
+    // Set IF command to read message object control value
+    //
+    // Set up the request for data from the message object.
+    // Transfer the message object to the IF register.
+    //
+    HWREG_BP(base + CAN_O_IF1CMD) = ((uint32_t)CAN_IF1CMD_CONTROL |
+                                     (objID & CAN_IF1CMD_MSG_NUM_M));
+
+    //
+    // Wait for busy bit to clear
+    //
+    while((HWREGH(base + CAN_O_IF1CMD) & CAN_IF1CMD_BUSY) == CAN_IF1CMD_BUSY)
+    {
+    }
+
+    //
+    // Read IF message control
+    //
+    msgCtrl = HWREGH(base + CAN_O_IF1MCTL);
+
+    //
+    // Check provided DLC size with actual Message DLC size
+    //
+    ASSERT((msgCtrl & CAN_IF1MCTL_DLC_M) == msgLen);
+
+    //
+    // Write the data out to the CAN Data registers.
+    //
+    CAN_writeDataReg_32bit(msgData, (base + CAN_O_IF1DATA),
+                     (msgCtrl & CAN_IF1MCTL_DLC_M));
+
+    //
+    //  Set Data to be transferred from IF
+    //
+    if(msgLen > 0U)
+    {
+        msgCtrl = CAN_IF1CMD_DATA_B | CAN_IF1CMD_DATA_A;
+    }
+    else
+    {
+        msgCtrl = 0U;
+    }
+
+    //
+    // Set Direction to write
+    //
+    // Set Tx Request Bit
+    //
+    // Transfer the message object to the message object specified by
+    // objID.
+    //
+    HWREG_BP(base + CAN_O_IF1CMD) = (msgCtrl | (uint32_t)CAN_IF1CMD_DIR |
+                                     (uint32_t)CAN_IF1CMD_TXRQST |
+                                     (objID & CAN_IF1CMD_MSG_NUM_M));
+}
+
+//*****************************************************************************
+//
+// CAN_sendMessage_updateDLC
+//
+//*****************************************************************************
+void
+CAN_sendMessage_updateDLC(uint32_t base, uint32_t objID, uint16_t msgLen,
+                  const uint16_t *msgData)
+{
+    uint32_t msgCtrl = 0U;
+
+    //
+    // Check the arguments.
+    //
+    ASSERT(CAN_isBaseValid(base));
+    ASSERT((objID <= 32U) && (objID > 0U));
+    ASSERT(msgLen <= 8U);
+
+    //
+    // Set IF command to read message object control value
+    //
+    // Set up the request for data from the message object.
+    // Transfer the message object to the IF register.
+    //
+    HWREG_BP(base + CAN_O_IF1CMD) = ((uint32_t)CAN_IF1CMD_CONTROL |
+                                     (objID & CAN_IF1CMD_MSG_NUM_M));
+
+    //
+    // Wait for busy bit to clear
+    //
+    while((HWREGH(base + CAN_O_IF1CMD) & CAN_IF1CMD_BUSY) == CAN_IF1CMD_BUSY)
+    {
+    }
+
+    //
+    // Read IF message control
+    //
+    msgCtrl = HWREGH(base + CAN_O_IF1MCTL);
+
+    //
+    // Update to the new data length
+    //
+    msgCtrl &= ~CAN_IF1MCTL_DLC_M;
+    msgCtrl |= (msgLen & CAN_IF1MCTL_DLC_M);
+
+    //
+    // Write out to the register to program the message object
+    //
+    HWREG_BP(base + CAN_O_IF1MCTL) = msgCtrl;
+
+    //
+    // Transfer data to message object RAM
+    //
+    HWREG_BP(base + CAN_O_IF1CMD) =
+        (CAN_IF1CMD_CONTROL | CAN_IF1CMD_DIR | (objID & CAN_IF1CMD_MSG_NUM_M));
+
+    //
+    // Wait for busy bit to clear
+    //
+    while((HWREGH(base + CAN_O_IF1CMD) & CAN_IF1CMD_BUSY) == CAN_IF1CMD_BUSY)
+    {
+    }
+
+    //
+    // Set IF command to read message object control value
+    //
+    // Set up the request for data from the message object.
+    // Transfer the message object to the IF register.
+    //
+    HWREG_BP(base + CAN_O_IF1CMD) = ((uint32_t)CAN_IF1CMD_CONTROL |
+                                     (objID & CAN_IF1CMD_MSG_NUM_M));
+
+    //
+    // Wait for busy bit to clear
+    //
+    while((HWREGH(base + CAN_O_IF1CMD) & CAN_IF1CMD_BUSY) == CAN_IF1CMD_BUSY)
+    {
+    }
+
+    //
+    // Read IF message control
+    //
+    msgCtrl = HWREGH(base + CAN_O_IF1MCTL);
+
+    //
+    // Check provided DLC size with actual Message DLC size
+    //
+    ASSERT((msgCtrl & CAN_IF1MCTL_DLC_M) == msgLen);
+
+    //
+    // Write the data out to the CAN Data registers.
+    //
+    CAN_writeDataReg(msgData, (base + CAN_O_IF1DATA),
+                     (msgCtrl & CAN_IF1MCTL_DLC_M));
+
+    //
+    //  Set Data to be transferred from IF
+    //
+    if(msgLen > 0U)
+    {
+        msgCtrl = CAN_IF1CMD_DATA_B | CAN_IF1CMD_DATA_A;
+    }
+    else
+    {
+        msgCtrl = 0U;
+    }
+
+    //
+    // Set Direction to write
+    //
+    // Set Tx Request Bit
+    //
+    // Transfer the message object to the message object specified by
+    // objID.
+    //
+    HWREG_BP(base + CAN_O_IF1CMD) = (msgCtrl | (uint32_t)CAN_IF1CMD_DIR |
+                                     (uint32_t)CAN_IF1CMD_TXRQST |
+                                     (objID & CAN_IF1CMD_MSG_NUM_M));
+}
+
+//*****************************************************************************
+//
 // CAN_sendRemoteRequestMessage
 //
 //*****************************************************************************
@@ -648,6 +911,11 @@ CAN_readMessage(uint32_t base, uint32_t objID,
     return(status);
 }
 
+//*****************************************************************************
+//
+// CAN_readMessageWithID
+//
+//*****************************************************************************
 bool CAN_readMessageWithID(uint32_t base,
                            uint32_t objID,
                            CAN_MsgFrameType *frameType,
@@ -656,9 +924,8 @@ bool CAN_readMessageWithID(uint32_t base,
 {
     bool status;
 
-
     //
-    // Check the arguments.
+    // Check the pointers.
     //
     ASSERT(msgID != 0U);
     ASSERT(frameType != 0U);
@@ -686,6 +953,7 @@ bool CAN_readMessageWithID(uint32_t base,
                       CAN_IF2ARB_STD_ID_S);
         }
     }
+
     return(status);
 }
 //*****************************************************************************
@@ -746,6 +1014,41 @@ CAN_transferMessage(uint32_t base, uint16_t interface, uint32_t objID,
 //*****************************************************************************
 void
 CAN_clearMessage(uint32_t base, uint32_t objID)
+{
+    //
+    // Check the arguments.
+    //
+    ASSERT(CAN_isBaseValid(base));
+    ASSERT((objID >= 1U) && (objID <= 32U));
+
+    //
+    // Wait for busy bit to clear
+    //
+    while((HWREGH(base + CAN_O_IF1CMD) & CAN_IF1CMD_BUSY) == CAN_IF1CMD_BUSY)
+    {
+    }
+
+    //
+    // Clear the message valid bit in the arbitration register. This disables
+    // the mailbox.
+    //
+    HWREG_BP(base + CAN_O_IF1ARB) = 0U;
+
+    //
+    // Initiate programming the message object
+    //
+    HWREG_BP(base + CAN_O_IF1CMD) =
+    (((uint32_t)CAN_IF1CMD_DIR | (uint32_t)CAN_IF1CMD_ARB) |
+     (objID & CAN_IF1CMD_MSG_NUM_M));
+}
+
+//*****************************************************************************
+//
+// CAN_disableMessageObject
+//
+//*****************************************************************************
+void
+CAN_disableMessageObject(uint32_t base, uint32_t objID)
 {
     //
     // Check the arguments.

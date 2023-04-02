@@ -6,7 +6,7 @@
 //
 //#############################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -163,11 +163,11 @@ typedef enum
 typedef enum
 {
     //! sync out on the sync in signal and software force
-    ECAP_SYNC_OUT_SYNCI         = 0x00,
+    ECAP_SYNC_OUT_SYNCI         = 0x00U,
     //! sync out on counter equals period
-    ECAP_SYNC_OUT_COUNTER_PRD   = 0x40,
+    ECAP_SYNC_OUT_COUNTER_PRD   = 0x40U,
     //! Disable sync out signal
-    ECAP_SYNC_OUT_DISABLED      = 0x80
+    ECAP_SYNC_OUT_DISABLED      = 0x80U
 }ECAP_SyncOutMode;
 
 //*****************************************************************************
@@ -862,7 +862,6 @@ static inline void ECAP_disableCounterResetOnEvent(uint32_t base,
                                                    ECAP_Events event)
 {
     ASSERT(ECAP_isBaseValid(base));
-    ASSERT((event >= 1U) || (event <= 4U));
 
     EALLOW;
 

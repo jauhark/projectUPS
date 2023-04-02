@@ -6,7 +6,7 @@
 //
 //#############################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -612,8 +612,8 @@ DCSM_forceFlashErrorStatus(void)
 //!
 //! \return None.
 //!
-//! \note This function should not be called in an actual application, 
-//! should only be used for debugging/development. Ensure flash data
+//! \note This function should not be called in an actual application,
+//! should only be used for once to program the OTP memory. Ensure flash data
 //! cache is disabled before calling this function(Flash_disableCache).
 //
 //*****************************************************************************
@@ -633,6 +633,10 @@ DCSM_unlockZone1CSM(const DCSM_CSMPasswordKey * const psCMDKey);
 //! provided passwords into CSM Key registers
 //!
 //! \return None.
+//!
+//! \note This function should not be called in an actual application,
+//! should only be used for once to program the OTP memory. Ensure flash data
+//! cache is disabled before calling this function(Flash_disableCache).
 //
 //*****************************************************************************
 extern void
@@ -651,7 +655,7 @@ DCSM_unlockZone2CSM(const DCSM_CSMPasswordKey * const psCMDKey);
 //! DCSM_UNPROTECTED if the sector is not EXE-ONLY protected,
 //! DCSM_INCORRECT_ZONE if sector does not belong to this zone.
 //!
-//! \note This function should not be called in an actual application, 
+//! \note This function should not be called in an actual application,
 //! should only be used for debugging/development. Ensure flash data
 //! cache is disabled before calling this function(Flash_disableCache).
 //

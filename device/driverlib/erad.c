@@ -44,10 +44,10 @@ ERAD_configBusComp(uint32_t base, ERAD_BusComp_Config config_params)
     // Enable interrupt and CPU halt if specified in the parameters
     //
     HWREGH(base + ERAD_O_HWBP_CNTL) =
-                   (config_params.comp_mode   << ERAD_HWBP_CNTL_COMP_MODE_S) |
-                   (config_params.bus_sel     << ERAD_HWBP_CNTL_BUS_SEL_S)   |
-                   (config_params.enable_stop << ERAD_HWBP_CNTL_STOP_S)      |
-                   (config_params.enable_int  << ERAD_HWBP_CNTL_RTOSINT_S);
+        ((uint16_t)config_params.comp_mode   << ERAD_HWBP_CNTL_COMP_MODE_S) |
+        ((uint16_t)config_params.bus_sel     << ERAD_HWBP_CNTL_BUS_SEL_S)   |
+        ((uint16_t)config_params.enable_stop << ERAD_HWBP_CNTL_STOP_S)      |
+        ((uint16_t)config_params.enable_int  << ERAD_HWBP_CNTL_RTOSINT_S);
     EDIS;
 }
 
@@ -98,8 +98,8 @@ ERAD_configCounterInCountingMode(uint32_t base,
         // configure the counter input event.
         //
         HWREGH(base + ERAD_O_CTM_INPUT_SEL) =
-                (config_params.event << ERAD_CTM_INPUT_SEL_CNT_INP_SEL_S) |
-                ERAD_CTM_INPUT_SEL_CTM_INP_SEL_EN;
+          ((uint16_t)config_params.event << ERAD_CTM_INPUT_SEL_CNT_INP_SEL_S) |
+          ERAD_CTM_INPUT_SEL_CTM_INP_SEL_EN;
     }
 
     //
@@ -109,16 +109,15 @@ ERAD_configCounterInCountingMode(uint32_t base,
     // parameters
     //
     HWREGH(base + ERAD_O_CTM_CNTL) =
-                 (HWREGH(base + ERAD_O_CTM_CNTL) &
-                  (~(ERAD_CTM_CNTL_RTOSINT      |
-                     ERAD_CTM_CNTL_STOP         |
-                     ERAD_CTM_CNTL_RST_ON_MATCH |
-                     ERAD_CTM_CNTL_EVENT_MODE   |
-                     ERAD_CTM_CNTL_START_STOP_MODE))) |
-                  (config_params.enable_int   << ERAD_CTM_CNTL_RTOSINT_S)    |
-                  (config_params.enable_stop  << ERAD_CTM_CNTL_STOP_S)       |
-                  (config_params.event_mode   << ERAD_CTM_CNTL_EVENT_MODE_S) |
-                  (config_params.rst_on_match << ERAD_CTM_CNTL_RST_ON_MATCH_S);
+        (HWREGH(base + ERAD_O_CTM_CNTL) & (~(ERAD_CTM_CNTL_RTOSINT      |
+                                             ERAD_CTM_CNTL_STOP         |
+                                             ERAD_CTM_CNTL_RST_ON_MATCH |
+                                             ERAD_CTM_CNTL_EVENT_MODE   |
+                                             ERAD_CTM_CNTL_START_STOP_MODE))) |
+        ((uint16_t)config_params.enable_int   << ERAD_CTM_CNTL_RTOSINT_S)     |
+        ((uint16_t)config_params.enable_stop  << ERAD_CTM_CNTL_STOP_S)        |
+        ((uint16_t)config_params.event_mode   << ERAD_CTM_CNTL_EVENT_MODE_S)  |
+        ((uint16_t)config_params.rst_on_match << ERAD_CTM_CNTL_RST_ON_MATCH_S);
 
     EDIS;
 }
@@ -165,8 +164,8 @@ ERAD_configCounterInStartStopMode(uint32_t base,
         // Set the start and stop events
         //
         HWREGH(base + ERAD_O_CTM_INPUT_SEL) =
-                (start_event << ERAD_CTM_INPUT_SEL_STA_INP_SEL_S) |
-                (stop_event << ERAD_CTM_INPUT_SEL_STO_INP_SEL_S);
+                ((uint16_t)start_event << ERAD_CTM_INPUT_SEL_STA_INP_SEL_S) |
+                ((uint16_t)stop_event << ERAD_CTM_INPUT_SEL_STO_INP_SEL_S);
     }
     else
     {
@@ -175,10 +174,10 @@ ERAD_configCounterInStartStopMode(uint32_t base,
         // configure the counter input, start event and stop event,
         //
         HWREGH(base + ERAD_O_CTM_INPUT_SEL) =
-                (config_params.event << ERAD_CTM_INPUT_SEL_CNT_INP_SEL_S) |
-                (start_event         << ERAD_CTM_INPUT_SEL_STA_INP_SEL_S) |
-                (stop_event          << ERAD_CTM_INPUT_SEL_STO_INP_SEL_S) |
-                ERAD_CTM_INPUT_SEL_CTM_INP_SEL_EN;
+           ((uint16_t)config_params.event << ERAD_CTM_INPUT_SEL_CNT_INP_SEL_S) |
+           ((uint16_t)start_event         << ERAD_CTM_INPUT_SEL_STA_INP_SEL_S) |
+           ((uint16_t)stop_event          << ERAD_CTM_INPUT_SEL_STO_INP_SEL_S) |
+           ERAD_CTM_INPUT_SEL_CTM_INP_SEL_EN;
     }
 
     //
@@ -189,16 +188,15 @@ ERAD_configCounterInStartStopMode(uint32_t base,
     // parameters
     //
     HWREGH(base + ERAD_O_CTM_CNTL) =
-                 (HWREGH(base + ERAD_O_CTM_CNTL) &
-                  (~(ERAD_CTM_CNTL_RTOSINT      |
-                     ERAD_CTM_CNTL_STOP         |
-                     ERAD_CTM_CNTL_RST_ON_MATCH |
-                     ERAD_CTM_CNTL_EVENT_MODE ))) |
-                ERAD_CTM_CNTL_START_STOP_MODE     |
-                (config_params.enable_int   << ERAD_CTM_CNTL_RTOSINT_S)    |
-                (config_params.enable_stop  << ERAD_CTM_CNTL_STOP_S)       |
-                (config_params.event_mode   << ERAD_CTM_CNTL_EVENT_MODE_S) |
-                (config_params.rst_on_match << ERAD_CTM_CNTL_RST_ON_MATCH_S);
+        (HWREGH(base + ERAD_O_CTM_CNTL) & (~(ERAD_CTM_CNTL_RTOSINT      |
+                                             ERAD_CTM_CNTL_STOP         |
+                                             ERAD_CTM_CNTL_RST_ON_MATCH |
+                                             ERAD_CTM_CNTL_EVENT_MODE )))    |
+        ERAD_CTM_CNTL_START_STOP_MODE                                        |
+        ((uint16_t)config_params.enable_int   << ERAD_CTM_CNTL_RTOSINT_S)    |
+        ((uint16_t)config_params.enable_stop  << ERAD_CTM_CNTL_STOP_S)       |
+        ((uint16_t)config_params.event_mode   << ERAD_CTM_CNTL_EVENT_MODE_S) |
+        ((uint16_t)config_params.rst_on_match << ERAD_CTM_CNTL_RST_ON_MATCH_S);
 
     EDIS;
 }

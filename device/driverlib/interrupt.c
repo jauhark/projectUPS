@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -107,7 +107,7 @@ static void Interrupt_clearIFR(uint16_t group)
             //
             // Invalid group mask.
             //
-            ASSERT(false);
+            ASSERT((bool)false);
             break;
     }
 }
@@ -191,9 +191,9 @@ Interrupt_initVectorTable(void)
     //
     // NMI and ITRAP get their own handlers.
     //
-    HWREG((uint32_t)PIEVECTTABLE_BASE + ((INT_NMI >> 16U) * 2U)) =
+    HWREG(PIEVECTTABLE_BASE + ((INT_NMI >> 16U) * 2U)) =
         (uint32_t)Interrupt_nmiHandler;
-    HWREG((uint32_t)PIEVECTTABLE_BASE + ((INT_ILLEGAL >> 16U) * 2U)) =
+    HWREG(PIEVECTTABLE_BASE + ((INT_ILLEGAL >> 16U) * 2U)) =
         (uint32_t)Interrupt_illegalOperationHandler;
 
     EDIS;
@@ -224,11 +224,11 @@ Interrupt_enable(uint32_t interruptNumber)
     //
     if(vectID >= 0x20U)
     {
-        intGroup = ((uint16_t)(interruptNumber & 0xFF00U) >> 8U) - 1U;
-        groupMask = 1U << intGroup;
+        intGroup = (uint16_t)(((interruptNumber & 0xFF00UL) >> 8U) - 1U);
+        groupMask = (uint16_t)1U << intGroup;
 
-        HWREGH(PIECTRL_BASE + PIE_O_IER1 + (intGroup * 2U)) |=
-            1U << ((uint16_t)(interruptNumber & 0xFFU) - 1U);
+        HWREGH((PIECTRL_BASE + PIE_O_IER1 + (intGroup * 2U))) |=
+            (uint16_t)1U << ((interruptNumber & 0xFFU) - 1U);
 
         //
         // Enable PIE Group Interrupt
@@ -281,14 +281,14 @@ Interrupt_disable(uint32_t interruptNumber)
     //
     if(vectID >= 0x20U)
     {
-        intGroup = ((uint16_t)(interruptNumber & 0xFF00U) >> 8U) - 1U;
-        groupMask = 1U << intGroup;
+        intGroup = (uint16_t)(((interruptNumber & 0xFF00UL) >> 8U) - 1U);
+        groupMask = (uint16_t)1U << intGroup;
 
         //
         // Disable individual PIE interrupt
         //
-        HWREGH(PIECTRL_BASE + PIE_O_IER1 + (intGroup * 2U)) &=
-            ~(1U << ((uint16_t)(interruptNumber & 0xFFU) - 1U));
+        HWREGH((PIECTRL_BASE + PIE_O_IER1 + (intGroup * 2U))) &=
+            ~(1U << ((interruptNumber & 0xFFUL) - 1U));
 
         //
         // Wait for any pending interrupts to get to the CPU
@@ -312,7 +312,7 @@ Interrupt_disable(uint32_t interruptNumber)
     //
     else if((vectID >= 0x0DU) && (vectID <= 0x10U))
     {
-        IER &= ~(1U << (vectID - 1U));
+        IER &= ~((uint16_t)1U << (vectID - 1U));
 
         //
         // Wait for any pending interrupts to get to the CPU
@@ -323,7 +323,7 @@ Interrupt_disable(uint32_t interruptNumber)
         NOP;
         NOP;
 
-        Interrupt_clearIFR(1U << (vectID - 1U));
+        Interrupt_clearIFR((uint16_t)1U << (vectID - 1U));
     }
     else
     {

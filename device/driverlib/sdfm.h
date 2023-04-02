@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -582,7 +582,7 @@ SDFM_clearZeroCrossTripStatus(uint32_t base, SDFM_FilterNumber filterNumber)
     // Set SDCTL MIE bit
     //
     EALLOW;
-    HWREGH(base + SDFM_O_SDCTL) |= (1U << filterNumber);
+    HWREGH(base + SDFM_O_SDCTL) |= ((uint16_t)1U << (uint16_t)filterNumber);
     EDIS;
 }
 
@@ -1774,11 +1774,11 @@ SDFM_setPWMSyncSource(uint32_t base, SDFM_FilterNumber filterNumber,
     HWREGH(address) =
         (HWREGH(address) & ~SDFM_SDSYNC1_SYNCSEL_M) | (uint16_t)syncSource;
     EDIS;
-	
-	//
-	//Enable SDSYNC reset to data filter
-	//
-	SDFM_enableExternalReset(base, filterNumber);
+
+    //
+    //Enable SDSYNC reset to data filter
+    //
+    SDFM_enableExternalReset(base, filterNumber);
 }
 
 //*****************************************************************************

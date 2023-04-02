@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -91,15 +91,15 @@ void EPWM_configureSignal(uint32_t base, const EPWM_SignalParams *signalParams)
     // achieving desired signal
     //
     tbClkInHz = ((float32_t)signalParams->sysClkInHz /
-                (1U << (uint16_t)signalParams->tbClkDiv));
+                 (float32_t)(1U << (uint16_t)signalParams->tbClkDiv));
 
     if(signalParams->tbHSClkDiv <= EPWM_HSCLOCK_DIVIDER_4)
     {
-        tbClkInHz /= (1U << (uint16_t)signalParams->tbHSClkDiv);
+        tbClkInHz /= (float32_t)(1U << (uint16_t)signalParams->tbHSClkDiv);
     }
     else
     {
-        tbClkInHz /= (2U * (uint16_t)signalParams->tbHSClkDiv);
+        tbClkInHz /= (float32_t)(2U * (uint16_t)signalParams->tbHSClkDiv);
     }
 
     if(signalParams->tbCtrMode == EPWM_COUNTER_MODE_UP)

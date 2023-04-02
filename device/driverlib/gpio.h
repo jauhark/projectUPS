@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -146,7 +146,7 @@ typedef enum
 //*****************************************************************************
 typedef enum
 {
-    GPIO_QUAL_SYNC,                     //!< Synchronization to SYSCLKOUT
+    GPIO_QUAL_SYNC,                     //!< Synchronization to SYSCLK
     GPIO_QUAL_3SAMPLE,                  //!< Qualified with 3 samples
     GPIO_QUAL_6SAMPLE,                  //!< Qualified with 6 samples
     GPIO_QUAL_ASYNC                     //!< No synchronization
@@ -264,8 +264,8 @@ GPIO_setInterruptType(GPIO_ExternalIntNum extIntNum, GPIO_IntType intType)
     //
     // Write the selected polarity to the appropriate register.
     //
-    HWREGH(XINT_BASE + (uint16_t)extIntNum) =
-        (HWREGH(XINT_BASE + (uint16_t)extIntNum) & ~XINT_1CR_POLARITY_M) |
+    HWREGH((uint16_t)(XINT_BASE + (uint16_t)extIntNum)) =
+        (uint16_t)(HWREGH((uint16_t)(XINT_BASE + (uint16_t)extIntNum)) & ~XINT_1CR_POLARITY_M) |
         (uint16_t)intType;
 }
 
@@ -297,8 +297,8 @@ GPIO_getInterruptType(GPIO_ExternalIntNum extIntNum)
     //
     // Read the selected polarity from the appropriate register.
     //
-    return((GPIO_IntType)(HWREGH(XINT_BASE + (uint16_t)extIntNum) &
-                          XINT_1CR_POLARITY_M));
+    return((GPIO_IntType)((uint16_t)(HWREGH((uint16_t)(XINT_BASE + (uint16_t)extIntNum)) &
+                          XINT_1CR_POLARITY_M)));
 }
 
 //*****************************************************************************
@@ -329,7 +329,7 @@ GPIO_enableInterrupt(GPIO_ExternalIntNum extIntNum)
     //
     // Set the enable bit for the specified interrupt.
     //
-    HWREGH(XINT_BASE + (uint16_t)extIntNum) |= XINT_1CR_ENABLE;
+    HWREGH((uint16_t)(XINT_BASE + (uint16_t)extIntNum)) |= XINT_1CR_ENABLE;
 }
 
 //*****************************************************************************
@@ -360,7 +360,7 @@ GPIO_disableInterrupt(GPIO_ExternalIntNum extIntNum)
     //
     // Clear the enable bit for the specified interrupt
     //
-    HWREGH(XINT_BASE + (uint16_t)extIntNum) &= ~XINT_1CR_ENABLE;
+    HWREGH((uint16_t)(XINT_BASE + (uint16_t)extIntNum)) &= ~XINT_1CR_ENABLE;
 }
 
 //*****************************************************************************
@@ -389,7 +389,7 @@ GPIO_getInterruptCounter(GPIO_ExternalIntNum extIntNum)
     //
     // Read the counter value from the appropriate register.
     //
-    return((HWREGH(XINT_BASE + XINT_O_1CTR + (uint16_t)extIntNum)));
+    return((HWREGH((uint16_t)(XINT_BASE + XINT_O_1CTR + (uint16_t)extIntNum))));
 }
 
 //*****************************************************************************

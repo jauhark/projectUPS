@@ -6,7 +6,7 @@
 //
 //###########################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -101,8 +101,8 @@ GPIO_getDirectionMode(uint32_t pin)
     gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE +
                    ((pin / 32U) * GPIO_CTRL_REGS_STEP);
 
-    return((GPIO_Direction)((gpioBaseAddr[GPIO_GPxDIR_INDEX] >>
-                             (pin % 32U)) & 1U));
+    return((GPIO_Direction)((uint32_t)((gpioBaseAddr[GPIO_GPxDIR_INDEX] >>
+                             (pin % 32U)) & 1U)));
 
 }
 

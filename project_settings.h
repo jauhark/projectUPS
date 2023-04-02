@@ -57,15 +57,21 @@
 #define INV_DEADBAND_PWM_COUNT (int)((float)INV_DEADBAND_US*(float)PWMSYSCLOCK_FREQ*(float)0.000001)
 
 #define CNTRL_ISR_FREQ_RATIO    1
+#define INV_ISR_FREQ            INV_PWM_SWITCHING_FREQUENCY/(2*CNTRL_ISR_FREQ_RATIO)
 #define INV_ISR_PIE_GROUP_NO    INTERRUPT_ACK_GROUP3
 
+//---------------------------------------------
+/* PWM1 */
 #define INV_PWM1_BASE               EPWM1_BASE      //epwm module base
+
 #define INV_PWM1_H_GPIO             0               //pin number
 #define INV_PWM1_H_GPIO_PIN_CONFIG  GPIO_0_EPWM1A   //alternate pin function
 
 #define INV_PWM1_L_GPIO             1
 #define INV_PWM1_L_GPIO_PIN_CONFIG  GPIO_1_EPWM1B
 
+//---------------------------------------------
+/* PWM2 */
 #define INV_PWM2_BASE               EPWM2_BASE
 
 #define INV_PWM2_H_GPIO             2
@@ -74,36 +80,48 @@
 #define INV_PWM2_L_GPIO             3
 #define INV_PWM2_L_GPIO_PIN_CONFIG  GPIO_3_EPWM2B
 
-#define ACQPS_SYS_CLKS    50  //ADC ACQUISITION CLOCK CYCLES
-#define ADC_CHANNEL_IN_Vmains          ADC_CH_ADCIN4  //ADC_A4 voltage measurement
-#define ADC_CHANNEL_IN_Idc      ADC_CH_ADCIN8   //CurrentMeasuremetn
+//---------------------------------------------
+
+#define ACQPS_SYS_CLKS    25  //ADC ACQUISITION CLOCK CYCLES
 #define ADC_SOC_TRIG             ADC_TRIGGER_EPWM1_SOCA    //adc soc trigger by epwm interrupt
 
 #define INV_ISR_TRIG_PWM_BASE           EPWM1_BASE         //interrupt module base
 #define INV_ISR                         INT_EPWM1          //interrupt vector number
 
+//---------------------------------------------
+/*
+ * PINOUT CONFIG
+ */
 
-//3 button switch settings
-#define ADC_SWITCH_CHANNEL_IN   ADC_CH_ADCIN6   //ADCINA6
-#define RELAY_SWITCH    58
-//LED output for indication
+#define ADC_CHANNEL_IN_invInst_V          ADC_CH_ADCIN4  //ADC_A4 voltage measurement
+#define ADC_CHANNEL_IN_mainsInst_V   ADC_CH_ADCIN0
+#define ADC_CHANNEL_IN_invLoad_I      ADC_CH_ADCIN8   //CurrentMeasuremetn
+#define ADC_CHANNEL_IN_battBus_V ADC_CH_ADCIN3   //dc bus reading
+#define ADC_CHANNEL_IN_battChrg_I   ADC_CH_ADCIN9
+#define ADC_CHANNEL_IN_clickSwitch   ADC_CH_ADCIN6   //ADCINA6
+
+
+#define INV_MAINS_RELAY_SWITCH    58  //relay switch OUTPUT
+#define CHGR_RELAY_SWITCH         30
+
 #define LED_PIN_SWITCH 34  //onboard led
-#define LED_PIN_ZCROSS_DETECTION    39
+#define LED_PIN_ZCROSS_DETECTION    39  //led for zerocross detection
 
-
-
+//---------------------------------------------
 /*
  * SFRA SETTINGS
  */
-#define SFRA_ENABLED 0
+#define SFRA_ENABLED 1
 
 #if SFRA_ENABLED==1
 
-#define SFRA_ISR_FREQ   INV_PWM_SWITCHING_FREQUENCY/CNTRL_ISR_FREQ_RATIO
-#define SFRA_FREQ_START 2
-#define SFRA_FREQ_STEP_MULTIPLY (float32_t)1.047
-#define SFRA_AMPLITUDE (float32_t)0.01
-#define SFRA_FREQ_LENGTH 200
+#define SFRA_ISR_FREQ   INV_PWM_SWITCHING_FREQUENCY/(2*CNTRL_ISR_FREQ_RATIO)
+#define SFRA_FREQ_START 10
+//#define SFRA_FREQ_STEP_MULTIPLY (float32_t)1.02329299
+//#define SFRA_FREQ_STEP_MULTIPLY (float32_t)(1.0471285)
+#define SFRA_FREQ_STEP_MULTIPLY (float32_t)(1.122018)
+#define SFRA_AMPLITUDE (float32_t)0.2
+#define SFRA_FREQ_LENGTH 60
 
 /* SFRA GUI SETTINGS */
 #define SFRA_GUI_SCI_BASE SCIA_BASE

@@ -14,14 +14,58 @@ ORDERED_OBJS += \
 "./project_main.obj" \
 "./device/device.obj" \
 "./device/f28004x_codestartbranch.obj" \
+"./device/driverlib/adc.obj" \
+"./device/driverlib/asysctl.obj" \
+"./device/driverlib/can.obj" \
+"./device/driverlib/cla.obj" \
+"./device/driverlib/clapromcrc.obj" \
+"./device/driverlib/clb.obj" \
+"./device/driverlib/cmpss.obj" \
+"./device/driverlib/cputimer.obj" \
+"./device/driverlib/dac.obj" \
+"./device/driverlib/dcc.obj" \
+"./device/driverlib/dcsm.obj" \
+"./device/driverlib/dma.obj" \
+"./device/driverlib/ecap.obj" \
+"./device/driverlib/epwm.obj" \
+"./device/driverlib/eqep.obj" \
+"./device/driverlib/erad.obj" \
+"./device/driverlib/flash.obj" \
+"./device/driverlib/fsi.obj" \
+"./device/driverlib/gpio.obj" \
+"./device/driverlib/hrcap.obj" \
+"./device/driverlib/hrpwm.obj" \
+"./device/driverlib/i2c.obj" \
+"./device/driverlib/interrupt.obj" \
+"./device/driverlib/lin.obj" \
+"./device/driverlib/memcfg.obj" \
+"./device/driverlib/pga.obj" \
+"./device/driverlib/pmbus.obj" \
+"./device/driverlib/sci.obj" \
+"./device/driverlib/sdfm.obj" \
+"./device/driverlib/spi.obj" \
+"./device/driverlib/sysctl.obj" \
+"./device/driverlib/version.obj" \
+"./device/driverlib/xbar.obj" \
+"./libraries/DCL/source/DCL_DF22_C1.obj" \
+"./libraries/DCL/source/DCL_PI_C4.obj" \
 "./libraries/LcdDrive/lcdDrive.obj" \
+"./libraries/pr.obj" \
 "./libraries/sfra/sfra_gui_scicomms_driverlib.obj" \
 "../device/gridconnectedinvlclfltr_flash_cpu1.cmd" \
+"../device/driverlib/driverlib.lib" \
+"../device/driverlib/driverlib_eabi.lib" \
+"../device/driverlib/ccs/Debug/driverlib.lib" \
+"../device/driverlib/ccs/Debug/driverlib_coff.lib" \
+"../device/driverlib/ccs/Debug/driverlib_eabi.lib" \
+"../device/driverlib/ccs/Release/driverlib.lib" \
+"../device/driverlib/ccs/Release/driverlib_coff.lib" \
+"../device/driverlib/ccs/Release/driverlib_eabi.lib" \
 "../libraries/FPUfastRTS/rts2800_fpu32_fast_supplement.lib" \
 "../libraries/FPUfastRTS/rts2800_fpu32_fast_supplement_eabi.lib" \
 "../libraries/sfra/sfra_f32_eabi.lib" \
 $(GEN_CMDS__FLAG) \
--l"D:/WORKSPACE/TI2/projectUPS/libraries/sfra/sfra_f32_eabi.lib" \
+-l"D:/WORKSPACE/backup/projectUPS/libraries/sfra/sfra_f32_eabi.lib" \
 -ldriverlib_eabi.lib \
 -lrts2800_fpu32_eabi.lib \
 -lrts2800_fpu32_fast_supplement_eabi.lib \
@@ -36,13 +80,23 @@ RMDIR := RMDIR /S/Q
 -include sources.mk
 -include subdir_vars.mk
 -include device/subdir_vars.mk
+-include device/driverlib/subdir_vars.mk
+-include device/driverlib/ccs/Debug/subdir_vars.mk
+-include device/driverlib/ccs/Release/subdir_vars.mk
+-include libraries/DCL/source/subdir_vars.mk
 -include libraries/FPUfastRTS/subdir_vars.mk
 -include libraries/LcdDrive/subdir_vars.mk
+-include libraries/subdir_vars.mk
 -include libraries/sfra/subdir_vars.mk
 -include subdir_rules.mk
 -include device/subdir_rules.mk
+-include device/driverlib/subdir_rules.mk
+-include device/driverlib/ccs/Debug/subdir_rules.mk
+-include device/driverlib/ccs/Release/subdir_rules.mk
+-include libraries/DCL/source/subdir_rules.mk
 -include libraries/FPUfastRTS/subdir_rules.mk
 -include libraries/LcdDrive/subdir_rules.mk
+-include libraries/subdir_rules.mk
 -include libraries/sfra/subdir_rules.mk
 -include objects.mk
 
@@ -160,7 +214,7 @@ all: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
 projectUPS.out: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: C2000 Linker'
-	"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu0 -Ooff --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all --define=_DEBUG --define=_FLASH --define=GCI --define=F28x_DEVICE --define=CPU1 --define=LARGE_MODEL --float_operations_allowed=32 --diag_suppress=10063 --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"projectUPS.map" --stack_size=0x200 --warn_sections -i"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/lib" -i"D:/SOFTWARES/TI/C2000Ware_4_02_00_00/libraries/control/DCL/c28/include" -i"D:/WORKSPACE/TI2/projectUPS/libraries/spll" -i"D:/WORKSPACE/TI2/projectUPS/libraries/sfra" -i"D:/WORKSPACE/TI2/projectUPS/libraries/FPUfastRTS" -i"D:/WORKSPACE/TI2/projectUPS/device/driverlib/ccs/Release" -i"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="projectUPS_linkInfo.xml" --entry_point=code_start --rom_model -o "projectUPS.out" $(ORDERED_OBJS)
+	"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu0 -Ooff --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all --define=_DEBUG --define=_FLASH --define=GCI --define=F28x_DEVICE --define=CPU1 --define=LARGE_MODEL --float_operations_allowed=32 --diag_suppress=10063 --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"projectUPS.map" --stack_size=0x200 --warn_sections -i"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/lib" -i"D:/SOFTWARES/TI/C2000Ware_4_02_00_00/libraries/control/DCL/c28/include" -i"D:/WORKSPACE/backup/projectUPS/libraries/spll" -i"D:/WORKSPACE/backup/projectUPS/libraries/sfra" -i"D:/WORKSPACE/backup/projectUPS/libraries/FPUfastRTS" -i"D:/WORKSPACE/backup/projectUPS/device/driverlib/ccs/Release" -i"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="projectUPS_linkInfo.xml" --entry_point=code_start --rom_model -o "projectUPS.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
@@ -174,9 +228,10 @@ projectUPS.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "project_functions.obj" "project_main.obj" "device\device.obj" "device\f28004x_codestartbranch.obj" "libraries\LcdDrive\lcdDrive.obj" "libraries\sfra\sfra_gui_scicomms_driverlib.obj" 
-	-$(RM) "project_functions.d" "project_main.d" "device\device.d" "libraries\LcdDrive\lcdDrive.d" "libraries\sfra\sfra_gui_scicomms_driverlib.d" 
-	-$(RM) "device\f28004x_codestartbranch.d" 
+	-$(RM) "project_functions.obj" "project_main.obj" "device\device.obj" "device\f28004x_codestartbranch.obj" "device\driverlib\adc.obj" "device\driverlib\asysctl.obj" "device\driverlib\can.obj" "device\driverlib\cla.obj" "device\driverlib\clapromcrc.obj" "device\driverlib\clb.obj" "device\driverlib\cmpss.obj" "device\driverlib\cputimer.obj" "device\driverlib\dac.obj" "device\driverlib\dcc.obj" "device\driverlib\dcsm.obj" "device\driverlib\dma.obj" "device\driverlib\ecap.obj" "device\driverlib\epwm.obj" "device\driverlib\eqep.obj" "device\driverlib\erad.obj" "device\driverlib\flash.obj" "device\driverlib\fsi.obj" "device\driverlib\gpio.obj" "device\driverlib\hrcap.obj" "device\driverlib\hrpwm.obj" "device\driverlib\i2c.obj" "device\driverlib\interrupt.obj" "device\driverlib\lin.obj" "device\driverlib\memcfg.obj" "device\driverlib\pga.obj" "device\driverlib\pmbus.obj" "device\driverlib\sci.obj" "device\driverlib\sdfm.obj" "device\driverlib\spi.obj" "device\driverlib\sysctl.obj" "device\driverlib\version.obj" 
+	-$(RM) "device\driverlib\xbar.obj" "libraries\DCL\source\DCL_DF22_C1.obj" "libraries\DCL\source\DCL_PI_C4.obj" "libraries\LcdDrive\lcdDrive.obj" "libraries\pr.obj" "libraries\sfra\sfra_gui_scicomms_driverlib.obj" 
+	-$(RM) "project_functions.d" "project_main.d" "device\device.d" "device\driverlib\adc.d" "device\driverlib\asysctl.d" "device\driverlib\can.d" "device\driverlib\cla.d" "device\driverlib\clapromcrc.d" "device\driverlib\clb.d" "device\driverlib\cmpss.d" "device\driverlib\cputimer.d" "device\driverlib\dac.d" "device\driverlib\dcc.d" "device\driverlib\dcsm.d" "device\driverlib\dma.d" "device\driverlib\ecap.d" "device\driverlib\epwm.d" "device\driverlib\eqep.d" "device\driverlib\erad.d" "device\driverlib\flash.d" "device\driverlib\fsi.d" "device\driverlib\gpio.d" "device\driverlib\hrcap.d" "device\driverlib\hrpwm.d" "device\driverlib\i2c.d" "device\driverlib\interrupt.d" "device\driverlib\lin.d" "device\driverlib\memcfg.d" "device\driverlib\pga.d" "device\driverlib\pmbus.d" "device\driverlib\sci.d" "device\driverlib\sdfm.d" "device\driverlib\spi.d" "device\driverlib\sysctl.d" "device\driverlib\version.d" "device\driverlib\xbar.d" "libraries\LcdDrive\lcdDrive.d" "libraries\pr.d" "libraries\sfra\sfra_gui_scicomms_driverlib.d" 
+	-$(RM) "device\f28004x_codestartbranch.d" "libraries\DCL\source\DCL_DF22_C1.d" "libraries\DCL\source\DCL_PI_C4.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

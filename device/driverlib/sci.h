@@ -5,10 +5,8 @@
 // TITLE:  C28x SCI driver.
 //
 //###########################################################################
-//
-//
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -555,6 +553,160 @@ SCI_disableModule(uint32_t base)
     // Disable the SCI.
     //
     HWREGH(base + SCI_O_CTL1) &= ~(SCI_CTL1_TXENA | SCI_CTL1_RXENA);
+}
+
+//*****************************************************************************
+//
+//! Enables transmitting.
+//!
+//! \param base is the base address of the SCI port.
+//!
+//! Enables SCI by taking SCI out of the software reset. Sets the TXENA bit
+//! which enables transmit.
+//!
+//! \return None.
+//
+//*****************************************************************************
+static inline void
+SCI_enableTxModule(uint32_t base)
+{
+    //
+    // Check the arguments.
+    //
+    ASSERT(SCI_isBaseValid(base));
+
+    //
+    // Enable TX and the SCI.
+    //
+    HWREGH(base + SCI_O_CTL1) |= (SCI_CTL1_TXENA | SCI_CTL1_SWRESET);
+}
+
+//*****************************************************************************
+//
+//! Disables transmitting.
+//!
+//! \param base is the base address of the SCI port.
+//!
+//! Disables SCI by taking SCI out of the software reset. Clears the TXENA bit
+//! which disables transmit.
+//!
+//! \return None.
+//
+//*****************************************************************************
+static inline void
+SCI_disableTxModule(uint32_t base)
+{
+    //
+    // Check the arguments.
+    //
+    ASSERT(SCI_isBaseValid(base));
+
+    //
+    // Disable TX.
+    //
+    HWREGH(base + SCI_O_CTL1) &= ~SCI_CTL1_TXENA;
+}
+
+//*****************************************************************************
+//
+//! Enables receiving.
+//!
+//! \param base is the base address of the SCI port.
+//!
+//! Enables SCI by taking SCI out of the software reset. Sets the RXENA bit
+//! which enables receive.
+//!
+//! \return None.
+//
+//*****************************************************************************
+static inline void
+SCI_enableRxModule(uint32_t base)
+{
+    //
+    // Check the arguments.
+    //
+    ASSERT(SCI_isBaseValid(base));
+
+    //
+    // Enable RX and the SCI.
+    //
+    HWREGH(base + SCI_O_CTL1) |= (SCI_CTL1_RXENA | SCI_CTL1_SWRESET);
+}
+
+//*****************************************************************************
+//
+//! Disables receiving.
+//!
+//! \param base is the base address of the SCI port.
+//!
+//! Disables SCI by taking SCI out of the software reset. Clears the RXENA bit
+//! which disables receive.
+//!
+//! \return None.
+//
+//*****************************************************************************
+static inline void
+SCI_disableRxModule(uint32_t base)
+{
+    //
+    // Check the arguments.
+    //
+    ASSERT(SCI_isBaseValid(base));
+
+    //
+    // Disable RX.
+    //
+    HWREGH(base + SCI_O_CTL1) &= ~SCI_CTL1_RXENA;
+}
+
+//*****************************************************************************
+//
+//! Enables Sleep Mode
+//!
+//! \param base is the base address of the SCI port.
+//!
+//! Enables the sleep mode in SCI by setting the SLEEP bit in SCICTL1 register
+//!
+//! \return None.
+//
+//*****************************************************************************
+static inline void
+SCI_enableSleepMode(uint32_t base)
+{
+    //
+    // Check the arguments.
+    //
+    ASSERT(SCI_isBaseValid(base));
+
+    //
+    // Set sleep bit
+    //
+    HWREGH(base + SCI_O_CTL1) |= SCI_CTL1_SLEEP;
+}
+
+//*****************************************************************************
+//
+//! Disables Sleep Mode
+//!
+//! \param base is the base address of the SCI port.
+//!
+//! Disables the sleep mode in SCI by clearing the SLEEP bit in SCICTL1 register
+//!
+//! \return None.
+//
+//*****************************************************************************
+static inline void
+SCI_disableSleepMode(uint32_t base)
+{
+    //
+    // Check the arguments.
+    //
+    ASSERT(SCI_isBaseValid(base));
+
+    //
+    // Clear sleep bit
+    //
+    HWREGH(base + SCI_O_CTL1) &= ~SCI_CTL1_SLEEP;
 }
 
 //*****************************************************************************

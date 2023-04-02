@@ -6,7 +6,7 @@
 //
 //#############################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -64,6 +64,7 @@ extern "C"
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "inc/hw_epwm.h"
+#include "hrpwm.h"
 #include "cpu.h"
 #include "debug.h"
 
@@ -1477,6 +1478,17 @@ typedef struct
 
 //*****************************************************************************
 //
+// Functions APIs shared with HRPWM module
+//
+//*****************************************************************************
+
+//
+// Period Control related API
+//
+#define EPWM_setSyncPulseSource                 HRPWM_setSyncPulseSource
+
+//*****************************************************************************
+//
 // Prototypes for the API.
 //
 //*****************************************************************************
@@ -2414,7 +2426,7 @@ EPWM_setCounterCompareValue(uint32_t base, EPWM_CounterCompareModule compModule,
     //
     // Get the register offset for the Counter compare
     //
-    registerOffset = EPWM_O_CMPA + (uint16_t)compModule;
+    registerOffset = EPWM_O_CMPA + (uint32_t)compModule;
 
     //
     // Write to the counter compare registers.
@@ -2467,7 +2479,7 @@ EPWM_getCounterCompareValue(uint32_t base, EPWM_CounterCompareModule compModule)
     //
     // Get the register offset for the Counter compare
     //
-    registerOffset = EPWM_O_CMPA + (uint16_t)compModule;
+    registerOffset = EPWM_O_CMPA + (uint32_t)compModule;
 
     //
     // Read from the counter compare registers.
@@ -2766,8 +2778,8 @@ EPWM_setActionQualifierAction(uint32_t base,
     //
     // Get the register offset
     //
-    registerOffset = EPWM_O_AQCTLA + (uint16_t)epwmOutput;
-    registerTOffset = EPWM_O_AQCTLA2 + (uint16_t)epwmOutput;
+    registerOffset = EPWM_O_AQCTLA + (uint32_t)epwmOutput;
+    registerTOffset = EPWM_O_AQCTLA2 + (uint32_t)epwmOutput;
 
     //
     // If the event occurs on T1 or T2 events
@@ -2891,7 +2903,7 @@ EPWM_setActionQualifierActionComplete(uint32_t base,
     //
     // Get the register offset
     //
-    registerOffset = EPWM_O_AQCTLA + (uint16_t)epwmOutput;
+    registerOffset = EPWM_O_AQCTLA + (uint32_t)epwmOutput;
 
     //
     // Write to ZRO, PRD, CAU, CAD, CBU or CBD bits of AQCTLA register
@@ -2975,7 +2987,7 @@ EPWM_setAdditionalActionQualifierActionComplete(uint32_t base,
     //
     // Get the register offset
     //
-    registerTOffset = EPWM_O_AQCTLA2 + (uint16_t)epwmOutput;
+    registerTOffset = (uint32_t)(EPWM_O_AQCTLA2 + (uint16_t)epwmOutput);
 
     //
     // Write to T1U, T1D, T2U or T2D of AQCTLA2 register
@@ -3248,7 +3260,7 @@ EPWM_setDeadBandDelayMode(uint32_t base, EPWM_DeadBandDelayMode delayMode,
     //
     ASSERT(EPWM_isBaseValid(base));
 
-    mask = 1U << ((uint16_t)(delayMode + EPWM_DBCTL_OUT_MODE_S));
+    mask = (uint16_t)1U << ((uint16_t)delayMode + EPWM_DBCTL_OUT_MODE_S);
 
     if(enableDelayMode)
     {
@@ -4515,7 +4527,7 @@ EPWM_clearTripZoneFlag(uint32_t base, uint16_t tzFlags)
     // Check the arguments
     //
     ASSERT(EPWM_isBaseValid(base));
-    ASSERT((tzFlags < 0x80U) && (tzFlags > 0x1U));
+    ASSERT(tzFlags < 0x80U);
 
     //
     // Clear Trip zone event flag
@@ -5474,7 +5486,7 @@ EPWM_setADCTriggerEventCountInitValue(uint32_t base,
     // Check the arguments
     //
     ASSERT(EPWM_isBaseValid(base));
-    ASSERT(eventCount < 16);
+    ASSERT(eventCount < 16U);
 
     //
     // Set the ADC Trigger event count
@@ -5887,7 +5899,7 @@ EPWM_setDigitalCompareEdgeFilterMode(uint32_t base,
     EALLOW;
     HWREGH(base + EPWM_O_DCFCTL) = (HWREGH(base + EPWM_O_DCFCTL) &
                                     ~EPWM_DCFCTL_EDGEMODE_M) |
-                                   (edgeMode << EPWM_DCFCTL_EDGEMODE_S);
+                                   ((uint16_t)edgeMode << EPWM_DCFCTL_EDGEMODE_S);
     EDIS;
 }
 
@@ -6114,7 +6126,7 @@ EPWM_getDigitalCompareBlankingWindowLengthCount(uint32_t base)
 //!                  DCBEVT1, DCAEVT2 or DCBEVT2 depending on the value of both
 //!                  dcModule and dcEvent.
 //!      - EPWM_DC_EVENT_SOURCE_ORIG_SIGNAL  - signal source is unfiltered
-//!                   The signal source for this option is DCEVTFILT.
+//!                   The signal source for this option is DCxEVTy.
 //! \return None
 //
 //*****************************************************************************
@@ -6131,7 +6143,7 @@ EPWM_setDigitalCompareEventSource(uint32_t base,
     //
     ASSERT(EPWM_isBaseValid(base));
 
-    registerOffset = EPWM_O_DCACTL + (uint16_t)dcModule;
+    registerOffset = EPWM_O_DCACTL + (uint32_t)dcModule;
 
     //
     // Set the DC event 1 source source
@@ -6191,7 +6203,7 @@ EPWM_setDigitalCompareEventSyncMode(uint32_t base,
     //
     ASSERT(EPWM_isBaseValid(base));
 
-    registerOffset = EPWM_O_DCACTL + (uint16_t)dcModule;
+    registerOffset = EPWM_O_DCACTL + (uint32_t)dcModule;
 
     //
     // Set the DC event sync mode
@@ -6239,7 +6251,7 @@ EPWM_enableDigitalCompareADCTrigger(uint32_t base,
     //
     ASSERT(EPWM_isBaseValid(base));
 
-    registerOffset = EPWM_O_DCACTL + (uint16_t)dcModule;
+    registerOffset = EPWM_O_DCACTL + (uint32_t)dcModule;
 
     //
     // Enable Digital Compare start of conversion generation
@@ -6277,7 +6289,7 @@ EPWM_disableDigitalCompareADCTrigger(uint32_t base,
     //
     ASSERT(EPWM_isBaseValid(base));
 
-    registerOffset = EPWM_O_DCACTL + (uint16_t)dcModule;
+    registerOffset = EPWM_O_DCACTL + (uint32_t)dcModule;
 
     //
     // Disable Digital Compare start of conversion generation
@@ -6315,7 +6327,7 @@ EPWM_enableDigitalCompareSyncEvent(uint32_t base,
     //
     ASSERT(EPWM_isBaseValid(base));
 
-    registerOffset = EPWM_O_DCACTL + (uint16_t)dcModule;
+    registerOffset = EPWM_O_DCACTL + (uint32_t)dcModule;
 
     //
     // Enable Digital Compare sync out pulse generation
@@ -6353,7 +6365,7 @@ EPWM_disableDigitalCompareSyncEvent(uint32_t base,
     //
     ASSERT(EPWM_isBaseValid(base));
 
-    registerOffset = EPWM_O_DCACTL + (uint16_t)dcModule;
+    registerOffset = EPWM_O_DCACTL + (uint32_t)dcModule;
 
     //
     // Disable Digital Compare sync out pulse generation
@@ -6555,7 +6567,7 @@ EPWM_enableDigitalCompareTripCombinationInput(uint32_t base,
     // Get the DCAHTRIPSEL, DCALTRIPSEL, DCBHTRIPSEL, DCBLTRIPSEL register
     // offset with respect to DCAHTRIPSEL
     //
-    registerOffset = EPWM_O_DCAHTRIPSEL + (uint16_t)dcType;
+    registerOffset = EPWM_O_DCAHTRIPSEL + (uint32_t)dcType;
 
     //
     // Set the DC trip input
@@ -6609,7 +6621,7 @@ EPWM_disableDigitalCompareTripCombinationInput(uint32_t base,
     // Get the DCAHTRIPSEL, DCALTRIPSEL, DCBHTRIPSEL, DCBLTRIPSEL register
     // offset with respect to DCAHTRIPSEL
     //
-    registerOffset = EPWM_O_DCAHTRIPSEL + (uint16_t)dcType;
+    registerOffset = EPWM_O_DCAHTRIPSEL + (uint32_t)dcType;
 
     //
     // Set the DC trip input

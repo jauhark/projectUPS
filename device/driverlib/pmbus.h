@@ -6,7 +6,7 @@
 //
 //#############################################################################
 // $Copyright:
-// Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 //
 // Redistribution and use in source and binary forms, with or without 
 // modification, are permitted provided that the following conditions 
@@ -765,6 +765,67 @@ static inline uint16_t PMBus_getOwnAddress(uint32_t base)
     ASSERT(PMBus_isBaseValid(base));
 
     return((HWREG(base + PMBUS_O_PMBHSA) & 0xFEU) >> 1U);
+}
+
+//*****************************************************************************
+//
+//! Set the current device address
+//!
+//! \param base is the base address of the PMBus instance used.
+//! \param address : Address to be configured.
+//!
+//! This function configures the current device address, this
+//! will be the own address of the module.
+//! \return None.
+//
+//*****************************************************************************
+static inline void PMBus_setOwnAddress(uint32_t base, uint16_t Ownaddress)
+{
+    //
+    // Check the arguments.
+    //
+    ASSERT(PMBus_isBaseValid(base));
+    ASSERT(Ownaddress <= 0x7FU);
+
+
+    EALLOW;
+
+    //
+    // Write the address to the PMBSC register (bits 6:0)
+    //
+    HWREG(base + PMBUS_O_PMBSC)|= Ownaddress;
+
+    EDIS;
+}
+
+//*****************************************************************************
+//
+//! Set the slave address
+//!
+//! \param base is the base address of the PMBus instance used.
+//! \param address : Slave Address to be configured.
+//!
+//! This function configures the current device address, this
+//! will be the slave address.
+//! \return None.
+//
+//*****************************************************************************
+static inline void PMBus_setSlaveAddress(uint32_t base, uint16_t slaveAddress)
+{
+    //
+    // Check the arguments.
+    //
+    ASSERT(PMBus_isBaseValid(base));
+    ASSERT(slaveAddress <= 0x7FU);
+
+    EALLOW;
+
+    //
+    // Write the slave address to PMBMC register
+    //
+    HWREG(base + PMBUS_O_PMBMC) |= (((uint32_t)slaveAddress << PMBUS_PMBMC_SLAVE_ADDR_S) &
+                                                PMBUS_PMBMC_SLAVE_ADDR_M);
+    EDIS;
 }
 
 //*****************************************************************************
