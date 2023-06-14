@@ -8,6 +8,7 @@
 
 #include "project_main.h"
 
+    uint16_t countLCD = 0;
 /*
  * ###################################################################################
  * ###################################################################################
@@ -195,7 +196,6 @@ void main(void)
     // Enable PWM Clocks
     enablePWMCLKCounting();
 
-    uint16_t countLCD = 0;
 
     //================================================================
     while (1)
@@ -210,6 +210,10 @@ void main(void)
         }
         lcd_UI(SW_PRESSED_VAL);
         lcdDrive_updateLCD();
+        if(countLCD>=500){
+            countLCD=0;
+        }
+        countLCD++;
     }
 }
 /*
@@ -287,12 +291,13 @@ interrupt void adcISR(void)
     POWER_MEAS_SINE_ANALYZER_run(&obj_mains_chgr_V_I); //measuring rms-avg of mains-charging voltage and current
 
     /*the flags*/
-    updateFlags();
+//    updateFlags();
 
     /*State Machine*/
+    STATE_PTR=&INV_MODE_STATE;
     (*STATE_PTR)();
 
-    writeToGraph(invLoad_I, 0, 0);
+    writeToGraph(obj_invInst_V.refSignalScaledUP, 0, 0);
 
     clearInterruptADC();
     /*---------------X ISR ENDS HERE X-----------------*/

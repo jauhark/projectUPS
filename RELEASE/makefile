@@ -65,7 +65,7 @@ ORDERED_OBJS += \
 "../libraries/FPUfastRTS/rts2800_fpu32_fast_supplement_eabi.lib" \
 "../libraries/sfra/sfra_f32_eabi.lib" \
 $(GEN_CMDS__FLAG) \
--l"D:/WORKSPACE/backup/projectUPS/libraries/sfra/sfra_f32_eabi.lib" \
+-l"D:/WORKSPACE/TI2/projectUPS/libraries/sfra/sfra_f32_eabi.lib" \
 -ldriverlib_eabi.lib \
 -lrts2800_fpu32_eabi.lib \
 -lrts2800_fpu32_fast_supplement_eabi.lib \
@@ -214,7 +214,7 @@ all: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
 projectUPS.out: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: C2000 Linker'
-	"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu0 -Ooff --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all --define=_DEBUG --define=_FLASH --define=GCI --define=F28x_DEVICE --define=CPU1 --define=LARGE_MODEL --float_operations_allowed=32 --diag_suppress=10063 --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"projectUPS.map" --stack_size=0x200 --warn_sections -i"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/lib" -i"D:/SOFTWARES/TI/C2000Ware_4_02_00_00/libraries/control/DCL/c28/include" -i"D:/WORKSPACE/backup/projectUPS/libraries/spll" -i"D:/WORKSPACE/backup/projectUPS/libraries/sfra" -i"D:/WORKSPACE/backup/projectUPS/libraries/FPUfastRTS" -i"D:/WORKSPACE/backup/projectUPS/device/driverlib/ccs/Release" -i"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="projectUPS_linkInfo.xml" --entry_point=code_start --rom_model -o "projectUPS.out" $(ORDERED_OBJS)
+	"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu0 -Ooff --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all --define=_DEBUG --define=_FLASH --define=GCI --define=F28x_DEVICE --define=CPU1 --define=LARGE_MODEL --float_operations_allowed=32 --diag_suppress=10063 --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"projectUPS.map" --stack_size=0x200 --warn_sections -i"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/lib" -i"D:/SOFTWARES/TI/C2000Ware_4_02_00_00/libraries/control/DCL/c28/include" -i"D:/WORKSPACE/TI2/projectUPS/libraries/spll" -i"D:/WORKSPACE/TI2/projectUPS/libraries/sfra" -i"D:/WORKSPACE/TI2/projectUPS/libraries/FPUfastRTS" -i"D:/WORKSPACE/TI2/projectUPS/device/driverlib/ccs/Release" -i"D:/SOFTWARES/TI/ccs/tools/compiler/ti-cgt-c2000_22.6.0.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="projectUPS_linkInfo.xml" --entry_point=code_start --rom_model -o "projectUPS.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
